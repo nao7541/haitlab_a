@@ -28,17 +28,15 @@ schema_view = get_swagger_view(title=API_TITLE)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apiv1.urls')),
-    # JWTで認証させる
-    path('api/v1/auth/', include('djoser.urls')),
-    path('api/v1/auth/', include('djoser.urls.jwt')),
     path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/rest-auth/', include('rest_auth.urls')),
     # ユーザー登録
     path('api/v1/rest-auth/registration/', include('rest_auth.registration.urls')),
     path('docs/', include_docs_urls(title=API_TITLE)),
     # 各urlにどのAPIが対応しているか見ることができる(そのまま使ったらエラーが出てしまうので初めて使うときは高山に言っていただけると)
     path('swagger-docs/', schema_view),
-    # rest-authは消しておく
-    # path('api/v1/rest-auth/', include('rest_auth.urls')),
+
+
 ]
 
 # 画像をアップロードするための設定
