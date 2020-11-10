@@ -6,5 +6,6 @@ class UserSerializer(serializers.ModelSerializer):
     skills = serializers.MultipleChoiceField(choices=SKILL_CHOICES, allow_blank=True)
 
     class Meta:
-        fields = ('email', 'username', 'prof_img', 'intro', 'univ_name', 'major', 'skills','contact')
+        fields = ('email', 'prof_img', 'intro', 'univ_name', 'major', 'skills','contact')
+        read_only_fields = ('username',)
         model = CustomUser
