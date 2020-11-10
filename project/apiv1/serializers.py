@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, SKILL_CHOICES
+from user.models import CustomUser, SKILL_CHOICES
 
 class UserSerializer(serializers.ModelSerializer):
     username = None
