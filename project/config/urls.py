@@ -29,9 +29,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apiv1.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/v1/rest-auth/', include('rest_auth.urls')),
+    path('api/v1/', include('rest_auth.urls')),
     # ユーザー登録
-    path('api/v1/rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('api/v1/registration/', include('rest_auth.registration.urls')),
     path('docs/', include_docs_urls(title=API_TITLE)),
     # 各urlにどのAPIが対応しているか見ることができる(そのまま使ったらエラーが出てしまうので初めて使うときは高山に言っていただけると)
     path('swagger-docs/', schema_view),
