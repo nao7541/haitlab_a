@@ -9,20 +9,23 @@ from multiselectfield import MultiSelectField
 
 class UserManager(UserManager):
     # usernameではなくemailでの認証ができるように設定
+    #if not username:
+    #    raise ValueError('ユーザー名は必須項目です')
 
-    def _create_user(self, email, password, **extra_fields):
+    def _create_user(self, username, email, password, **extra_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        username = self.model.normalize_username(username)
+        user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email=None, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(username, email, password, **extra_fields)
 
-    def create_superuser(self, email=None, password=None, **extra_fields):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -31,7 +34,7 @@ class UserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(username, email, password, **extra_fields)
 
 SKILL_CHOICES = (
     ('デザイン', 'デザイン'),
@@ -47,10 +50,10 @@ class Tag(models.Model):
         return self.name
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+        # ユーザー名
+    username = models.CharField(max_length=20, verbose_name='ユーザー名', unique=True)
     # メールアドレス
     email = models.EmailField('メールアドレス', unique=True)
-    # ユーザー名
-    username = models.CharField(max_length=20, verbose_name='ユーザー名')
     # プロフィール画像
     prof_img = models.ImageField(upload_to='images/', verbose_name='プロフィール画像', null=True, blank=True)
     # 自己紹介文
@@ -86,7 +89,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     class Meta:
