@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # 作ったアプリケーション
     'user',
+    'idea',
     # サードパーティーのライブラリ
     'allauth',
     'allauth.account',

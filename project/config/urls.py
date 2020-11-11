@@ -36,6 +36,8 @@ urlpatterns = [
     path('docs/', include_docs_urls(title=API_TITLE)),
     # 各urlにどのAPIが対応しているか見ることができる(そのまま使ったらエラーが出てしまうので初めて使うときは高山に言っていただけると)
     path('swagger-docs/', schema_view),
+    # ideaへのアクセス
+    path('api/v2/', include('idea_api.urls')),
 ]
 
 # 画像をアップロードするための設定
