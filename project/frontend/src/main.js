@@ -1,8 +1,12 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router'
+import store from './store'
 
-Vue.config.productionTip = false
+import TheHeader from '@/components/UI/TheHeader.vue'
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+const app = createApp(App);
+app.component('TheHeader', TheHeader);
+app.use(store);
+app.use(router);
+app.mount('#app');
