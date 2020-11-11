@@ -8,7 +8,6 @@ from multiselectfield import MultiSelectField
 # Create your models here.
 
 class UserManager(UserManager):
-    # usernameではなくemailでの認証ができるように設定
     #if not username:
     #    raise ValueError('ユーザー名は必須項目です')
 

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from user.models import CustomUser, SKILL_CHOICES
 
 class UserSerializer(serializers.ModelSerializer):
-    username = None
+    # username = None
     skills = serializers.MultipleChoiceField(choices=SKILL_CHOICES, allow_blank=True)
 
     class Meta:
