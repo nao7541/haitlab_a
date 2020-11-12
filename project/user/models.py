@@ -41,6 +41,11 @@ SKILL_CHOICES = (
     ('英語', '英語'),
     ('マーケティング', 'マーケティング'),
 )
+class Tag(models.Model):
+    name = models.CharField('タグ名', max_length=20)
+
+    def __str__(self):
+        return self.name
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     # ユーザーのID (idのみだとわかりにくかったため、変更)
