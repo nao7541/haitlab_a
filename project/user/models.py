@@ -42,12 +42,6 @@ SKILL_CHOICES = (
     ('マーケティング', 'マーケティング'),
 )
 
-class Tag(models.Model):
-    name = models.CharField('タグ名', max_length=20)
-
-    def __str__(self):
-        return self.name
-
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     # ユーザーのID (idのみだとわかりにくかったため、変更)
     user_id = models.AutoField(primary_key=True, verbose_name="ユーザーID")
