@@ -49,7 +49,9 @@ class Tag(models.Model):
         return self.name
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-        # ユーザー名
+    # ユーザーのID (idのみだとわかりにくかったため、変更)
+    user_id = models.AutoField(primary_key=True, verbose_name="ユーザーID")
+    # ユーザー名
     username = models.CharField(max_length=20, verbose_name='ユーザー名', unique=True)
     # メールアドレス
     email = models.EmailField('メールアドレス', unique=True)
