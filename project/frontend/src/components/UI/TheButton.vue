@@ -19,6 +19,7 @@ button {
     background-color: #ffffff;
     padding: 1rem 3rem;
     outline: none;
+    cursor: pointer;
 }
 
 button:focus {
