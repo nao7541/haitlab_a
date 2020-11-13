@@ -16,8 +16,7 @@
                     <input type="password" name="password">
                 </div>
                 <TheButton text="Submit" class="submit"/>
-                <div class="form-control forget">
-                    <a href="#">forget password?</a>
+                <div class="forget">
                 </div>
                 <div class="or">
                     <p>OR</p>
@@ -95,16 +94,6 @@ form button {
     transition: all .25s ease-in;
     border: 1px solid #ffe0a7;
     background-color: #ffe0a7;
-}
-
-.form-control a {
-    text-decoration: none;
-    color: #a7a7a7;
-    line-height: 2rem;
-}
-
-.form-control a:hover {
-    color:  #ffbb3c;
 }
 
 .forget {
