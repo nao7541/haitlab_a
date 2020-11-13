@@ -10,7 +10,6 @@ class UserViewset(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = CustomUser.objects.all()
 """
-
 class UserList(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
