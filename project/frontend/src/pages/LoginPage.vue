@@ -15,7 +15,7 @@
                         <div class="form-control">
                             <input type="password" id="password" name="password" placeholder="password">
                         </div>
-                        <TheButton @click="acceptUser" text="新規登録"></TheButton>
+                        <TheButton @click="acceptUser" text="ログイン"></TheButton>
                     </div>
                     <div class="ref-registration">
                         <div class="form-control">
