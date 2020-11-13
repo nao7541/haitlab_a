@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # 作ったアプリケーション
     'user',
+<<<<<<< HEAD
     'apiv1',
+=======
+    'idea',
+>>>>>>> idea_kamino
     # サードパーティーのライブラリ
     'allauth',
     'allauth.account',
@@ -162,6 +166,7 @@ AUTH_USER_MODEL = 'user.CustomUser'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 #ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
+<<<<<<< HEAD
 ACCOUNT_USERNAME_REQUIRED = True
 
 # jwt認証のための設定
@@ -169,3 +174,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30)
 }
+=======
+ACCOUNT_USERNAME_REQUIRED = False
+>>>>>>> idea_kamino

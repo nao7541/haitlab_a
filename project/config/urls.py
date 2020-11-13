@@ -37,8 +37,13 @@ urlpatterns = [
     path('docs/', include_docs_urls(title=API_TITLE)),
     # 各urlにどのAPIが対応しているか見ることができる(そのまま使ったらエラーが出てしまうので初めて使うときは高山に言っていただけると)
     path('swagger-docs/', schema_view),
+<<<<<<< HEAD
     # rest-authは消しておく
     # path('api/v1/rest-auth/', include('rest_auth.urls')),
+=======
+    # ideaへのアクセス
+    path('api/v1/', include('idea_api.urls')),
+>>>>>>> idea_kamino
 ]
 
 # 画像をアップロードするための設定
