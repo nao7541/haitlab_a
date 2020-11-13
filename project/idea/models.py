@@ -34,8 +34,12 @@ class PostIdea(models.Model):
 # )
 
 class RequiredSkill(models.Model):
+    class Meta:
+        db_table = "Required_Skill"
+
     idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE)
     idea_skills = models.IntegerField(null=True, blank=True)
+    idea_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
 
     def __str__(self):
         return str(self.idea_id)
@@ -43,18 +47,18 @@ class RequiredSkill(models.Model):
 
 
 
-class Reply(models.Model):
+class Comment(models.Model):
     class Meta:
-        db_table = "Reply"
+        db_table = "Comment"
 
-    # どの投稿に対してリプライを送ったか (自動生成されるkeyに対して外部キー設定)
+    # どの投稿に対してコメントを送ったか (自動生成されるkeyに対して外部キー設定)
     idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name="アイデアID")
-    # リプライを送ったユーザ
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="リプライユーザ")
-    # リプライを送った日時
-    reply_date = models.DateField(default=timezone.now(), verbose_name="リプライ日時")
-    # リプライ
-    reply = models.TextField(max_length=255, verbose_name="リプライ")
+    # コメントを送ったユーザ
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="コメントユーザ")
+    # コメントを送った日時
+    comment_date = models.DateField(default=timezone.now(), verbose_name="コメント日時")
+    # コメント
+    comment = models.TextField(max_length=255, verbose_name="コメント")
 
     def __str__(self):
         return str(self.user_id) + "to" + str(self.post_id)
