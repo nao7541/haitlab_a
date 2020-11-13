@@ -13,7 +13,8 @@
 }
 
 html {
-    font-family: 'Kosugi Maru', sans-serif;
+    font-family: 'Noto Serif JP', serif;
+    /* font-family: 'Kosugi Maru', sans-serif; */
 }
 
 body {
