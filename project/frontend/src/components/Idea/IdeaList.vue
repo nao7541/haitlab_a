@@ -2,7 +2,7 @@
     <div class="idea-list">
         <IdeaElement
             v-for="idea in ideas"
-            :key="idea.id"
+            :key="idea.idea_id"
             :idea_id="idea.idea_id"
             :user_id="idea.user_id"
             :title="idea.idea_title"
