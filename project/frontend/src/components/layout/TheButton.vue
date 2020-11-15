@@ -10,6 +10,7 @@ export default {
 
 <style scoped>
 button {
+    width: 100%;
     font-size: 16px;
     font-weight: bold;
     color: #000;

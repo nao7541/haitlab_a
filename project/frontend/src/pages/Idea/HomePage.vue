@@ -1,7 +1,7 @@
 <template>
     <div id="home-page">
         <div class="sidebar">
-            <h1>sidebar</h1>
+            <SearchSetting/>
         </div>
         <div class="main-content">
             <IdeaList :ideas="ideas"/>
@@ -10,10 +10,12 @@
 </template>
 
 <script>
-import IdeaList from '../components/Ideas/IdeaList.vue'
+import IdeaList from '@/components/Idea/IdeaList.vue';
+import SearchSetting from '@/components/Idea/SearchSetting.vue';
 
 export default {
     components: {
+        SearchSetting,
         IdeaList,
     },
     data() {
@@ -21,29 +23,29 @@ export default {
             users: [
                 {
                     user_id: 0,
-                    username: '田中進',
-                    intro: '田中進です。よろしくお願いします。',
+                    username: 'Tanaka',
+                    intro: '田中です。よろしくお願いします。',
                     univ_name: 'Hait大学',
                     major: '情報学部',
-                    prof_img: '@/assets/user.png',
+                    prof_img: '../assets/images/avatar1.png',
                     contact: 'tanaka@example.com',
                 },
                 {
                     user_id: 1,
-                    username: '山田太郎',
-                    intro: '山田太郎です。よろしくお願いします。',
+                    username: 'Yamada',
+                    intro: '山田です。よろしくお願いします。',
                     univ_name: 'Hait大学',
-                    major: '経済学部',
-                    prof_img: '@/assets/user.png',
+                    major: 'デザイン学科',
+                    prof_img: '../assets/images/avatar2.png',
                     contact: 'yamada@example.com',
                 },
                 {
                     user_id: 2,
-                    username: '佐藤昇',
-                    intro: '佐藤昇です。よろしくお願いします。',
+                    username: 'Satoh',
+                    intro: '佐藤です。よろしくお願いします。',
                     univ_name: 'Hait大学',
-                    major: '文学部',
-                    prof_img: '@/assets/user.png',
+                    major: '理学部',
+                    prof_img: '../assets/images/avatar3.png',
                     contact: 'sato@example.com',
                 },
             ],
@@ -92,14 +94,20 @@ export default {
                 },
             ]
         }
-    }
+    },
+    provide() {
+        return {
+            users: this.users,
+            ideas: this.ideas,
+        };
+    },
 }
 </script>
 
 <style scoped>
 #home-page {
-    width: 80%;
-    height: 100vh;
+    width: 60%;
+    background-color: #fff;
     margin: 2rem auto;
     display: grid;
     grid-template-columns: 1fr 2.5fr;
@@ -108,12 +116,10 @@ export default {
 
 .sidebar {
     grid-area: sidebar;
-    background-color: #fff;
 }
 
 .main-content {
     grid-area: main-content;
-    background-color: #fff;
 }
 
 
