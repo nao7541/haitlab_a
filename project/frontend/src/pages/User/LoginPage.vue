@@ -1,35 +1,32 @@
 <template>
     <div id="signup-page">
-        <BaseCard class="base-card">
+        <BaseCard>
             <form @submit.prevent="acceptUser">
-                <h1>Sign Up</h1>
+                <h1>Log In</h1>
                 <div class="form-control">
                     <p>Username</p>
                     <input type="text" name="username">
-                </div>
-                <div class="form-control">
-                    <p>Email</p>
-                    <input type="email" name="email">
                 </div>
                 <div class="form-control">
                     <p>Password</p>
                     <input type="password" name="password">
                 </div>
                 <TheButton text="Submit" class="submit"/>
-                <div class="forget">
+                <div class="form-control forget">
+                    <a href="#">forget password?</a>
                 </div>
                 <div class="or">
                     <p>OR</p>
                 </div>
-                <TheButton text="SignUp with Facebook" class="facebook"/>
-                <TheButton text="SignUp with Twitter" class="twitter"/>
+                <TheButton text="LogIn with Facebook" class="facebook"/>
+                <TheButton text="LogIn with Twitter" class="twitter"/>
             </form>
         </BaseCard>
     </div>
 </template>
 
 <script>
-import BaseCard from '@/components/BaseCard.vue';
+import BaseCard from '@/components/UI/BaseCard.vue';
 
 export default {
     components: {
@@ -45,7 +42,7 @@ export default {
 
 <style scoped>
 
-.base-card {
+.card {
     max-width: 30rem;
 }
 
@@ -94,6 +91,16 @@ form button {
     transition: all .25s ease-in;
     border: 1px solid #ffe0a7;
     background-color: #ffe0a7;
+}
+
+.form-control a {
+    text-decoration: none;
+    color: #a7a7a7;
+    line-height: 2rem;
+}
+
+.form-control a:hover {
+    color:  #ffbb3c;
 }
 
 .forget {

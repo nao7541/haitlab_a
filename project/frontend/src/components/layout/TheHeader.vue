@@ -1,8 +1,9 @@
 <template>
     <header>
-        <h1><router-link to="/home">{{ title }}</router-link></h1>
+        <h1><router-link to="/ideas">{{ title }}</router-link></h1>
         <nav>
             <ul class="nav-links">
+                <li><router-link class="post" to="/post">Post</router-link></li>
                 <li><router-link to="/signup">Sign up</router-link></li>
                 <li><router-link to="/login">Log in</router-link></li>
             </ul>
@@ -51,6 +52,19 @@ li, a {
 .nav-links li a:hover,
 .nav-links li a:active,
 .nav-links a.router-link-active {
-    color: rgb(152, 252, 255);
+    color: #ffbb3c;
+}
+
+.post {
+    color: #000000 !important;
+    padding: .5rem 2rem;
+    background-color: #ffe0a7;
+    border-radius: 4px;
+}
+
+.post:hover,
+.post:active {
+    color: #000000 !important;
+    background-color: #ffbb3c;
 }
 </style>
