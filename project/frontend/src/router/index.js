@@ -1,19 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-// pages
-import HomePage from '@/pages/HomePage.vue';
-import SignupPage from '@/pages/SignupPage.vue';
-import LoginPage from '@/pages/LoginPage.vue';
-import UserProfilePage from '@/pages/UserProfilePage.vue';
-import IdeaPostPage from '@/pages/IdeaPostPage.vue';
-import IdeaDetailPage from '@/pages/IdeaDetailPage.vue';
+//// impport page components
+// Idea pages
+import HomePage from '@/pages/Idea/HomePage.vue';
+import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
+import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
+// User pages
+import SignupPage from '@/pages/User/SignupPage.vue';
+import LoginPage from '@/pages/User/LoginPage.vue';
+import UserProfilePage from '@/pages/User/UserProfilePage.vue';
+import MessageListPage from '@/pages/User/MessageListPage.vue';
+import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
+// Event pages
+import EventListPage from '@/pages/Event/EventListPage.vue';
 
 const routes = [
     {
-        // ホーム画面
-        name: 'home',
-        path: '/home',
-        component: HomePage,
+        // アイデア詳細画面
+        name: 'ideas',
+        path: '/ideas',
+        component: HomePage, // 表示する画面はHomePageと同じ
+    },
+    {
+        name: 'idea',
+        path: '/ideas/:ideaId',
+        component: IdeaDetailPage,
+        props: true,
+    },
+    {
+        // アイデア投稿画面
+        name: 'post',
+        path: '/post',
+        component: IdeaPostPage,
+        meta: { requiresAuth: true },
     },
     {
         // サインアップ画面
@@ -30,56 +49,35 @@ const routes = [
     {
         // ユーザー画面
         name: 'userprofile',
-        path: '/:username',
+        path: '/:userId',
         component: UserProfilePage,
+        props: true,
         meta: { requiresAuth: true }, // ログイン後にのみ参照できるページはmetaタグとしてrequiresAuthを付ける
     },
     {
-        // アイデア投稿画面
-        name: 'post',
-        path: '/post',
-        component: IdeaPostPage,
+        // メッセージ一覧画面
+        name: 'messages',
+        path: '/messages',
+        component: MessageListPage,
         meta: { requiresAuth: true },
-    },
-    {
-        // アイデア詳細画面
-        name: 'ideas',
-        path: '/ideas',
-        component: HomePage, // 表示する画面はHomePageと同じ
         children: [
             {
-                name: 'idea',
-                path: '/:ideaId',
-                component: IdeaDetailPage,
-                props: true,
+                name: 'messageDisplay',
+                path: 'username',
+                component: MessageDisplayPage,
             }
         ]
-    },
-    {
-        // メッセージ一覧画面
-        // name: 'messages',
-        // path: '/messages',
-        // component: null,
-        // meta: { requiresAuth: true },
-    },
-    {
-        // メッセージ詳細画面
-        // TODO: urlをどうすればよいかわからない
-        // 今のままだと他のユーザーも見れる
-        // path: '/messages/:username',
-        // component: null,
-        // meta: { requiresAuth: true },
     },
     {
         // イベント一覧画面
         name: 'events',
         path: '/events',
-        component: null,
+        component: EventListPage,
     },
     {
         // それ以外はホーム画面に遷移
         path: '/:notFound(.*)',
-        redirect: '/home'
+        redirect: '/ideas'
     }
 ];
 
