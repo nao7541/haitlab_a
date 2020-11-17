@@ -46,11 +46,12 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'rest_framework_swagger',
-    'multiselectfield',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
