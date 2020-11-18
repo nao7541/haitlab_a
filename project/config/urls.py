@@ -17,11 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from apiv1.views import TwitterLogin
+from apiv1.views import TwitterLogin, FacebookLogin
 
 API_TITLE = 'Application API'
 
-#schema_view = get_swagger_view(title=API_TITLE)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,7 +30,8 @@ urlpatterns = [
     # ユーザー登録
     path('api/v1/registration/', include('rest_auth.registration.urls')),
     # ソーシャルアカウントでのログイン
-    path('login/twitter/', TwitterLogin.as_view(), name='twitter_login'),
+    path('api/v1/login/twitter/', TwitterLogin.as_view(), name='twitter_login'),
+    path('api/v1/login/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('accounts/', include('allauth.urls'), name='socialaccount_signup'),
 
 ]
