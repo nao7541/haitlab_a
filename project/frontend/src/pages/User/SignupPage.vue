@@ -1,23 +1,22 @@
 <template>
     <div id="signup-page">
         <BaseCard>
-            <form @submit.prevent="acceptUser">
+            <form @submit.prevent="signUp">
                 <h1>Sign Up</h1>
                 <div class="form-control">
-                    <p>Username</p>
-                    <input type="text" name="username">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" v-model.trim="username.val">
                 </div>
                 <div class="form-control">
-                    <p>Email</p>
-                    <input type="email" name="email">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" v-model.trim="mailAddress.val">
                 </div>
                 <div class="form-control">
-                    <p>Password</p>
-                    <input type="password" name="password">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" v-model="password.val">
                 </div>
                 <TheButton text="Submit" class="submit"/>
-                <div class="forget">
-                </div>
+                <div class="line"></div>
                 <div class="or">
                     <p>OR</p>
                 </div>
@@ -35,9 +34,56 @@ export default {
     components: {
         BaseCard,
     },
+    data() {
+        return {
+            username: {
+                val: '',
+                isValid: true,
+            },
+            mailAddress: {
+                val: '',
+                isValid: true,
+            },
+            password: {
+                val: '',
+                isValid: true,
+            },
+            isFormValid: true,
+        };
+    },
     methods: {
-        acceptUser() {
-            this.$router.push('/ideas');
+        formValidation() {
+            this.isFormValid = true;
+
+            if (this.username.val === '') {
+                this.username.isValid = false;
+                this.isFormValid = false;
+            }
+
+            if (this.mailAddress.val === '') {
+                this.mailAddress.isValid = false;
+                this.isFormValid = false;
+            }
+
+            if (this.password.val === '') {
+                this.password.isValid = false;
+                this.isFormValid = false;
+            }
+        },
+        signUp() {
+            this.formValidation();
+
+            if (!this.isFormValid) {
+                return;
+            }
+
+            const userData = {
+                username: this.username.val,
+                mailAddress: this.mailAddress.val,
+                password: this.password.val,
+            };
+
+            console.log(userData);
         }
     }
 }
@@ -62,8 +108,9 @@ form h1 {
     margin-bottom: 1rem;
 }
 
-.form-control p {
+.form-control label {
     text-align: left;
+    display: block;
     margin: 0;
     font-weight: bold;
 }
@@ -96,7 +143,7 @@ form button {
     background-color: #ffe0a7;
 }
 
-.forget {
+.line {
     padding-bottom: 1rem;
     border-bottom: 1px solid #a7a7a7;
 }
