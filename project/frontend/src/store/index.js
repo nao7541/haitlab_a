@@ -1,45 +1,29 @@
 import { createStore } from 'vuex';
 
-const authModule = {
-    namespaced: true,
+import IdeaModule from './modules/Idea/index.js';
+import UserModule from './modules/User/index.js';
+
+const store = createStore({
+    modules: {
+        idea: IdeaModule,
+        user: UserModule,
+    },
     state() {
         return {
-            username: '',
-            isLoggedIn: false,
+            skills: [
+                'programmer',
+                'engineer',
+                'design',
+                'business',
+                'idea / planning',
+            ]
         };
     },
     getters: {
-        username(state) {
-            return state.username;
-        },
-        isLoggedIn(state) {
-            return state.isLoggedIn;
+        skills(state) {
+            return state.skills;
         }
-    },
-    mutations: {
-        set(state, payload) {
-            state.username = payload.user.username;
-            state.isLoggedIn = true;
-        },
-        clear(state) {
-            state.username = '';
-            state.isLoggedIn = false;
-        }
-    },
-    actions: {
-        // login(context, payload) {
-            
-        // },
-        logout(context) {
-            localStorage.removeItem('access');
-            context.commit('clear');
-        },
-
     }
-};
+})
 
-export default createStore({
-    modules: {
-        auth: authModule
-    }
-});
+export default store;
