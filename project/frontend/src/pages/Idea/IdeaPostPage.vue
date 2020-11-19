@@ -3,17 +3,18 @@
         <BaseCard>
             <form @submit.prevent="submitPost">
                 <div class="form-control">
-                    <p>Title</p>
-                    <input type="text" id="title" name="title">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" v-model="title">
                 </div>
                 <div class="form-control">
-                    <p>Overview</p>
-                    <textarea name="overview" rows="10" cols="33"></textarea>
+                    <label for="overview">Overview</label>
+                    <textarea name="overview" rows="10" cols="33" v-model="overview"></textarea>
                 </div>
                 <div class="form-control">
-                    <p>Required Skills</p>
+                    <h3>Required Skills</h3>
                     <TheCheckBox
-                        v-for="skill in skillsList"
+                        v-for="skill in skills"
+                        v-model="requiredSkills"
                         :key="skill"
                         :value="skill"
                     ></TheCheckBox>
@@ -33,111 +34,88 @@ export default {
     },
     data() {
         return {
-            requiredSkill: [
-                {
-                    skill_id: 0,
-                    idea_id: 0,
-                    skill_name: 'business'
-                },
-                {
-                    skill_id: 1,
-                    idea_id: 0, 
-                    skill_name: 'design',
-                },
-                {
-                    skill_id: 2,
-                    idea_id: 1,
-                    skill_name: 'ios app'
-                },
-                {
-                    skill_id: 3,
-                    idea_id: 2, 
-                    skill_name: 'design',
-                },   
-                {
-                    skill_id: 4,
-                    idea_id: 3,
-                    skill_name: 'ios app'
-                },
-                {
-                    skill_id: 5,
-                    idea_id: 3, 
-                    skill_name: 'android app',
-                },
-                {
-                    skill_id: 6,
-                    idea_id: 4,
-                    skill_name: 'business'
-                },
-                {
-                    skill_id: 7,
-                    idea_id: 5, 
-                    skill_name: 'business',
-                },
-            ],
-            skillsList: [],
+            title: '',
+            overview: '',
+            requiredSkills: []
+        };
+    },
+    computed: {
+        skills() {
+            return this.$store.getters['idea/skills'];
         }
     },
     methods: {
         submitPost() {
+            // ideaとrequiredSkillsは別々のテーブルに格納する。
+            
+            // register new idea
+            const ideaData = {
+                title: this.title,
+                overview: this.overview,
+            };
+            this.$store.dispatch('idea/registerIdea', ideaData);
 
+            // register new required skills
+            // ---- step 1 ---- //
+            // get idea id 
+            
+            // ---- step 2 ---- //
+            // create requried skill data
+            this.requiredSkills.foreach( (skill) => {
+                const skillData = {
+                    id: '',
+                    skill: skill
+                };
+                
+                this.$store.dispatch('idea/registerRequiredSkill', skillData);
+            })
         },
-        getUniqSkills() {
-            const uniqList = [];
-            for (const skill of this.requiredSkill) {
-                if (!uniqList.includes(skill.skill_name)) {
-                    uniqList.push(skill.skill_name);
-                }
-            }
-            return uniqList;
-        }
     },
-    created() {
-        this.skillsList = this.getUniqSkills();
-    }
 }
 </script>
 
 <style scoped>
 .card {
-    width: 40%;
+    width: 60%;
+    max-width: 40rem;
 }
 
 .form-control {
     margin-bottom: 1rem;
 }
 
+.form-control h3 {
+    text-align: left;
+}
+
 form {
     padding: 2rem;
 }
 
-form p {
-    text-align: left;
+form label {
+    text-align: left;;
     font-size: 20px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: .25rem;
 }
 
 input, textarea {
+    font: inherit;
+    font-size: 18px;
+    display: block;
     width: 100%;
     border-radius: 4px;
     border: 1px solid #000;
-    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.25);
-    padding: .75rem .5rem;
-}
-
-input {
-    font-size: 20px;
-}
-
-textarea {
-    font-size: 16px;
+    outline: none;
+    padding: .3rem .5rem;
 }
 
 input:focus,
 textarea:focus {
     transition: all .5s ease;
-    border: 1px solid #df9203;
+    border-color: #ad7100;
     background-color: #ffe1a9;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .check-box {
@@ -146,18 +124,17 @@ textarea:focus {
 
 form button {
     margin-top: 2rem;
-    width: 50%;
-    border: 1px solid #ffeece;
+    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 form button:hover {
-    border: 1px solid #ffe0a7;
+    border-color: #ffe0a7;
     background-color: #ffe0a7;
 }
 
 form button:focus {
-    border: 1px solid #ffca67;
+    border-color: #ffca67;
     background-color: #ffca67;
 }
 
