@@ -2,27 +2,27 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, PermissionsMixin
 from django.utils import timezone
-# 複数選択を可能にするための設定
-from multiselectfield import MultiSelectField
 
 # Create your models here.
 
 class UserManager(UserManager):
-    # usernameではなくemailでの認証ができるように設定
+    #if not username:
+    #    raise ValueError('ユーザー名は必須項目です')
 
-    def _create_user(self, email, password, **extra_fields):
+    def _create_user(self, username, email, password, **extra_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        username = self.model.normalize_username(username)
+        user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email=None, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(username, email, password, **extra_fields)
 
-    def create_superuser(self, email=None, password=None, **extra_fields):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -31,26 +31,16 @@ class UserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(username, email, password, **extra_fields)
 
-SKILL_CHOICES = (
-    ('デザイン', 'デザイン'),
-    ('エンジニア', 'エンジニア'),
-    ('英語', '英語'),
-    ('マーケティング', 'マーケティング'),
-)
-
-class Tag(models.Model):
-    name = models.CharField('タグ名', max_length=20)
-
-    def __str__(self):
-        return self.name
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # ユーザーのID (idのみだとわかりにくかったため、変更)
+    user_id = models.AutoField(primary_key=True, verbose_name="ユーザーID")
+    # ユーザー名
+    username = models.CharField(max_length=20, verbose_name='ユーザー名', unique=True)
     # メールアドレス
     email = models.EmailField('メールアドレス', unique=True)
-    # ユーザー名
-    username = models.CharField(max_length=20, verbose_name='ユーザー名')
     # プロフィール画像
     prof_img = models.ImageField(upload_to='images/', verbose_name='プロフィール画像', null=True, blank=True)
     # 自己紹介文
@@ -59,10 +49,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     univ_name = models.CharField(verbose_name='大学名', max_length=30)
     # 専攻
     major = models.CharField(verbose_name='学部・学科・専攻', max_length=50, null=True, blank=True)
-    # 持っているスキル
-    # skills = models.ManyToManyField(Tag, verbose_name='スキル', null=True, blank=True)
-    #skills = models.CharField(choices=SKILL_CHOICES, max_length=30, null=True, blank=False)
-    skills = MultiSelectField(choices=SKILL_CHOICES, max_choices=5, max_length=30, null=True, blank=True)
     # 連絡先
     contact = models.EmailField(verbose_name='連絡先', max_length=255, null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -86,7 +72,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     class Meta:
@@ -96,3 +82,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
+
+class Tag(models.Model):
+    # タグのID
+    tag_id = models.AutoField(primary_key=True, verbose_name='タグID')
+    # そのタグを持つユーザーのID
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    # タグの名前
+    tag_name = models.CharField(max_length=20, verbose_name='タグ名')
+
+    def __str__(self):
+        return self.tag_name

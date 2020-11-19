@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     # 作ったアプリケーション
     'user',
     'idea',
+    'apiv1',
     # サードパーティーのライブラリ
     'allauth',
     'allauth.account',
@@ -50,7 +52,6 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_framework_swagger',
     'multiselectfield',
-
 ]
 
 MIDDLEWARE = [
@@ -138,8 +139,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        #'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication', # 変更
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
 }
@@ -156,7 +158,13 @@ MEDIA_URL = '/media/'
 
 # カスタムユーザーの設定を追加
 AUTH_USER_MODEL = 'user.CustomUser'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+#ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+
+""" # jwt認証のための設定
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30)
+} """

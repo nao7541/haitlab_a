@@ -1,8 +1,16 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router'
+import store from './store'
 
-Vue.config.productionTip = false
+import TheHeader from '@/components/layout/TheHeader.vue';
+import TheButton from '@/components/layout/TheButton.vue';
+import TheCheckBox from '@/components/layout/TheCheckBox.vue';
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+const app = createApp(App);
+app.component('TheHeader', TheHeader);
+app.component('TheButton', TheButton);
+app.component('TheCheckBox', TheCheckBox);
+app.use(store);
+app.use(router);
+app.mount('#app');

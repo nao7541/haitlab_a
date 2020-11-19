@@ -3,10 +3,10 @@ from rest_framework import permissions
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
 
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, CustomUser):
         # Read-only permissions are allowed for any request
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Write permissions are only allowed to the author of a post
-        return obj.username == request.user
+        # カスタムユーザーを使用したため、変更を加える。
+        return CustomUser.username == request.user.username
