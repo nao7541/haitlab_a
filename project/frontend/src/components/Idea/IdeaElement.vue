@@ -38,48 +38,6 @@ export default {
     },
     data() {
         return {
-            requiredSkill: [
-                {
-                    skill_id: 0,
-                    idea_id: 0,
-                    skill_name: 'business'
-                },
-                {
-                    skill_id: 1,
-                    idea_id: 0, 
-                    skill_name: 'design',
-                },
-                {
-                    skill_id: 2,
-                    idea_id: 1,
-                    skill_name: 'ios app'
-                },
-                {
-                    skill_id: 3,
-                    idea_id: 2, 
-                    skill_name: 'design',
-                },   
-                {
-                    skill_id: 4,
-                    idea_id: 3,
-                    skill_name: 'ios app'
-                },
-                {
-                    skill_id: 5,
-                    idea_id: 3, 
-                    skill_name: 'android app',
-                },
-                {
-                    skill_id: 6,
-                    idea_id: 4,
-                    skill_name: 'business'
-                },
-                {
-                    skill_id: 7,
-                    idea_id: 5, 
-                    skill_name: 'business',
-                },
-            ],
             skillsList: [],
         };
     },
@@ -89,17 +47,19 @@ export default {
         },
         userLink() {
             return { name: 'userprofile', params: { userId: this.user_id }}
+        },
+        requiredSkills() {
+            return this.$store.getters['idea/requiredSkills'];
         }
     },
     props: ['idea_id', 'user_id', 'title', 'content', 'date'],
-    inject: ['users'],
     methods: {
         moveDetail() {
             this.$router.push('/ideas/' + this.idea_id);
         }
     },
     created() {
-        for (const skill of this.requiredSkill) {
+        for (const skill of this.requiredSkills) {
             if (skill.idea_id == this.idea_id) {
                 this.skillsList.push(skill);
             }

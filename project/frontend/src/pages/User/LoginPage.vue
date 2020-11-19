@@ -1,15 +1,15 @@
 <template>
     <div id="signup-page">
         <BaseCard>
-            <form @submit.prevent="acceptUser">
+            <form @submit.prevent="logIn">
                 <h1>Log In</h1>
                 <div class="form-control">
-                    <p>Username</p>
-                    <input type="text" name="username">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" v-model.trim="username">
                 </div>
                 <div class="form-control">
-                    <p>Password</p>
-                    <input type="password" name="password">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" v-model="password">
                 </div>
                 <TheButton text="Submit" class="submit"/>
                 <div class="form-control forget">
@@ -32,8 +32,14 @@ export default {
     components: {
         BaseCard,
     },
+    data() {
+        return {
+            username: '',
+            password: '',
+        };
+    },
     methods: {
-        acceptUser() {
+        logIn() {
             this.$router.push('/ideas');
         }
     }
@@ -59,7 +65,8 @@ form h1 {
     margin-bottom: 1rem;
 }
 
-.form-control p {
+.form-control label {
+    display: block;
     text-align: left;
     margin: 0;
     font-weight: bold;

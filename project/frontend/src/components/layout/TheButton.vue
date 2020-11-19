@@ -12,6 +12,7 @@ export default {
 button {
     width: 100%;
     font-size: 16px;
+    font: inherit;
     font-weight: bold;
     color: #000;
     border-radius: 8px;
