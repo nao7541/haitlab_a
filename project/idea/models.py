@@ -12,6 +12,8 @@ class PostIdea(models.Model):
    idea_id = models.AutoField(primary_key=True, verbose_name="アイデアID")
    # 投稿したユーザのID
    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="アイデア投稿ユーザ")
+   # タイトル
+   title = models.CharField(verbose_name='タイトル', max_length=100)
    # 投稿 文字列
    idea_str = models.TextField(max_length=1000, blank=True, null=True, verbose_name="投稿文章")
    # 投稿 画像
@@ -25,21 +27,13 @@ class PostIdea(models.Model):
        return "No. " + str(self.idea_id)
 
 
-# 整数で代用
-# SKILL_CHOICES = (
-#     ('デザイン', 1),
-#     ('エンジニア', 2),
-#     ('英語', 3),
-#     ('マーケティング', 4),
-# )
-
 class RequiredSkill(models.Model):
     class Meta:
         db_table = "Required_Skill"
 
     idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE)
     idea_skills = models.IntegerField(null=True, blank=True)
-    idea_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
+    skill_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
 
     def __str__(self):
         return str(self.idea_id)
