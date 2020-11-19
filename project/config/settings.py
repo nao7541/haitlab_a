@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # 作ったアプリケーション
     'user',
+    'idea',
     'apiv1',
     # サードパーティーのライブラリ
     'allauth',
@@ -166,4 +167,5 @@ ACCOUNT_USERNAME_REQUIRED = True
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30)
+
 } """
