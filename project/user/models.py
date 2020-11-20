@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # ユーザー名
     username = models.CharField(max_length=20, verbose_name='ユーザー名', unique=True)
     # メールアドレス
-    email = models.EmailField('メールアドレス', unique=True)
+    email = models.EmailField('メールアドレス')
     # プロフィール画像
     prof_img = models.ImageField(upload_to='images/', verbose_name='プロフィール画像', null=True, blank=True)
     # 自己紹介文

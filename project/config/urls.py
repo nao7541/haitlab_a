@@ -17,13 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework.schemas import get_schema_view
-from rest_framework.documentation import include_docs_urls
-from rest_framework_swagger.views import get_swagger_view
+from apiv1.views import TwitterLogin, FacebookLogin
 
 API_TITLE = 'Application API'
 
-schema_view = get_swagger_view(title=API_TITLE)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,13 +29,11 @@ urlpatterns = [
     path('api/v1/', include('rest_auth.urls')),
     # ユーザー登録
     path('api/v1/registration/', include('rest_auth.registration.urls')),
-    path('docs/', include_docs_urls(title=API_TITLE)),
-    # 各urlにどのAPIが対応しているか見ることができる(そのまま使ったらエラーが出てしまうので初めて使うときは高山に言っていただけると)
-    path('swagger-docs/', schema_view),
-    # rest-authは消しておく
-    # path('api/v1/rest-auth/', include('rest_auth.urls')),
-    # ideaへのアクセス
-    path('api/v1/', include('idea_api.urls')),
+    # ソーシャルアカウントでのログイン
+    path('api/v1/login/twitter/', TwitterLogin.as_view(), name='twitter_login'),
+    path('api/v1/login/facebook/', FacebookLogin.as_view(), name='fb_login'),
+    path('accounts/', include('allauth.urls'), name='socialaccount_signup'),
+
 ]
 
 # 画像をアップロードするための設定
