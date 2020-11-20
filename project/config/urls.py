@@ -33,7 +33,8 @@ urlpatterns = [
     path('api/v1/login/twitter/', TwitterLogin.as_view(), name='twitter_login'),
     path('api/v1/login/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('accounts/', include('allauth.urls'), name='socialaccount_signup'),
-
+    # ideaへのアクセス
+    path('api/v1/', include('idea_api.urls')),
 ]
 
 # 画像をアップロードするための設定
