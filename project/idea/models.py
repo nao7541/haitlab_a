@@ -13,7 +13,7 @@ class PostIdea(models.Model):
    # 投稿したユーザのID
    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="アイデア投稿ユーザ")
    # タイトル
-   title = models.CharField(verbose_name='タイトル', max_length=100)
+   title = models.CharField(default="Idea Title", max_length=100, verbose_name='タイトル')
    # 投稿 文字列
    idea_str = models.TextField(max_length=1000, blank=True, null=True, verbose_name="投稿文章")
    # 投稿 画像
@@ -21,7 +21,7 @@ class PostIdea(models.Model):
    # 投稿 動画
    idea_movie = models.FileField(upload_to='images/',  blank=True, null=True, verbose_name="投稿動画ファイル")
    # 投稿した日時
-   idea_date = models.DateField(default=timezone.now(), verbose_name="投稿日時")
+   idea_date = models.DateField(default=timezone.now, verbose_name="投稿日時")
 
    def __str__(self):
        return "No. " + str(self.idea_id)
@@ -45,7 +45,7 @@ class Comment(models.Model):
     # コメントを送ったユーザ
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="コメントユーザ")
     # コメントを送った日時
-    comment_date = models.DateField(default=timezone.now(), verbose_name="コメント日時")
+    comment_date = models.DateField(default=timezone.now, verbose_name="コメント日時")
     # コメント
     comment = models.TextField(max_length=255, verbose_name="コメント")
 
