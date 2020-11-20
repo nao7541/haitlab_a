@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 
 from .serializers import IdeaSerializer
-from idea.models import PostIdea, RequiredSkill, Reply
+from idea.models import PostIdea, RequiredSkill, Comment
 from user.models import CustomUser
 
 # Create your views here.
