@@ -82,7 +82,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
-
+    
+    #def __str__(self):
+    #    return self.user_id
 class Tag(models.Model):
     # タグのID
     tag_id = models.AutoField(primary_key=True, verbose_name='タグID')
@@ -92,4 +94,4 @@ class Tag(models.Model):
     tag_name = models.CharField(max_length=20, verbose_name='タグ名')
 
     def __str__(self):
-        return self.tag_name
+        return str(self.user_id)+ "_" + str(self.tag_name)
