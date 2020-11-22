@@ -1,7 +1,8 @@
 from rest_framework import viewsets, generics
 
 from user.models import CustomUser
-from .serializers import UserSerializer
+from idea.models import PostIdea, RequiredSkill, Comment
+from .serializers import UserSerializer, IdeaSerializer
 from .permissions import IsAuthorOrReadOnly
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
@@ -29,3 +30,11 @@ class TwitterLogin(SocialLoginView):
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
+
+class IdeaViewset(viewsets.ModelViewSet):
+    # 疑問点
+    # apiとしては複数のテーブルを参考にデータを取得している
+    # ここのquerysetにはどう複数指定するのか(テーブルの結合を自動でdjangoがしてくれる?)
+    queryset = PostIdea.objects.all()
+    serializer_class = IdeaSerializer
