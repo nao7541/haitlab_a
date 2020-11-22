@@ -3,27 +3,35 @@
         <BaseCard>
             <form @submit.prevent="signUp">
                 <h1>Sign Up</h1>
-                <div class="form-control">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" v-model.trim="username.val">
+                <div class="form-control" :class="{invalid: !username.isValid}">
+                    <label for="username">username</label>
+                    <p v-if="!username.isValid">username must be filled</p>
+                    <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
                 </div>
-                <div class="form-control">
+                <div class="form-control" :class="{invalid: !email.isValid}">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" v-model.trim="mailAddress.val">
+                    <p v-if="!email.isValid">email must be filled</p>
+                    <input type="email" id="email" name="email" v-model.trim="email.val" @blur="clearValidity('email')">
                 </div>
-                <div class="form-control">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" v-model="password.val">
+                <div class="form-control" :class="{invalid: !password1.isValid}">
+                    <label for="password1">Password</label>
+                    <p v-if="!password1.isValid">password1 must be filled</p>
+                    <input type="password" id="password1" name="password1" v-model="password1.val" @blur="clearValidity('password1')">
+                </div>
+                <div class="form-control" :class="{invalid: !password2.isValid}">
+                    <label for="password2">Password(Confirmation)</label>
+                    <p v-if="!password2.isValid">password2 must be filled</p>
+                    <input type="password" id="password2" name="password2" v-model="password2.val" @blur="clearValidity('password2')">
                 </div>
                 <TheButton text="Submit" class="submit"/>
-                <div class="line"></div>
-                <div class="or">
-                    <p>OR</p>
-                </div>
-                <TheButton text="SignUp with Facebook" class="facebook"/>
-                <TheButton text="SignUp with Twitter" class="twitter"/>
             </form>
-        </BaseCard>
+            <div class="line"></div>
+            <div class="or">
+                <p>OR</p>
+            </div>
+            <TheButton text="SignUp with Facebook" class="facebook"/>
+            <TheButton text="SignUp with Twitter" class="twitter"/>
+    </BaseCard>
     </div>
 </template>
 
@@ -40,11 +48,15 @@ export default {
                 val: '',
                 isValid: true,
             },
-            mailAddress: {
+            email: {
                 val: '',
                 isValid: true,
             },
-            password: {
+            password1: {
+                val: '',
+                isValid: true,
+            },
+            password2: {
                 val: '',
                 isValid: true,
             },
@@ -52,6 +64,9 @@ export default {
         };
     },
     methods: {
+        clearValidity(input) {
+            this[input].isValid = true;
+        },
         formValidation() {
             this.isFormValid = true;
 
@@ -60,13 +75,18 @@ export default {
                 this.isFormValid = false;
             }
 
-            if (this.mailAddress.val === '') {
-                this.mailAddress.isValid = false;
+            if (this.email.val === '') {
+                this.email.isValid = false;
                 this.isFormValid = false;
             }
 
-            if (this.password.val === '') {
-                this.password.isValid = false;
+            if (this.password1.val === '') {
+                this.password1.isValid = false;
+                this.isFormValid = false;
+            }
+
+            if (this.password2.val === '') {
+                this.password2.isValid = false;
                 this.isFormValid = false;
             }
         },
@@ -79,11 +99,12 @@ export default {
 
             const userData = {
                 username: this.username.val,
-                mailAddress: this.mailAddress.val,
-                password: this.password.val,
+                email: this.email.val,
+                password1: this.password1.val,
+                password2: this.password2.val,
             };
 
-            console.log(userData);
+            this.$store.dispatch('auth/signup', userData);
         }
     }
 }
@@ -93,19 +114,20 @@ export default {
 
 .card {
     max-width: 30rem;
-}
-
-form {
-    padding: .25rem 2rem;
+    padding: 2rem;
 }
 
 form h1 {
     font-size: 28px;
-    padding: 1rem 0;
 }
 
 .form-control {
     margin-bottom: 1rem;
+}
+
+.form-control p {
+    text-align: left;
+    font-size: 14px;
 }
 
 .form-control label {
@@ -126,10 +148,6 @@ form h1 {
 
 .form-control input:focus {
     border-bottom: 2px solid #ffb01e;
-}
-
-form button {
-    margin-bottom: 1rem;
 }
 
 .submit {
@@ -165,4 +183,7 @@ form button {
     background-color: #50ABF1;
 }
 
+.invalid label {
+    color: #ff4a4a;
+}
 </style>
