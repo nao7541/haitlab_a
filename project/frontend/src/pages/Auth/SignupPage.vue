@@ -2,7 +2,7 @@
     <div id="signup-page">
         <BaseCard>
             <form @submit.prevent="signUp">
-                <h1>Sign Up</h1>
+                <h1>Sign up</h1>
                 <div class="form-control" :class="{invalid: !username.isValid}">
                     <label for="username">username</label>
                     <p v-if="!username.isValid">username must be filled</p>
@@ -23,14 +23,14 @@
                     <p v-if="!password2.isValid">password2 must be filled</p>
                     <input type="password" id="password2" name="password2" v-model="password2.val" @blur="clearValidity('password2')">
                 </div>
-                <TheButton text="Submit" class="submit"/>
+                <BaseButton text="Submit" class="submit"/>
             </form>
             <div class="line"></div>
             <div class="or">
                 <p>OR</p>
             </div>
-            <TheButton text="SignUp with Facebook" class="facebook"/>
-            <TheButton text="SignUp with Twitter" class="twitter"/>
+            <BaseButton text="SignUp with Facebook" class="facebook"/>
+            <BaseButton text="SignUp with Twitter" class="twitter"/>
     </BaseCard>
     </div>
 </template>
@@ -66,6 +66,24 @@ export default {
     methods: {
         clearValidity(input) {
             this[input].isValid = true;
+        },
+        clearForm() {
+            this.username = {
+                val: '',
+                isValid: true,
+            };
+            this.email = {
+                val: '',
+                isValid: true,
+            };
+            this.password1 = {
+                val: '',
+                isValid: true,
+            };
+            this.password2 = {
+                val: '',
+                isValid: true,
+            };
         },
         formValidation() {
             this.isFormValid = true;
@@ -103,8 +121,13 @@ export default {
                 password1: this.password1.val,
                 password2: this.password2.val,
             };
-
             this.$store.dispatch('auth/signup', userData);
+
+            // clear input
+            this.clearForm();
+
+            // redirect to /ideas
+            this.$router.replace('/ideas');
         }
     }
 }

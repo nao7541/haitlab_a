@@ -6,7 +6,9 @@ export default {
     namespaced: true,
     state() {
         return {
-            userId: null,
+            username: '',
+            token: null,
+            isLoggedIn: false,
         }
     },
     getters,

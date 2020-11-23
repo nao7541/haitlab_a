@@ -12,14 +12,14 @@
                 </div>
                 <div class="form-control">
                     <h3>Required Skills</h3>
-                    <TheCheckBox
+                    <BaseCheckBox
                         v-for="skill in skills"
                         v-model="requiredSkills"
                         :key="skill"
                         :value="skill"
-                    ></TheCheckBox>
+                    ></BaseCheckBox>
                 </div>
-                <TheButton text="Post"/>
+                <BaseButton text="Post"/>
             </form>
         </BaseCard>
     </div>

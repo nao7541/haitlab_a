@@ -1,11 +1,12 @@
 <template>
     <header>
-        <h1><router-link to="/ideas">{{ title }}</router-link></h1>
+        <h1><router-link to="/ideas">カムトル</router-link></h1>
         <nav>
             <ul class="nav-links">
-                <li><router-link class="post" to="/post">Post</router-link></li>
-                <li><router-link to="/signup">Sign up</router-link></li>
-                <li><router-link to="/login">Log in</router-link></li>
+                <li v-if="!isLoggedIn"><router-link to="/signup">Sign up</router-link></li>
+                <li v-if="!isLoggedIn"><router-link to="/login">Log in</router-link></li>
+                <li v-if="isLoggedIn"><router-link class="post" to="/post">Post</router-link></li>
+                <li v-if="isLoggedIn"><BaseButton text="Log out" mode="flat" @click="logout"/></li>
             </ul>
         </nav>
     </header>
@@ -13,7 +14,17 @@
 
 <script>
 export default {
-    props: ['title'],
+    computed: {
+        isLoggedIn() {
+            return this.$store.getters['auth/isLoggedIn'];
+        }
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('auth/logout');
+            this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
+        }
+    }
 }
 </script>
 
