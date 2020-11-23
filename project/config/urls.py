@@ -26,9 +26,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apiv1.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/users/', include('dj_rest_auth.urls')),
     path('api/v1/', include('rest_auth.urls')),
     # ユーザー登録
-    path('api/v1/registration/', include('rest_auth.registration.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     # ソーシャルアカウントでのログイン
     path('api/v1/login/twitter/', TwitterLogin.as_view(), name='twitter_login'),
     path('api/v1/login/facebook/', FacebookLogin.as_view(), name='fb_login'),

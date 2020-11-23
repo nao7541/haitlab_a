@@ -4,6 +4,6 @@ djangorestframework==3.10.3
 pytz==2020.1
 sqlparse==0.4.1
 pillow==8.0.1
-django-rest-auth==0.9.5
 django-allauth==0.43.0
 django-widget-tweaks==1.4.8
+dj-rest-auth==2.1.1
