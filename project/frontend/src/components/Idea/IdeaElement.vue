@@ -19,7 +19,7 @@
                 <p>{{ content }}</p>
             </div>
             <div class="detail-button">
-                <TheButton text="詳細" @click="moveDetail" />
+                <BaseButton text="詳細" @click="moveDetail" />
                 <!-- <router-link :to="detailLink">詳細</router-link> -->
             </div>
             <div class="footer">

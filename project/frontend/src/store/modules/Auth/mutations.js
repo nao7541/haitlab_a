@@ -1,5 +1,12 @@
 export default {
     setUser(state, payload) {
-        state.userId = payload.userId;
+        state.username = payload.username;
+        state.token = payload.token;
+        state.isLoggedIn = true;
+    },
+    clear(state) {
+        state.username = '';
+        state.token = null;
+        state.isLoggedIn = false;
     }
 };

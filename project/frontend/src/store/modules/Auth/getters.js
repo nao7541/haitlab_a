@@ -1,5 +1,8 @@
 export default {
-    userId(state) {
-        return state.userId;
+    username(state) {
+        return state.username;
     },
+    isLoggedIn(state) {
+        return state.isLoggedIn;
+    }
 };
