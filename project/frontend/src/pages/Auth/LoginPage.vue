@@ -1,44 +1,39 @@
 <template>
     <div id="login-page">
-        <BaseCard>
-            <form @submit.prevent="login">
-                <h1>Log in</h1>
-                <div class="form-control" :class="{invalid: !username.isValid}">
-                    <label for="username">username</label>
-                    <p v-if="!username.isValid">username must be filled</p>
-                    <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
-                </div>
-                <div class="form-control" :class="{invalid: !email.isValid}">
-                    <label for="email">Email</label>
-                    <p v-if="!email.isValid">email must be filled</p>
-                    <input type="email" id="email" name="email" v-model.trim="email.val" @blur="clearValidity('email')">
-                </div>
-                <div class="form-control" :class="{invalid: !password.isValid}">
-                    <label for="password">Password</label>
-                    <p v-if="!password.isValid">password must be filled</p>
-                    <input type="password" id="password" name="password" v-model="password.val" @blur="clearValidity('password')">
-                </div>
-                <div class="form-control forget">
-                    <a href="#">forget password?</a>
-                </div>
-                <BaseButton text="Submit" class="submit"/>
-            </form>
-            <div class="line"></div>
-            <div class="or">
-                <p>OR</p>
-            </div>
-            <BaseButton text="Login with Facebook" class="facebook"/>
-            <BaseButton text="Login with Twitter" class="twitter"/>
-        </BaseCard>
+        <AuthModel mode="login">
+            <template #form>
+                <form @submit.prevent="login">
+                    <h1>Log in</h1>
+                    <div class="form-control" :class="{invalid: !username.isValid}">
+                        <label for="username">username</label>
+                        <p v-if="!username.isValid">username must be filled</p>
+                        <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
+                    </div>
+                    <div class="form-control" :class="{invalid: !email.isValid}">
+                        <label for="email">Email</label>
+                        <p v-if="!email.isValid">email must be filled</p>
+                        <input type="email" id="email" name="email" v-model.trim="email.val" @blur="clearValidity('email')">
+                    </div>
+                    <div class="form-control" :class="{invalid: !password.isValid}">
+                        <label for="password">Password</label>
+                        <p v-if="!password.isValid">password must be filled</p>
+                        <input type="password" id="password" name="password" v-model="password.val" @blur="clearValidity('password')">
+                    </div>
+                    <div class="form-control forget">
+                        <a href="#">forget password?</a>
+                    </div>
+                    <BaseButton text="Submit" class="submit"/>
+                </form>
+            </template>
+        </AuthModel>
     </div>
 </template>
 
 <script>
-import BaseCard from '@/components/UI/BaseCard.vue';
-
+import AuthModel from '@/components/Auth/AuthModel.vue';
 export default {
     components: {
-        BaseCard,
+        AuthModel,
     },
     data() {
         return {
@@ -119,12 +114,6 @@ export default {
 </script>
 
 <style scoped>
-
-.card {
-    max-width: 30rem;
-    padding: 2rem;
-}
-
 form h1 {
     font-size: 28px;
 }
@@ -169,32 +158,9 @@ form h1 {
     background-color: #ffe0a7;
 }
 
-
 .forget a {
     text-decoration: none;
     color: #ff8fab;
-}
-
-.line {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #a7a7a7;
-}
-
-.or {
-    text-align: center;
-    margin-top: -30px;
-}
-
-.facebook {
-    color: #eeeeee;
-    border-color: 1px solid #3A559F;
-    background-color: #3A559F;
-}
-
-.twitter {
-    color: #eeeeee;
-    border-color: 1px solid #50ABF1;
-    background-color: #50ABF1;
 }
 
 .invalid label {
