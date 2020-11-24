@@ -81,6 +81,9 @@ export default {
                 isValid: true,
             };
         },
+        passwordConfirmation() {
+            return this.password1 === this.password2;
+        },
         formValidation() {
             this.isFormValid = true;
 
@@ -108,6 +111,11 @@ export default {
             this.formValidation();
 
             if (!this.isFormValid) {
+                return;
+            }
+
+            // もしpassword1とpassword2が違うとform送信拒否
+            if (!this.passwordConfirmation) {
                 return;
             }
 

@@ -16,28 +16,24 @@
                     :tagname="skill.skill_name"
                 ></BaseTag>
             </div>
-        </BaseCard>
-        <BaseCard v-if="commentVisibility">
-            <Comment
-                v-for="comment in commentList"
-                :key="comment.comment_id"
-                :username="user.username"
-                :date="comment.comment_date"
-                :message="comment.comment"
-            ></Comment>
+            <div class="comment-container">
+                <Comment :v-if="commentVisibility"
+                    v-for="comment in commentList"
+                    :key="comment.comment_id"
+                    :username="user.username"
+                    :date="comment.comment_date"
+                    :message="comment.comment"
+                ></Comment>
+            </div>
         </BaseCard>
     </div>
 </template>
 
 <script>
-import BaseCard from '@/components/UI/BaseCard.vue';
-import BaseTag from '@/components/UI/BaseTag.vue';
 import Comment from '@/components/Idea/Comment.vue';
 
 export default {
     components: {
-        BaseCard,
-        BaseTag,
         Comment,
     },
     data() {
@@ -99,7 +95,7 @@ export default {
 
 <style scoped>
 .card {
-    width: 60%;
+    max-width: 60rem;
     padding: 2rem;
     text-align: left;
     background: linear-gradient(to top right, #ffe0a7, #ffffff);
@@ -136,9 +132,5 @@ export default {
 
 .skill {
     margin: 0 .25rem;
-}
-
-.comment {
-    margin: 1rem 0;
 }
 </style>
