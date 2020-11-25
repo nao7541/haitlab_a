@@ -19,8 +19,7 @@
                 <p>{{ content }}</p>
             </div>
             <div class="detail-button">
-                <TheButton text="詳細" @click="moveDetail" />
-                <!-- <router-link :to="detailLink">詳細</router-link> -->
+                <BaseButton @click="moveDetail">詳細</BaseButton>
             </div>
             <div class="footer">
                 <small>{{ date }}</small>
@@ -73,13 +72,16 @@ export default {
     width: 45%;
     text-align: center;
     background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     margin: 2rem auto;
 }
 
 .idea-element:hover {
     transition: all 0.25s ease-in;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.profile {
+    background-color: #f7f2e9;
 }
 
 .profile img{
@@ -137,12 +139,10 @@ export default {
 }
 
 .card-body .detail-button button:hover {
-    border: 1px solid #f5f5f5;
     background-color: #f5f5f5;
 }
 
 .card-body .detail-button button:focus {
-    border: 1px solid #eeeeee;
     background-color: #eeeeee;
 }
 
