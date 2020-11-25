@@ -49,8 +49,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     univ_name = models.CharField(verbose_name='大学名', max_length=30)
     # 専攻
     major = models.CharField(verbose_name='学部・学科・専攻', max_length=50, null=True, blank=True)
-    # 連絡先
-    contact = models.EmailField(verbose_name='連絡先', max_length=255, null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # 使わないからNoneにしておく
     first_name = None
