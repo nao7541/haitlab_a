@@ -22,7 +22,7 @@
                     <div class="form-control forget">
                         <a href="#">forget password?</a>
                     </div>
-                    <BaseButton text="Submit" class="submit"/>
+                    <BaseButton class="submit">Submit</BaseButton>
                 </form>
             </template>
         </AuthModel>
@@ -148,13 +148,11 @@ form h1 {
 }
 
 .submit {
-    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 .submit:hover {
     transition: all .25s ease-in;
-    border: 1px solid #ffe0a7;
     background-color: #ffe0a7;
 }
 

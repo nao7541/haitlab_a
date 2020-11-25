@@ -6,7 +6,7 @@
                 <li v-if="!isLoggedIn"><router-link to="/signup">Sign up</router-link></li>
                 <li v-if="!isLoggedIn"><router-link to="/login">Log in</router-link></li>
                 <li v-if="isLoggedIn"><router-link class="post" to="/post">Post</router-link></li>
-                <li v-if="isLoggedIn"><BaseButton text="Log out" mode="flat" @click="logout"/></li>
+                <li v-if="isLoggedIn"><BaseButton @click="logout">LogOut</BaseButton></li>
             </ul>
         </nav>
     </header>

@@ -6,8 +6,14 @@
             <div class="or">
                 <p>OR</p>
             </div>
-            <BaseButton :text="facebookButtonTitle" class="facebook"/>
-            <BaseButton :text="twitterButtonTitle" class="twitter"/>
+            <BaseButton class="facebook">
+                <span class="btn-title">{{ facebookButtonTitle }}</span>
+                <FontAwesomeIcon :icon="['fab', 'facebook-square']" size="lg"/>
+            </BaseButton>
+            <BaseButton class="twitter">
+                <span class="btn-title">{{ twitterButtonTitle }}</span>
+                <FontAwesomeIcon :icon="['fab', 'twitter-square']" size="lg"/>
+            </BaseButton>
         </BaseCard>
     </div>
 </template>
@@ -42,15 +48,28 @@ export default {
     margin-top: -30px;
 }
 
+.btn-title {
+    margin-right: 1rem;
+}
+
 .facebook {
     color: #eeeeee;
-    border-color: 1px solid #3A559F;
     background-color: #3A559F;
+    margin-bottom: .5rem;
+}
+
+.facebook:hover {
+    transition: all .25s ease-in;
+    background-color: #163896;
 }
 
 .twitter {
     color: #eeeeee;
-    border-color: 1px solid #50ABF1;
     background-color: #50ABF1;
+}
+
+.twitter:hover {
+    transition: all .25s ease-in;
+    background-color: #3297e4;
 }
 </style>

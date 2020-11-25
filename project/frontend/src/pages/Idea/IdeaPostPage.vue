@@ -19,7 +19,7 @@
                         :value="skill"
                     ></BaseCheckBox>
                 </div>
-                <BaseButton text="Post"/>
+                <BaseButton>Post</BaseButton>
             </form>
         </BaseCard>
     </div>
@@ -119,17 +119,14 @@ textarea:focus {
 
 form button {
     margin-top: 2rem;
-    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 form button:hover {
-    border-color: #ffe0a7;
     background-color: #ffe0a7;
 }
 
 form button:focus {
-    border-color: #ffca67;
     background-color: #ffca67;
 }
 

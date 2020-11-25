@@ -24,7 +24,7 @@
                         <p v-if="!password2.isValid">password2 must be filled</p>
                         <input type="password" id="password2" name="password2" v-model="password2.val" @blur="clearValidity('password2')">
                     </div>
-                    <BaseButton text="Submit" class="submit"/>
+                    <BaseButton class="submit">Submit</BaseButton>
                 </form>
             </template>
         </AuthModel> 
@@ -172,13 +172,11 @@ form h1 {
 }
 
 .submit {
-    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 .submit:hover {
     transition: all .25s ease-in;
-    border: 1px solid #ffe0a7;
     background-color: #ffe0a7;
 }
 
