@@ -1,11 +1,10 @@
 from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
-from user.models import CustomUser, Tag
+from user.models import CustomUser, Skill
 
 class UserSerializer(serializers.ModelSerializer):
-    tags = serializers.ReadOnlyField(source='Tag.tag_name')
+    skills = serializers.ReadOnlyField(source='Skill.skill_name')
     class Meta:
         model = CustomUser
-        fields = ('email', 'prof_img', 'intro', 'univ_name', 'major', 'contact', 'tags')
-        read_only_fields = ( 'user_id', 'username',)
+        fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name', 'major', 'contact', 'skills')
 
