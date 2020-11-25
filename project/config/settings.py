@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user',
     'idea',
     'apiv1',
+    'event',
     # サードパーティーのライブラリ
     'allauth',
     'allauth.account',
