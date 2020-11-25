@@ -11,12 +11,12 @@ export default {
             localStorage.setItem('username', payload.data.username);
             localStorage.setItem('token', key);
             context.commit('setUser', {
-                username: payload.username,
+                username: payload.data.username,
                 token: key,
             });
         }).catch( errorMessage => {
             console.error(errorMessage);
-        })
+        });
     },
     signup(context, payload) {
         context.dispatch('auth', {

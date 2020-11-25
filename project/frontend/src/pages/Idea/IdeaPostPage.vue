@@ -19,19 +19,14 @@
                         :value="skill"
                     ></BaseCheckBox>
                 </div>
-                <BaseButton text="Post"/>
+                <BaseButton>Post</BaseButton>
             </form>
         </BaseCard>
     </div>
 </template>
 
 <script>
-import BaseCard from '@/components/UI/BaseCard.vue';
-
 export default {
-    components: {
-        BaseCard,
-    },
     data() {
         return {
             title: '',
@@ -124,17 +119,14 @@ textarea:focus {
 
 form button {
     margin-top: 2rem;
-    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 form button:hover {
-    border-color: #ffe0a7;
     background-color: #ffe0a7;
 }
 
 form button:focus {
-    border-color: #ffca67;
     background-color: #ffca67;
 }
 

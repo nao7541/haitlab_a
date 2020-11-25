@@ -38,14 +38,7 @@
 </template>
 
 <script>
-import BaseCard from '@/components/UI/BaseCard.vue';
-import BaseTag from '@/components/UI/BaseTag.vue';
-
 export default {
-    components: {
-        BaseCard,
-        BaseTag,
-    },
     data() {
         return {
             user: null,

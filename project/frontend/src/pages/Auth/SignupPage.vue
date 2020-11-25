@@ -24,7 +24,7 @@
                         <p v-if="!password2.isValid">password2 must be filled</p>
                         <input type="password" id="password2" name="password2" v-model="password2.val" @blur="clearValidity('password2')">
                     </div>
-                    <BaseButton text="Submit" class="submit"/>
+                    <BaseButton class="submit">Submit</BaseButton>
                 </form>
             </template>
         </AuthModel> 
@@ -81,6 +81,9 @@ export default {
                 isValid: true,
             };
         },
+        passwordConfirmation() {
+            return this.password1 === this.password2;
+        },
         formValidation() {
             this.isFormValid = true;
 
@@ -108,6 +111,11 @@ export default {
             this.formValidation();
 
             if (!this.isFormValid) {
+                return;
+            }
+
+            // もしpassword1とpassword2が違うとform送信拒否
+            if (!this.passwordConfirmation) {
                 return;
             }
 
@@ -164,13 +172,11 @@ form h1 {
 }
 
 .submit {
-    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 .submit:hover {
     transition: all .25s ease-in;
-    border: 1px solid #ffe0a7;
     background-color: #ffe0a7;
 }
 
