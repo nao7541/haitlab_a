@@ -1,15 +1,11 @@
-from django.urls import path
-from rest_framework.routers import SimpleRouter
+from django.urls import path, include
+from rest_framework.routers import SimpleRouter, DefaultRouter
 
-from .views import UserList, UserDetail
+from .views import UserViewset, EventViewset
 
-"""
-router = SimpleRouter()
-router.register('users', UserViewset, basename='users')
+router = DefaultRouter()
+router.register('users', UserViewset, basename='user')
+router.register('events', EventViewset, basename='events')
 
-urlpatterns = router.urls """
+urlpatterns = router.urls
 
-urlpatterns = [
-    path('users/<int:pk>/', UserDetail.as_view()),
-    path('users/', UserList.as_view()),
-]

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user',
     'idea',
     'apiv1',
+    'event',
     # サードパーティーのライブラリ
     'corsheaders',
     'allauth',
@@ -54,7 +55,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -142,6 +144,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -161,8 +165,8 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # 画像をモデルに定義すための設定
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = 'static/images'
+MEDIA_URL = '/'
 
 # カスタムユーザーの設定を追加
 AUTH_USER_MODEL = 'user.CustomUser'
