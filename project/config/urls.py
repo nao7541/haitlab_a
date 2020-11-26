@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from apiv1.views import TwitterLogin, FacebookLogin
 
+
 API_TITLE = 'Application API'
 
 

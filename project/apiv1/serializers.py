@@ -4,10 +4,15 @@ from user.models import CustomUser, Skill
 from event.models import Event
 
 class UserSerializer(serializers.ModelSerializer):
-    skills = serializers.ReadOnlyField(source='Skill.skill_name')
+    #skills = serializers.ReadOnlyField(source='Skill.skill_name')
     class Meta:
         model = CustomUser
-        fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name', 'major', 'skills')
+        fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name', 'major')
+
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = ('skill_id', 'user_id', 'skill_name', 'skill_level')
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
