@@ -9,8 +9,8 @@
                 </div>
                 <div v-if="isLoggedIn">
                     <li><router-link class="post" to="/post">Post</router-link></li>
-                    <li><BaseButton @click="logout">LogOut</BaseButton></li>
-                    <li><router-link :to="userLink"><FontAwesomeIcon :icon="['fas', 'user']" size="lg"/></router-link></li>
+                    <li><BaseButton @buttonEvent="logout">LogOut</BaseButton></li>
+                    <!-- <li><router-link :to="userLink"><FontAwesomeIcon :icon="['fas', 'user']" size="lg"/></router-link></li> -->
                 </div>
             </ul>
         </nav>
@@ -33,7 +33,7 @@ export default {
     methods: {
         logout() {
             this.$store.dispatch('auth/logout');
-            this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
+            // this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
         }
     }
 }

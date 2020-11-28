@@ -1,10 +1,13 @@
-import { createStore } from 'vuex';
+import Vue from 'vue'
+import Vuex from 'vuex'
 
 import IdeaModule from './modules/Idea/index.js';
 import UserModule from './modules/User/index.js';
 import AuthModule from './modules/Auth/index.js';
 
-const store = createStore({
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
     modules: {
         idea: IdeaModule,
         auth: AuthModule,
@@ -26,6 +29,6 @@ const store = createStore({
             return state.skills;
         }
     }
-})
+});
 
 export default store;

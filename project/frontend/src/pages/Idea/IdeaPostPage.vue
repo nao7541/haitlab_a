@@ -14,7 +14,6 @@
                     <h3>Required Skills</h3>
                     <BaseCheckBox
                         v-for="skill in skills"
-                        v-model="requiredSkills"
                         :key="skill"
                         :value="skill"
                     ></BaseCheckBox>
@@ -31,7 +30,6 @@ export default {
         return {
             title: '',
             overview: '',
-            requiredSkills: []
         };
     },
     computed: {

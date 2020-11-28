@@ -1,8 +1,19 @@
 <template>
-    <button>
+    <button @click="buttonEvent">
         <slot></slot>
     </button>
 </template>
+
+<script>
+export default {
+    emits: ['buttonEvent'],
+    methods: {
+        buttonEvent() {
+            this.$emit('buttonEvent');
+        }
+    }
+}
+</script>
 
 <style scoped>
 button {
@@ -11,7 +22,6 @@ button {
     font: inherit;
     font-weight: bold;
     color: #000;
-    background-color: #ffffff;
     padding: 1rem 3rem;
     border-radius: 6px;
     border: none;

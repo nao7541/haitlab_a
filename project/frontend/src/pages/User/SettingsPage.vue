@@ -53,7 +53,7 @@
                             :level="sk.level"
                         >
                             <template #delete-icon>
-                                <span @click="removeSkill(index)"><FontAwesomeIcon :icon="['fas', 'times']" size="sm" /></span>
+                                <!-- <span @click="removeSkill(index)"><FontAwesomeIcon :icon="['fas', 'times']" size="sm" /></span> -->
                             </template>
                         </BaseSkill>
                         <!-- stored skills -->

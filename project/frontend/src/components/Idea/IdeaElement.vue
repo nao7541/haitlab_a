@@ -1,7 +1,7 @@
 <template>
     <div class="idea-element">
         <div class="profile">
-            <router-link :to="userLink"><img src="@/assets/images/avatar1.png" alt="image"></router-link>
+            <router-link :to="userLink"><img src="user.prof_img" alt="image"></router-link>
         </div>
         <div class="card-body">
             <div class="skills">
@@ -19,7 +19,7 @@
                 <p>{{ content }}</p>
             </div>
             <div class="detail-button">
-                <BaseButton @click="moveDetail">詳細</BaseButton>
+                <router-link :to="detailLink">詳細</router-link>
             </div>
             <div class="footer">
                 <small>{{ date }}</small>
@@ -37,7 +37,7 @@ export default {
     },
     computed: {
         detailLink() {
-            return { name: 'idea', params: { ideaId: this.idea_id } };
+            return { name: 'ideaDetail', params: { ideaId: this.idea_id } };
         },
         userLink() {
             return { name: 'userprofile', params: { userId: this.user_id }}
@@ -47,11 +47,6 @@ export default {
         }
     },
     props: ['idea_id', 'user_id', 'title', 'content', 'date'],
-    methods: {
-        moveDetail() {
-            this.$router.push('/ideas/' + this.idea_id);
-        }
-    },
     created() {
         for (const skill of this.requiredSkills) {
             if (skill.idea_id == this.idea_id) {
