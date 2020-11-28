@@ -12,26 +12,21 @@
                 </div>
                 <div class="form-control">
                     <h3>Required Skills</h3>
-                    <TheCheckBox
+                    <BaseCheckBox
                         v-for="skill in skills"
                         v-model="requiredSkills"
                         :key="skill"
                         :value="skill"
-                    ></TheCheckBox>
+                    ></BaseCheckBox>
                 </div>
-                <TheButton text="Post"/>
+                <BaseButton>Post</BaseButton>
             </form>
         </BaseCard>
     </div>
 </template>
 
 <script>
-import BaseCard from '@/components/UI/BaseCard.vue';
-
 export default {
-    components: {
-        BaseCard,
-    },
     data() {
         return {
             title: '',
@@ -124,17 +119,14 @@ textarea:focus {
 
 form button {
     margin-top: 2rem;
-    border-color: #ffeece;
     background-color: #ffeece;
 }
 
 form button:hover {
-    border-color: #ffe0a7;
     background-color: #ffe0a7;
 }
 
 form button:focus {
-    border-color: #ffca67;
     background-color: #ffca67;
 }
 
