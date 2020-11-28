@@ -22,5 +22,24 @@ export default {
         }).catch(errorMsg => {
             console.log(errorMsg);
         });
+    },
+    updateUserData(_, payload) {
+        const url = '/users/' + payload.userId + '/';
+        const formData = new FormData();
+        formData.append('username', payload.username);
+        formData.append('email', payload.email);
+        formData.append('prof_img', payload.prof_img);
+        formData.append('intro', payload.intro);
+        formData.append('univ_name', payload.univ_name);
+        formData.append('major', payload.major);
+        return api.put(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            console.log(response);
+        }).catch(errorMsg => {
+            console.log(errorMsg);
+        })
     }
 };

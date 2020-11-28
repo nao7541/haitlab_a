@@ -14,7 +14,6 @@ export default {
                 intro: '',
                 univ_name: '',
                 major: '',
-                created_at: null,
             },
             skill: {
                 skill_id: null,

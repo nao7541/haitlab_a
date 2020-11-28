@@ -66,10 +66,12 @@ export default {
         }
     },
     methods: {
+        
     },
     created() {
         // パラメータとして渡されたuserid
         const paramUserId = this.$route.params.userId;
+        console.log(paramUserId);
         // ローカルに保存しているuserIdと比較して、自分のページか否かを確かめる
         if (paramUserId === this.userId) {
             // 自分のページであるならtrue

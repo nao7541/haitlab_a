@@ -9,12 +9,12 @@
                 <p>{{ idea.idea_str }}</p>
             </div>
             <div class="container skills">
-                <BaseTag
+                <BaseSkill
                     class="skill"
                     v-for="skill in skillList"
                     :key="skill.skill_id"
                     :tagname="skill.skill_name"
-                ></BaseTag>
+                ></BaseSkill>
             </div>
             <div class="comment-container">
                 <Comment :v-if="commentVisibility"
