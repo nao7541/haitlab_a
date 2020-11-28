@@ -5,12 +5,12 @@
         </div>
         <div class="card-body">
             <div class="skills">
-                <BaseTag
+                <BaseSkill
                     v-for="skill in skillsList"
                     :key="skill.skill_id"
                     :tagname="skill.skill_name"
                     class="skill-tag"
-                ></BaseTag>
+                ></BaseSkill>
             </div>
             <div class="title">
                 <h2>{{ title }}</h2>
@@ -29,12 +29,7 @@
 </template>
 
 <script>
-import BaseTag from '@/components/UI/BaseTag.vue';
-
 export default {
-    components: {
-        BaseTag,
-    },
     data() {
         return {
             skillsList: [],
