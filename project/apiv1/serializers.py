@@ -10,9 +10,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name', 'major')
 
 class SkillSerializer(serializers.ModelSerializer):
+    #user = UserSerializer(many=True, read_only=True)
     class Meta:
         model = Skill
-        fields = ('skill_id', 'user_id', 'skill_name', 'skill_level')
+        fields = ('skill_id', 'user', 'skill_name', 'skill_level')
+
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
