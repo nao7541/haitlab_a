@@ -7,7 +7,7 @@
                 <div class="edit-profile" v-if="isMyProfile">
                     <router-link to="/settings">
                         <span class="title">Edit Profile</span>
-                        <FontAwesomeIcon :icon="['far', 'edit']" size="lg" />
+                        <!-- <FontAwesomeIcon :icon="['far', 'edit']" size="lg" /> -->
                     </router-link>
                 </div>
                 <div class="info-container info-line">
