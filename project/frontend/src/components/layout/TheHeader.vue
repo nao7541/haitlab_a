@@ -3,10 +3,15 @@
         <h1><router-link to="/ideas">カムトル</router-link></h1>
         <nav>
             <ul class="nav-links">
-                <li v-if="!isLoggedIn"><router-link to="/signup">Sign up</router-link></li>
-                <li v-if="!isLoggedIn"><router-link to="/login">Log in</router-link></li>
-                <li v-if="isLoggedIn"><router-link class="post" to="/post">Post</router-link></li>
-                <li v-if="isLoggedIn"><BaseButton @click="logout">LogOut</BaseButton></li>
+                <div v-if="!isLoggedIn">
+                    <li><router-link to="/signup">Sign up</router-link></li>
+                    <li><router-link to="/login">Log in</router-link></li>
+                </div>
+                <div v-if="isLoggedIn">
+                    <li><router-link class="post" to="/post">Post</router-link></li>
+                    <li><BaseButton @buttonEvent="logout">LogOut</BaseButton></li>
+                    <!-- <li><router-link :to="userLink"><FontAwesomeIcon :icon="['fas', 'user']" size="lg"/></router-link></li> -->
+                </div>
             </ul>
         </nav>
     </header>
@@ -15,14 +20,20 @@
 <script>
 export default {
     computed: {
+        userId() {
+            return this.$store.getters['auth/userId'];
+        },
         isLoggedIn() {
             return this.$store.getters['auth/isLoggedIn'];
+        },
+        userLink() {
+            return { name: 'userprofile', params: { userId: this.userId } };
         }
     },
     methods: {
         logout() {
             this.$store.dispatch('auth/logout');
-            this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
+            // this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
         }
     }
 }
@@ -56,13 +67,20 @@ li, a {
     padding: 0 1rem;
 }
 
+.nav-links li button {
+    padding: .5rem 1rem;
+}
+
+.nav-links li span {
+    cursor: pointer;
+}
+
 .nav-links li a {
     transition: all 0.3s ease 0s;
 }
 
 .nav-links li a:hover,
-.nav-links li a:active,
-.nav-links a.router-link-active {
+.nav-links li a:active {
     color: #ffbb3c;
 }
 

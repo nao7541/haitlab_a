@@ -5,7 +5,7 @@
                 <form @submit.prevent="signUp">
                     <h1>Sign up</h1>
                     <div class="form-control" :class="{invalid: !username.isValid}">
-                        <label for="username">username</label>
+                        <label for="username">Username</label>
                         <p v-if="!username.isValid">username must be filled</p>
                         <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
                     </div>

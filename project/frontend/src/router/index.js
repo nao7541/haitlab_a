@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
 //---------- impport page components ----------//
 // Idea pages
 import HomePage from '@/pages/Idea/HomePage.vue';
@@ -10,6 +11,7 @@ import SignupPage from '@/pages/Auth/SignupPage.vue';
 import LoginPage from '@/pages/Auth/LoginPage.vue';
 // User Pages
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
+import SettingsPage from '@/pages/User/SettingsPage.vue';
 import MessageListPage from '@/pages/User/MessageListPage.vue';
 import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 // Event pages
@@ -17,6 +19,10 @@ import EventListPage from '@/pages/Event/EventListPage.vue';
 
 //---------- import vuex ----------//
 import store from '@/store/index.js';
+
+//---------- about meta ----------//
+// requiresAuth: ログイン状態でのみ訪問可能なページ
+// requiresUnAuth: 未ログイン状態でのみ訪問可能なページ
 
 const routes = [
     {
@@ -26,7 +32,7 @@ const routes = [
         component: HomePage, // 表示する画面はHomePageと同じ
     },
     {
-        name: 'idea',
+        name: 'ideaDetail',
         path: '/ideas/:ideaId',
         component: IdeaDetailPage,
         props: true,
@@ -55,10 +61,16 @@ const routes = [
     {
         // ユーザー画面
         name: 'userprofile',
-        path: '/:userId',
+        path: '/profile/:userId',
         component: UserProfilePage,
         props: true,
-        meta: { requiresAuth: true }, // ログイン後にのみ参照できるページはmetaタグとしてrequiresAuthを付ける
+        meta: { requiresAuth: true }, 
+    },
+    {
+        name: 'settings',
+        path: '/settings',
+        component: SettingsPage,
+        meta: { requiresAuth: true },
     },
     {
         // メッセージ一覧画面
@@ -85,18 +97,16 @@ const routes = [
         path: '/:notFound(.*)',
         redirect: '/ideas'
     }
-];
+]
 
-const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL,
     routes
 });
 
 router.beforeEach((to, from, next) => {
     const isLoggedIn = store.getters['auth/isLoggedIn'];
-    // const token = localStorage.getItem('access');
-    console.log('to.path=', to.path);
-    console.log('isLoggedIn=', isLoggedIn);
 
     // loginが必要となページへの遷移の場合はloginしているかを確認する
     if (to.matched.some( record => record.meta.requiresAuth )) {
@@ -120,7 +130,7 @@ router.beforeEach((to, from, next) => {
 });
 
 // ログインページに強制送還するための関数
-function forceToLoginPage(to, from, next) {
+function forceToLoginPage(to, _, next) {
     next({
         path: '/login',
         query: { next: to.fullPath },
