@@ -17,5 +17,5 @@ router.register('ideas', IdeaViewset, basename='ideas')
 urlpatterns = [
     path('users/<int:pk>/', UserDetail.as_view()),
     path('users/', UserList.as_view()),
-    path('ideas/', include(router.urls)),
+    path('', include(router.urls)),
 ]

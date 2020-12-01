@@ -31,10 +31,19 @@ class TwitterLogin(SocialLoginView):
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
+# Idea's View Class
+class IdeaList(generics.ListAPIView):
+    queryset = PostIdea.objects.all()
+    serializer_class = IdeaSerializer
+
+class IdeaDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+
+
+
 
 class IdeaViewset(viewsets.ModelViewSet):
-    # 疑問点
-    # apiとしては複数のテーブルを参考にデータを取得している
-    # ここのquerysetにはどう複数指定するのか(テーブルの結合を自動でdjangoがしてくれる?)
+
     queryset = PostIdea.objects.all()
     serializer_class = IdeaSerializer
