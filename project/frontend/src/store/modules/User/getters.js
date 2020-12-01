@@ -1,11 +1,8 @@
 export default {
-    users(state) {
-        return state.users;
+    user(state) {
+        return state.user;
     },
-    tags(state) {
-        return state.tags;
+    skill(state) {
+        return state.skill;
     },
-    interests(state) {
-        return state.interests;
-    }
 };

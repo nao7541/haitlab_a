@@ -130,3 +130,4 @@ dmypy.json
 
 # 画像ファイルのアップロードを防ぐ
 media/
+static/

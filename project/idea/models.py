@@ -4,6 +4,7 @@ from django.utils import timezone
 from user.models import CustomUser
 # Create your models here.
 
+
 class PostIdea(models.Model):
    class Meta:
        db_table = "Post_Idea"
@@ -26,6 +27,8 @@ class PostIdea(models.Model):
    def __str__(self):
        return "No. " + str(self.idea_id)
 
+
+
 class RequiredSkill(models.Model):
     class Meta:
         db_table = "Required_Skill"
@@ -35,6 +38,8 @@ class RequiredSkill(models.Model):
 
     def __str__(self):
         return str(self.idea_id)
+
+
 
 class Comment(models.Model):
     class Meta:

@@ -42,15 +42,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # メールアドレス
     email = models.EmailField('メールアドレス')
     # プロフィール画像
-    prof_img = models.ImageField(upload_to='images/', verbose_name='プロフィール画像', null=True, blank=True)
+    prof_img = models.ImageField(upload_to='user/', verbose_name='プロフィール画像', null=True, blank=True)
     # 自己紹介文
     intro = models.TextField(verbose_name='自己紹介', max_length=300, null=True, blank=True)
     # 大学名
     univ_name = models.CharField(verbose_name='大学名', max_length=30)
     # 専攻
     major = models.CharField(verbose_name='学部・学科・専攻', max_length=50, null=True, blank=True)
-    # 連絡先
-    contact = models.EmailField(verbose_name='連絡先', max_length=255, null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # 使わないからNoneにしておく
     first_name = None
@@ -83,13 +81,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-class Tag(models.Model):
-    # タグのID
-    tag_id = models.AutoField(primary_key=True, verbose_name='タグID')
-    # そのタグを持つユーザーのID
+    #def __str__(self):
+    #    return self.user_id
+class Skill(models.Model):
+    # スキルのID
+    skill_id = models.AutoField(primary_key=True, verbose_name='スキルID')
+    # そのスキルを持つユーザーのID
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    # タグの名前
-    tag_name = models.CharField(max_length=20, verbose_name='タグ名')
+    # スキルの名前
+    skill_name = models.CharField(max_length=20, verbose_name='スキル名')
+    # スキルの熟練度
+    skill_level = models.CharField(max_length=20, verbose_name="持っているスキルのレベル", null=True,blank=True)
 
     def __str__(self):
-        return self.tag_name
+        return str(self.user_id)+ "_" + str(self.skill_name)

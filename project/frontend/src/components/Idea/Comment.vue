@@ -18,10 +18,9 @@ export default {
 
 <style scoped>
 .comment {
+    border-top: 1px solid #dddddd;
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    display: flex;
+    display: flex;  
 }
 
 .info {
@@ -29,8 +28,7 @@ export default {
     padding: 2rem;
 }
 
-.message { 
+.message {
     width: 70%;
-    /* display: table; */
 }
 </style>
