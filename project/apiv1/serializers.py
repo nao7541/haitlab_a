@@ -22,7 +22,7 @@ class SkillSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('event_id', 'event_name', 'event_detail', 'event_schedule', 'event_url')
+        fields = ('event_id', 'event_name', 'event_detail', 'event_location', 'event_schedule', 'event_url')
 
 
 class RequiredSkillSerializer(serializers.ModelSerializer):
