@@ -86,8 +86,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Skill(models.Model):
     # スキルのID
     skill_id = models.AutoField(primary_key=True, verbose_name='スキルID')
-    # そのスキルを持つユーザーのID
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    # そのスキルを持つユーザー
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     # スキルの名前
     skill_name = models.CharField(max_length=20, verbose_name='スキル名')
     # スキルの熟練度
