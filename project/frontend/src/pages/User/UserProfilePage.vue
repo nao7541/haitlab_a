@@ -7,7 +7,7 @@
                 <div class="edit-profile" v-if="isMyProfile">
                     <router-link to="/settings">
                         <span class="title">Edit Profile</span>
-                        <!-- <FontAwesomeIcon :icon="['far', 'edit']" size="lg" /> -->
+                        <FontAwesomeIcon :icon="['far', 'edit']" size="lg" />
                     </router-link>
                 </div>
                 <div class="info-container info-line">
@@ -71,7 +71,6 @@ export default {
     created() {
         // パラメータとして渡されたuserid
         const paramUserId = this.$route.params.userId;
-        console.log(paramUserId);
         // ローカルに保存しているuserIdと比較して、自分のページか否かを確かめる
         if (paramUserId === this.userId) {
             // 自分のページであるならtrue

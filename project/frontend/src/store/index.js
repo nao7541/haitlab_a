@@ -1,17 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import IdeaModule from './modules/Idea/index.js';
-import UserModule from './modules/User/index.js';
-import AuthModule from './modules/Auth/index.js';
+import AuthModule  from './modules/Auth/index.js';
+import EventModule from './modules/Event/index.js';
+import IdeaModule  from './modules/Idea/index.js';
+import UserModule  from './modules/User/index.js';
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     modules: {
-        idea: IdeaModule,
-        auth: AuthModule,
-        user: UserModule,
+        auth:  AuthModule,
+        event: EventModule,
+        idea:  IdeaModule,
+        user:  UserModule,
     },
     state() {
         return {

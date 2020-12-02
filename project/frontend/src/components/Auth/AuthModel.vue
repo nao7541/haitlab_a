@@ -8,11 +8,11 @@
             </div>
             <BaseButton class="facebook">
                 <span class="btn-title">{{ facebookButtonTitle }}</span>
-                <!-- <FontAwesomeIcon :icon="['fab', 'facebook-square']" size="lg"/> -->
+                <FontAwesomeIcon :icon="['fab', 'facebook-square']" size="lg"/>
             </BaseButton>
             <BaseButton class="twitter">
                 <span class="btn-title">{{ twitterButtonTitle }}</span>
-                <!-- <FontAwesomeIcon :icon="['fab', 'twitter-square']" size="lg"/> -->
+                <FontAwesomeIcon :icon="['fab', 'twitter-square']" size="lg"/>
             </BaseButton>
         </BaseCard>
     </div>
@@ -39,8 +39,8 @@ export default {
 }
 
 .line {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #a7a7a7;
+    padding: 1rem 0;
+    border-bottom: 1px solid #000000;
 }
 
 .or {
