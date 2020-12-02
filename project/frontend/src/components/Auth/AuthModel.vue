@@ -39,8 +39,8 @@ export default {
 }
 
 .line {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #a7a7a7;
+    padding: 1rem 0;
+    border-bottom: 1px solid #000000;
 }
 
 .or {

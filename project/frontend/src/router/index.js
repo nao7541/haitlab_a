@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
 //---------- impport page components ----------//
 // Idea pages
 import HomePage from '@/pages/Idea/HomePage.vue';
@@ -31,7 +32,7 @@ const routes = [
         component: HomePage, // 表示する画面はHomePageと同じ
     },
     {
-        name: 'idea',
+        name: 'ideaDetail',
         path: '/ideas/:ideaId',
         component: IdeaDetailPage,
         props: true,
@@ -96,10 +97,11 @@ const routes = [
         path: '/:notFound(.*)',
         redirect: '/ideas'
     }
-];
+]
 
-const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL,
     routes
 });
 

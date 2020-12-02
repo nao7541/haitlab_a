@@ -3,7 +3,7 @@
         <AuthModel mode="login">
             <template #form>
                 <form @submit.prevent="login">
-                    <h1>Log in</h1>
+                    <h1>ログイン</h1>
                     <div class="form-control" :class="{invalid: !username.isValid}">
                         <label for="username">Username</label>
                         <p v-if="!username.isValid">username must be filled</p>

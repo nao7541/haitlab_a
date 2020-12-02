@@ -1,31 +1,34 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
-//---------- Font Awesome ----------//
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import { faFacebookSquare, faTwitterSquare } from '@fortawesome/free-brands-svg-icons';
-import { faEdit } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add(faTimes, faFacebookSquare, faTwitterSquare, faEdit, faUser);
 
 //---------- Base Components ----------//
 import BaseCard from '@/components/UI/BaseCard.vue';
 import BaseButton from '@/components/UI/BaseButton.vue';
 import BaseCheckBox from '@/components/UI/BaseCheckBox.vue';
 import BaseSkill from '@/components/UI/BaseSkill.vue';
+import vuetify from './plugins/vuetify';
 
-const app = createApp(App);
-// add font awesome
-app.config.productionTip = false;
-app.component('FontAwesomeIcon', FontAwesomeIcon);
+//---------- Font Awesome ----------//
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUser, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faFacebookSquare, faTwitterSquare } from '@fortawesome/free-brands-svg-icons';
+import { faEdit } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+library.add(faUser, faMapMarkerAlt, faFacebookSquare, faTwitterSquare, faEdit);
+Vue.component('FontAwesomeIcon', FontAwesomeIcon);
+
+Vue.config.productionTip = false
 // add base components
-app.component('BaseCard', BaseCard);
-app.component('BaseButton', BaseButton);
-app.component('BaseCheckBox', BaseCheckBox);
-app.component('BaseSkill', BaseSkill);
-app.use(store);
-app.use(router);
-app.mount('#app');
+Vue.component('BaseCard', BaseCard);
+Vue.component('BaseButton', BaseButton);
+Vue.component('BaseCheckBox', BaseCheckBox);
+Vue.component('BaseSkill', BaseSkill);
+
+new Vue({
+  router,
+  store,
+  vuetify,
+  render: h => h(App)
+}).$mount('#app')

@@ -3,7 +3,7 @@
         <BaseCard>
             <div class="container title">
                 <h2>{{ idea.idea_title }}</h2>
-                <router-link :to="userLink"><img src="@/assets/images/avatar1.png" alt="profile"></router-link>
+                <router-link :to="userLink"><img :src="user.prof_img" alt="profile"></router-link>
             </div>
             <div class="container overview">
                 <p>{{ idea.idea_str }}</p>
@@ -39,7 +39,6 @@ export default {
     data() {
         return {
             idea: null,
-            user: null, 
             skillList: [],
             commentList: [],
         };
@@ -47,16 +46,16 @@ export default {
     props: ['ideaId'],
     computed: {
         userLink() {
-            return { name: 'userprofile', params: { userId: this.user.user_id }};
+            return { name: 'userprofile', params: { userId: this.user.userId }};
         },
         commentVisibility() {
             return this.commentList.length > 0;
         },
+        user() {
+            return this.$store.getters['user/user'];
+        },
         ideas() {
             return this.$store.getters['idea/ideas'];
-        },
-        users() {
-            return this.$store.getters['user/users'];
         },
         requiredSkills() {
             return this.$store.getters['idea/requiredSkills'];
@@ -68,8 +67,15 @@ export default {
     methods: {
         loadIdea(ideaId) {
             this.idea = this.ideas.find(idea => idea.idea_id == ideaId);
-            const userId = this.idea.user_id;
-            this.user = this.users.find(user => user.user_id == userId);
+            
+            // アイデア投稿者の情報を取得
+            const ideaUserId = this.idea.user_id;
+            this.$store.dispatch('user/loadUserData', {
+                userId: ideaUserId
+            }).catch( errorMsg => {
+                console.log("fail to get user data. \n" + errorMsg);
+            });
+            
             for (const skill of this.requiredSkills) {
                 if (skill.idea_id == this.idea.idea_id) {
                     this.skillList.push(skill);

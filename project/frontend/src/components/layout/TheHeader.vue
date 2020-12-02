@@ -4,12 +4,14 @@
         <nav>
             <ul class="nav-links">
                 <div v-if="!isLoggedIn">
-                    <li><router-link to="/signup">Sign up</router-link></li>
-                    <li><router-link to="/login">Log in</router-link></li>
+                    <li><router-link to="/events">イベント一覧</router-link></li>
+                    <li><router-link to="/signup">新規登録</router-link></li>
+                    <li><router-link to="/login">ログイン</router-link></li>
                 </div>
                 <div v-if="isLoggedIn">
-                    <li><router-link class="post" to="/post">Post</router-link></li>
-                    <li><BaseButton @click="logout">LogOut</BaseButton></li>
+                    <li><router-link to="/events">イベント一覧</router-link></li>
+                    <li><router-link class="post" to="/post">アイデア投稿</router-link></li>
+                    <li><BaseButton @buttonEvent="logout">ログアウト</BaseButton></li>
                     <li><router-link :to="userLink"><FontAwesomeIcon :icon="['fas', 'user']" size="lg"/></router-link></li>
                 </div>
             </ul>
@@ -32,7 +34,7 @@ export default {
     },
     methods: {
         logout() {
-            this.$store.dispatch('auth/logout');
+            this.$store.dispatch('auth/logout')
             this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
         }
     }
@@ -49,8 +51,13 @@ header {
     color: black;
     font-weight: bold;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+}
+
+header h1,
+header nav {
+    margin: 0 2rem;
 }
 
 li, a {
