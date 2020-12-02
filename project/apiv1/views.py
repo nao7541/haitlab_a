@@ -2,7 +2,7 @@ from rest_framework import viewsets, generics, mixins
 
 from user.models import CustomUser
 from idea.models import PostIdea, RequiredSkill, Comment
-from .serializers import UserSerializer, IdeaSerializer
+from .serializers import IdeaSerializer, RequiredSkillSerializer, CommentSerializer
 from event.models import Event
 from .serializers import UserSerializer, EventSerializer
 from .permissions import IsAuthorOrReadOnly
@@ -32,19 +32,18 @@ class TwitterLogin(SocialLoginView):
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
-# Idea's View Class
-class IdeaList(generics.ListAPIView):
-    queryset = PostIdea.objects.all()
-    serializer_class = IdeaSerializer
-
-class IdeaDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-
-
-
 
 class IdeaViewset(viewsets.ModelViewSet):
 
     queryset = PostIdea.objects.all()
     serializer_class = IdeaSerializer
+
+class RequiredSkillViewset(viewsets.ModelViewSet):
+
+    queryset = RequiredSkill.objects.all()
+    serializer_class = RequiredSkillSerializer
+
+class CommentViewSet(viewsets.ModelViewSet):
+
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer

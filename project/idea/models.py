@@ -22,7 +22,7 @@ class PostIdea(models.Model):
    # 投稿 動画
    idea_movie = models.FileField(upload_to='images/',  blank=True, null=True, verbose_name="投稿動画ファイル")
    # 投稿した日時
-   idea_date = models.DateField(default=timezone.now, verbose_name="投稿日時")
+   idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日時")
 
    def __str__(self):
        return "No. " + str(self.idea_id)
@@ -35,6 +35,7 @@ class RequiredSkill(models.Model):
 
     idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE)
     skill_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
+    skill_level = models.CharField(verbose_name='スキルレベル', max_length=30, null=True, blank=True)
 
     def __str__(self):
         return str(self.idea_id)
@@ -50,7 +51,7 @@ class Comment(models.Model):
     # コメントを送ったユーザ
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="コメントユーザ")
     # コメントを送った日時
-    comment_date = models.DateField(default=timezone.now, verbose_name="コメント日時")
+    comment_date = models.DateTimeField(default=timezone.now, verbose_name="コメント日時")
     # コメント
     comment = models.TextField(max_length=255, verbose_name="コメント")
 

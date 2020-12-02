@@ -12,17 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name', 'major')
 
-class IdeaSerializer(serializers.ModelSerializer):
-    required_skills = serializers.ReadOnlyField(source='RequiredSkill.idea_skills')
-    user_name = serializers.ReadOnlyField(source='CustomUser.user_name')
-    comment = serializers.ReadOnlyField(source='Comment.comment')
-    comment_date = serializers.ReadOnlyField(source='Comment.comment_date')
-
-    class Meta:
-        model = PostIdea
-        fields = ('user_name','idea_str','idea_image','idea_movie','idea_date','comment', 'comment_date', 'required_skills')
-
-
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
@@ -32,3 +21,22 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('event_id', 'event_name', 'event_detail', 'event_schedule', 'event_url')
+
+
+class RequiredSkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequiredSkill
+        fields = ('idea_id', 'skill_name', 'skill_level')
+
+class IdeaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PostIdea
+        fields = ('idea_id', 'user_id', 'title','idea_str','idea_image','idea_movie','idea_date')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('idea_id', 'user_id', 'comment_date', 'comment')
