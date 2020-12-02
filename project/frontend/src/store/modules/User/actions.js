@@ -28,10 +28,14 @@ export default {
         const formData = new FormData();
         formData.append('username', payload.username);
         formData.append('email', payload.email);
-        formData.append('prof_img', payload.prof_img);
         formData.append('intro', payload.intro);
         formData.append('univ_name', payload.univ_name);
         formData.append('major', payload.major);
+
+        // 画像だけnullでない場合のみ更新する
+        if (payload.prof_img !== null) {
+            formData.append('prof_img', payload.prof_img);
+        }
         return api.put(url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
