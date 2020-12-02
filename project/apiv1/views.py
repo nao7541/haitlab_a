@@ -1,9 +1,9 @@
 from rest_framework import viewsets, generics, mixins
 from rest_framework.permissions import IsAuthenticated
-
 from user.models import CustomUser, Skill
+from idea.models import PostIdea, RequiredSkill, Comment
 from event.models import Event
-from .serializers import UserSerializer, EventSerializer, SkillSerializer
+from .serializers import UserSerializer, EventSerializer, SkillSerializer, IdeaSerializer, RequiredSkillSerializer, CommentSerializer
 from .permissions import IsAuthorOrReadOnly, IsSkillAuthorOrReadOnly
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
@@ -35,3 +35,19 @@ class TwitterLogin(SocialLoginView):
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
+
+class IdeaViewset(viewsets.ModelViewSet):
+
+    queryset = PostIdea.objects.all()
+    serializer_class = IdeaSerializer
+
+class RequiredSkillViewset(viewsets.ModelViewSet):
+
+    queryset = RequiredSkill.objects.all()
+    serializer_class = RequiredSkillSerializer
+
+class CommentViewSet(viewsets.ModelViewSet):
+
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
