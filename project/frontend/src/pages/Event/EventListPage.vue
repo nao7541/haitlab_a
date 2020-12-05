@@ -14,6 +14,7 @@
                     :name="event.event_name"
                     :detail="event.event_detail"
                     :schedule="event.event_schedule"
+                    :location="event.event_location"
                     :url="event.event_url"
                 ></EventElement>
             </BaseCard>
@@ -39,7 +40,6 @@ export default {
         loadEvents() {
             this.$store.dispatch('event/loadEvents')
             .then(() => {
-
                 console.log(this.events);
             })
         }
