@@ -4,7 +4,13 @@ Vue.use(VueRouter);
 //---------- impport page components ----------//
 // Idea pages
 import HomePage from '@/pages/Idea/HomePage.vue';
+import IdeasPage from '@/pages/Idea/IdeasPage.vue';
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
+import PostStep1 from '@/pages/Idea/PostStep1.vue';
+import PostStep2 from '@/pages/Idea/PostStep2.vue';
+import PostStep3 from '@/pages/Idea/PostStep3.vue';
+import PostStep4 from '@/pages/Idea/PostStep4.vue';
+import PostStep5 from '@/pages/Idea/PostStep5.vue';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 // Auth pages
 import SignupPage from '@/pages/Auth/SignupPage.vue';
@@ -26,76 +32,91 @@ import store from '@/store/index.js';
 
 const routes = [
     {
-        // アイデア詳細画面
-        name: 'ideas',
-        path: '/ideas',
-        component: HomePage, // 表示する画面はHomePageと同じ
-    },
-    {
-        name: 'ideaDetail',
-        path: '/ideas/:ideaId',
-        component: IdeaDetailPage,
-        props: true,
+        path: '/',
+        component: HomePage,
+        children: [
+            {
+                name: 'ideas',
+                path: '',
+                component: IdeasPage,
+            },
+            {
+                // アイデア詳細画面
+                name: 'ideaDetail',
+                path: '/ideas/:ideaId',
+                component: IdeaDetailPage,
+                props: true,
+            },
+            {
+                // サインアップ画面
+                name: 'signup',
+                path: 'signup',
+                component: SignupPage,
+                meta: { requiresUnAuth: true },
+            },
+            {
+                // ログイン画面
+                name: 'login',
+                path: 'login',
+                component: LoginPage,
+                meta: { requiresUnAuth: true },
+            },
+            {
+                // ユーザー画面
+                name: 'userprofile',
+                path: 'profile/:userId',
+                component: UserProfilePage,
+                props: true,
+                meta: { requiresAuth: true }, 
+            },
+            {
+                // プロフィール設定画面
+                name: 'settings',
+                path: 'settings',
+                component: SettingsPage,
+                meta: { requiresAuth: true },
+            },
+            {
+                // メッセージ一覧画面
+                name: 'messages',
+                path: 'messages',
+                component: MessageListPage,
+                meta: { requiresAuth: true },
+                children: [
+                    {
+                        name: 'messageDisplay',
+                        path: 'username',
+                        component: MessageDisplayPage,
+                    }
+                ]
+            },
+            {
+                // イベント一覧画面
+                name: 'events',
+                path: 'events',
+                component: EventListPage,
+            },
+        ]
     },
     {
         // アイデア投稿画面
         name: 'post',
         path: '/post',
+        // redirect: { name: 'step1' },
         component: IdeaPostPage,
         meta: { requiresAuth: true },
-    },
-    {
-        // サインアップ画面
-        name: 'signup',
-        path: '/signup',
-        component: SignupPage,
-        meta: { requiresUnAuth: true },
-    },
-    {
-        // ログイン画面
-        name: 'login',
-        path: '/login',
-        component: LoginPage,
-        meta: { requiresUnAuth: true },
-    },
-    {
-        // ユーザー画面
-        name: 'userprofile',
-        path: '/profile/:userId',
-        component: UserProfilePage,
-        props: true,
-        meta: { requiresAuth: true }, 
-    },
-    {
-        name: 'settings',
-        path: '/settings',
-        component: SettingsPage,
-        meta: { requiresAuth: true },
-    },
-    {
-        // メッセージ一覧画面
-        name: 'messages',
-        path: '/messages',
-        component: MessageListPage,
-        meta: { requiresAuth: true },
         children: [
-            {
-                name: 'messageDisplay',
-                path: 'username',
-                component: MessageDisplayPage,
-            }
+            { name: 'step1', path: 'step1', component: PostStep1 },
+            { name: 'step2', path: 'step2', component: PostStep2 },
+            { name: 'step3', path: 'step3', component: PostStep3 },
+            { name: 'step4', path: 'step4', component: PostStep4 },
+            { name: 'step5', path: 'step5', component: PostStep5 },
         ]
-    },
-    {
-        // イベント一覧画面
-        name: 'events',
-        path: '/events',
-        component: EventListPage,
     },
     {
         // それ以外はホーム画面に遷移
         path: '/:notFound(.*)',
-        redirect: '/ideas'
+        redirect: ''
     }
 ]
 
