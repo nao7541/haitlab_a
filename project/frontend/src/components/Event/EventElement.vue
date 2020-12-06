@@ -6,7 +6,7 @@
             </div>
             <div class="info">
                 <h3 class="date">{{ schedule }}</h3>
-                <small class="location"><FontAwesomeIcon style="marginRight: .5rem" :icon="['fas', 'map-marker-alt']"/>東京</small>
+                <small class="location"><FontAwesomeIcon style="marginRight: .5rem" :icon="['fas', 'map-marker-alt']"/>{{ location }}</small>
             </div>
         </div>
         <div class="content">

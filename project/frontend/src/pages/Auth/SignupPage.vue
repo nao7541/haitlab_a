@@ -131,7 +131,7 @@ export default {
             this.clearForm();
 
             // redirect to /ideas
-            this.$router.replace('/ideas');
+            this.$router.replace('/');
         }
     }
 }

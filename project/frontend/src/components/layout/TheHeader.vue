@@ -1,6 +1,6 @@
 <template>
     <header>
-        <h1><router-link to="/ideas">カムトル</router-link></h1>
+        <h1><router-link to="/">カムトル</router-link></h1>
         <nav>
             <ul class="nav-links">
                 <div v-if="!isLoggedIn">
@@ -9,8 +9,8 @@
                     <li><router-link to="/login">ログイン</router-link></li>
                 </div>
                 <div v-if="isLoggedIn">
-                    <li><router-link to="/events">イベント一覧</router-link></li>
                     <li><router-link class="post" to="/post">アイデア投稿</router-link></li>
+                    <li><router-link to="/events">イベント一覧</router-link></li>
                     <li><BaseButton @buttonEvent="logout">ログアウト</BaseButton></li>
                     <li><router-link :to="userLink"><FontAwesomeIcon :icon="['fas', 'user']" size="lg"/></router-link></li>
                 </div>
@@ -35,7 +35,7 @@ export default {
     methods: {
         logout() {
             this.$store.dispatch('auth/logout')
-            this.$router.replace('/ideas'); // ログイン後は/ideasへ自動的に遷移させる
+            this.$router.replace(''); // ログイン後は/ideasへ自動的に遷移させる
         }
     }
 }
