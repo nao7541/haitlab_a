@@ -31,10 +31,9 @@ class RequiredSkillSerializer(serializers.ModelSerializer):
         fields = ('idea_id', 'skill_name', 'skill_level')
 
 class IdeaSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PostIdea
-        fields = ('idea_id', 'user_id', 'title','overview','background','passion','idea_image','idea_movie','idea_date','state')
+        fields = ('idea_id', 'user_id', 'title', 'overview', 'background', 'passion', 'idea_image', 'idea_date', 'state')
 
 
 class CommentSerializer(serializers.ModelSerializer):

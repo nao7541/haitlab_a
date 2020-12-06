@@ -24,7 +24,7 @@ class PostIdea(models.Model):
    # 投稿した日時
    idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日時")
    # 状態
-   state = models.models.CharField(max_length=100, verbose_name='状態')
+   state = models.CharField(max_length=100, verbose_name='状態')
 
    def __str__(self):
        return "No. " + str(self.idea_id)
