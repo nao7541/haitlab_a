@@ -1,13 +1,14 @@
 <template>
     <div class="event-search">
-        <BaseCard>
-            Event Search
-        </BaseCard>
+        <h3>Event Search</h3>
     </div>
 </template>
 
 <style scoped>
-.card {
-    height: 50vh;
+.event-search {
+    min-height: 100vh;
+    height: 100%;
+    width: 10rem;
+    background-color: #ccc;
 }
 </style>
