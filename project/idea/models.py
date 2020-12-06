@@ -16,13 +16,15 @@ class PostIdea(models.Model):
    # タイトル
    title = models.CharField(default="Idea Title", max_length=100, verbose_name='タイトル')
    # 投稿 文字列
-   idea_str = models.TextField(max_length=1000, blank=True, null=True, verbose_name="投稿文章")
+   overview = models.TextField(max_length=500, verbose_name="概要")
+   background = models.TextField(max_length=500,  blank=True, null=True, verbose_name="背景")
+   passion = models.TextField(max_length=500, blank=True, null=True, verbose_name="思い")
    # 投稿 画像
    idea_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="投稿画像") # upload_to settings - MEDIA_ROOT以下のファイル保存先
-   # 投稿 動画
-   idea_movie = models.FileField(upload_to='images/',  blank=True, null=True, verbose_name="投稿動画ファイル")
    # 投稿した日時
    idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日時")
+   # 状態
+   state = models.models.CharField(max_length=100, verbose_name='状態')
 
    def __str__(self):
        return "No. " + str(self.idea_id)

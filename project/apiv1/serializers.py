@@ -32,7 +32,7 @@ class IdeaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostIdea
-        fields = ('idea_id', 'user_id', 'title','idea_str','idea_image','idea_movie','idea_date')
+        fields = ('idea_id', 'user_id', 'title','overview','background','passion','idea_image','idea_movie','idea_date','state')
 
 
 class CommentSerializer(serializers.ModelSerializer):
