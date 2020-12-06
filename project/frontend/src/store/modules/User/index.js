@@ -5,7 +5,7 @@ import actions from './actions.js';
 export default {
     namespaced: true,
     state() {
-        return {   
+        return {
             user: {
                 user_id: null,
                 username: '',

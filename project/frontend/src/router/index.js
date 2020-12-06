@@ -3,15 +3,20 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 //---------- impport page components ----------//
 // Idea pages
-import HomePage from '@/pages/Idea/HomePage.vue';
+import HomePage from '@/pages/HomePage.vue';
 import IdeasPage from '@/pages/Idea/IdeasPage.vue';
+import NewIdeasPage from '@/pages/Idea/NewIdeasPage.vue';
+import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
+import EventIdeasPage from '@/pages/Idea/EventIdeasPage';
+import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
+import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
+// Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
 import PostStep1 from '@/pages/Idea/PostStep1.vue';
 import PostStep2 from '@/pages/Idea/PostStep2.vue';
 import PostStep3 from '@/pages/Idea/PostStep3.vue';
 import PostStep4 from '@/pages/Idea/PostStep4.vue';
 import PostStep5 from '@/pages/Idea/PostStep5.vue';
-import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 // Auth pages
 import SignupPage from '@/pages/Auth/SignupPage.vue';
 import LoginPage from '@/pages/Auth/LoginPage.vue';
@@ -34,11 +39,19 @@ const routes = [
     {
         path: '/',
         component: HomePage,
+        redirect: '/ideas',
         children: [
             {
                 name: 'ideas',
-                path: '',
+                path: 'ideas',
                 component: IdeasPage,
+                redirect: { name: 'newIdeas' },
+                children: [
+                    { name: 'newIdeas',   path: 'new',   component: NewIdeasPage   },
+                    { name: 'trendIdeas', path: 'trend', component: TrendIdeasPage },
+                    { name: 'tagIdeas',   path: 'tag',   component: TagIdeasPage   },
+                    { name: 'eventIdeas', path: 'event', component: EventIdeasPage },
+                ]
             },
             {
                 // アイデア詳細画面

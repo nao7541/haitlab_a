@@ -18,6 +18,7 @@ export default {
 <style scoped>
 #home-page {
     min-height: 100vh;
+    height: 100%;
     background-color: #f7f2e9;
 }
 </style>
