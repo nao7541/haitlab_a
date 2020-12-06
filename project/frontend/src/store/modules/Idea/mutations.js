@@ -1,10 +1,8 @@
 export default {
-    registerIdea(state, payload) {
-        // register new idea 
-        console.log(state, payload);
+    setIdeas(state, payload) {
+        state.ideas = payload;
     },
-    regiserRequiredSkill(state, payload) {
-        // register new required skill 
+    setIdea(state, payload) {
         console.log(state, payload);
     }
 };

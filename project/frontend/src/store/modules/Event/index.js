@@ -4,15 +4,11 @@ import actions from './actions.js';
 
 export default {
     namespaced: true,
-    state() {
-        return {
-            ideas: [],
-            idea: null,
-            comments: [],
-            requiredSkills: [],
-        }
-    },
+    state: () => ({
+        events: [],
+    }),
     getters,
     mutations,
     actions,
 };
+
