@@ -6,9 +6,10 @@
 
 <style scoped>
 .event-search {
+    color: #fff;
     min-height: 100vh;
     height: 100%;
     width: 10rem;
-    background-color: #ccc;
+    background-color: #182b3e;
 }
 </style>

@@ -1,6 +1,6 @@
 export default {
-    user(state) {
-        return state.user;
+    userDetail(state) {
+        return state.userDetail;
     },
     skill(state) {
         return state.skill;

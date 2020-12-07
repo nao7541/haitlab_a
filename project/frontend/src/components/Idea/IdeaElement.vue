@@ -42,7 +42,7 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch("user/loadUserData", {
+        this.$store.dispatch("user/loadUserDetail", {
             userId: this.user_id
         }).catch( err => {
             console.log(err);

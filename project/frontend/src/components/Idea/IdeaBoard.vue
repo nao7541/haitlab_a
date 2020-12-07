@@ -32,13 +32,11 @@ export default {
 </script>
 
 <style scoped>
-.idea-board {
-    background-color: #fff;
-}
-
 .board-header {
+    color: #fff;
+    background-color: #182b3e;
     padding: 1rem;
-    border-bottom: 1px solid #999999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .idea-list {

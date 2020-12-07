@@ -78,7 +78,7 @@ export default {
         }
 
         // load userdata
-        this.$store.dispatch('user/loadUserData', {
+        this.$store.dispatch('user/loadUserDetail', {
             userId: paramUserId
         });
     }

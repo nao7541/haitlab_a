@@ -15,20 +15,22 @@
     min-height: 100vh;
     width: 10rem;
     height: 100%;
-    background-color: #ccc;
-    border-right: 1px solid #999;
+    background-color: #182b3e;
 }
 
 .title {
+    color: #fff;
     font-weight: bold;
     padding: 0.5rem 1rem;
-    text-align: center;
+    text-align: left;
+    border-bottom: 1px solid #fff;
 }
 
 .tabs a {
     text-decoration: none;
-    color: #000;
+    color: #fff;
     font-size: 18px;
+    font-weight: bold;
     padding: .5rem;
     transition: all .15s ease-out;
     display: block;
@@ -36,11 +38,12 @@
 }
 
 .tabs a:hover {
+    color: #182b3e;
     background-color: #ffd588;
 }
 
 .router-link-active {
-    box-shadow: 0 1px 4px #0002;
+    color: #182b3e !important;
     background-color: #ffd588;
     border-right: 3px solid #ffa14e;
 }

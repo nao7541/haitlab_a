@@ -1,4 +1,7 @@
 export default {
+    ideaDetail(state) {
+        return state.ideaDetail;
+    },
     ideas(state) {
         return state.ideas;
     },

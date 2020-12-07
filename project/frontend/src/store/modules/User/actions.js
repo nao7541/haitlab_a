@@ -1,7 +1,7 @@
 import api from '@/services/api.js';
 
 export default {
-    loadUserData(context, payload) {
+    loadUserDetail(context, payload) {
         const url = '/users/' + payload.userId + '/';
         return api.get(url)
         .then(response => {
@@ -18,7 +18,7 @@ export default {
             };
     
             // commit
-            context.commit('setUser', userData);
+            context.commit('setUserDetail', userData);
         }).catch(errorMsg => {
             console.log(errorMsg);
         });

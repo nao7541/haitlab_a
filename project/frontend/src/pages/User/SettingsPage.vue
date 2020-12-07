@@ -106,7 +106,7 @@ export default {
             return this.$store.getters['auth/userId'];
         },
         user() {
-            return this.$store.getters['user/user'];
+            return this.$store.getters['user/userDetail'];
         },
         previewImgSrc() {
             return this.previewImage === null ? require('@/assets/images/person.png') : this.previewImage;
@@ -116,7 +116,7 @@ export default {
         // user storeに現在保存されているuser情報が、自分の情報であるかを確認
         if (this.userId !== this.user.user_id) {
             // もし自分の情報でなければ、自分の情報にセットする
-            this.$store.dispatch('user/loadUserData', {
+            this.$store.dispatch('user/loadUserDetail', {
                 userId: this.userId
             }).then(() => {
                 // load完了後にformをinitする
@@ -212,7 +212,10 @@ export default {
                 major: this.formData.major,
             };
 
-            this.$store.dispatch('user/updateUserData', updateData);
+            this.$store.dispatch('user/updateUserData', updateData)
+            .then( () => {
+                this.$router.replace({ name: 'userprofile', params: this.userId });
+            })
         }
     }
 }
