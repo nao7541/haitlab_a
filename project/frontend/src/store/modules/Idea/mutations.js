@@ -2,7 +2,10 @@ export default {
     setIdeas(state, payload) {
         state.ideas = payload;
     },
-    setIdea(state, payload) {
-        console.log(state, payload);
+    setIdeaDetail(state, payload) {
+        state.ideaDetail = payload;
+    },
+    setComments(state, payload) {
+        state.comments = payload;
     }
 };

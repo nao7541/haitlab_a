@@ -46,9 +46,9 @@ header {
     width: 100%;
     height: 10vh;
     padding: 1rem 0;
-    background-color: #ffffff;
+    background-color: #fff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    color: black;
+    color: #000;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
@@ -61,8 +61,8 @@ header nav {
 }
 
 li, a {
+    color: #000;
     text-decoration: none;
-    color: black;
 }
 
 .nav-links {
@@ -91,8 +91,12 @@ li, a {
     color: #ffbb3c;
 }
 
+/* .nav-links button {
+    color: #fff;
+} */
+
 .post {
-    color: #000000 !important;
+    color: #000;
     padding: .5rem 2rem;
     background-color: #ffe0a7;
     border-radius: 4px;

@@ -7,7 +7,7 @@ export default {
     state() {
         return {
             ideas: [],
-            idea: null,
+            ideaDetail: null,
             comments: [],
             requiredSkills: [],
         }
