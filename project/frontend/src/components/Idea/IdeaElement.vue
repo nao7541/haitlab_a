@@ -26,19 +26,17 @@ export default {
         content() {
             return this.overview;
         },
-        user() {
-            return this.$store.getters['user/user'];
+        userDetail() {
+            return this.$store.getters['user/userDetail'];
         },
         ideaLink() {
             return { name: 'ideaDetail', params: { ideaId: this.idea_id } };
         },
         userLink() {
             return { name: 'userprofile', params: { userId: this.user_id } };
-        }
-    },
-    data() {
-        return {
-            profileImage: require('@/assets/images/person.png'),
+        },
+        profileImage() {
+            return this.userDetail.prof_img === null ? require('@/assets/images/person.png') : this.userDetail.prof_img
         }
     },
     created() {
@@ -110,6 +108,6 @@ export default {
 }
 
 .idea-footer .profile img:hover {
-    background-color: #ffbb3c;
+    box-shadow: 0 1px 2px #0005;
 }
 </style>

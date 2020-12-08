@@ -214,7 +214,7 @@ export default {
 
             this.$store.dispatch('user/updateUserData', updateData)
             .then( () => {
-                this.$router.replace({ name: 'userprofile', params: this.userId });
+                this.$router.replace({ name: 'userprofile', params: { userId: this.userId} });
             })
         }
     }

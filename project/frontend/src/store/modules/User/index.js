@@ -15,12 +15,6 @@ export default {
                 univ_name: '',
                 major: '',
             },
-            skill: {
-                skill_id: null,
-                user_id: null,
-                skill_name: '',
-                skill_level: '',
-            }
         }
     },
     getters,

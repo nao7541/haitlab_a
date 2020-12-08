@@ -12,8 +12,8 @@
 
 <style scoped>
 .tabs {
-    min-height: 100vh;
     width: 10rem;
+    min-height: 100vh;
     height: 100%;
     background-color: #182b3e;
 }
@@ -39,12 +39,12 @@
 
 .tabs a:hover {
     color: #182b3e;
-    background-color: #ffd588;
+    background-color: #dbb774;
 }
 
 .router-link-active {
     color: #182b3e !important;
-    background-color: #ffd588;
+    background-color: #ffd588 !important;
     border-right: 3px solid #ffa14e;
 }
 </style>
