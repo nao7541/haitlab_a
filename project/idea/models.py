@@ -48,6 +48,7 @@ class Comment(models.Model):
     class Meta:
         db_table = "Comment"
 
+    comment_id = models.AutoField(primary_key=True, verbose_name="コメントID")
     # どの投稿に対してコメントを送ったか (自動生成されるkeyに対して外部キー設定)
     idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name="アイデアID")
     # コメントを送ったユーザ
