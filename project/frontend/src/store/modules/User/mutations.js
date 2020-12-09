@@ -1,6 +1,6 @@
 export default {
-    setUser(state, payload) {
-        state.user = {
+    setUserDetail(state, payload) {
+        state.userDetail = {
             user_id: payload.user_id,
             username: payload.username,
             email: payload.email,

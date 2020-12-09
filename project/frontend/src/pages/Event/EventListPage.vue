@@ -1,7 +1,7 @@
 <template>
     <div id="event-page">
-        <section class="search">
-            <EventSearch/>
+        <section class="side">
+           <EventSearch/>
         </section>
         <section class="events">
             <BaseCard>
@@ -14,6 +14,7 @@
                     :name="event.event_name"
                     :detail="event.event_detail"
                     :schedule="event.event_schedule"
+                    :location="event.event_location"
                     :url="event.event_url"
                 ></EventElement>
             </BaseCard>
@@ -38,10 +39,6 @@ export default {
     methods: {
         loadEvents() {
             this.$store.dispatch('event/loadEvents')
-            .then(() => {
-
-                console.log(this.events);
-            })
         }
     },
     created() {
@@ -52,23 +49,15 @@ export default {
 
 <style scoped>
 #event-page {
-    width: 80%;
-    display: grid;
+    width: 60%;
     margin: 2rem auto;
-    grid-template-columns: 1fr 2.5fr;
-    grid-template-areas: "search events";
-}
-.search {
-    padding: 0 1rem;
-    grid-area: search;
-}
-
-.events .card {
-    padding: 2rem 0;
+    display: flex;
 }
 
 .events {
-    grid-area: events;
+    min-height: 100vh;
+    height: 100%;
+    background-color: #fff;
 }
 
 .events .header {

@@ -76,5 +76,24 @@ export default {
         }).catch(errorMessage => {
             console.log(errorMessage);
         });
+    },
+    twitterSign() {
+        const url = "/login/twitter/";
+        const access_token = "";
+        const token_secret = "";
+        const oauthValues = {
+            'access_token': access_token,
+            'token_secret': token_secret,
+        };
+
+        return api.post(url, oauthValues)
+        .then( response => {
+            if (response.status === 200) {
+                const token = response.data.key;
+                localStorage.setItem("token", token);
+            }
+        }).catch( err => {
+            console.log(err);
+        });
     }
 };

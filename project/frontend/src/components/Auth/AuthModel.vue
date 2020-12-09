@@ -10,7 +10,7 @@
                 <span class="btn-title">{{ facebookButtonTitle }}</span>
                 <FontAwesomeIcon :icon="['fab', 'facebook-square']" size="lg"/>
             </BaseButton>
-            <BaseButton class="twitter">
+            <BaseButton class="twitter" @buttonEvent="twitterSign">
                 <span class="btn-title">{{ twitterButtonTitle }}</span>
                 <FontAwesomeIcon :icon="['fab', 'twitter-square']" size="lg"/>
             </BaseButton>
@@ -27,6 +27,11 @@ export default {
         },
         twitterButtonTitle() {
             return this.mode + ' with Twitter';
+        }
+    },
+    methods: {
+        twitterSign() {
+            this.$store.dispatch("auth/twitterSign");
         }
     }
 }

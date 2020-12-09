@@ -5,8 +5,8 @@ import actions from './actions.js';
 export default {
     namespaced: true,
     state() {
-        return {   
-            user: {
+        return {
+            userDetail: {
                 user_id: null,
                 username: '',
                 email: null,
@@ -15,12 +15,6 @@ export default {
                 univ_name: '',
                 major: '',
             },
-            skill: {
-                skill_id: null,
-                user_id: null,
-                skill_name: '',
-                skill_level: '',
-            }
         }
     },
     getters,

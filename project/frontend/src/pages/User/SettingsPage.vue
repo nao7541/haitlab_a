@@ -4,7 +4,7 @@
             <form @submit.prevent="updateProfile">
                 <h1>Edit My Profile</h1>
                 <div class="form-control profile-image">
-                    <img :src="user.prof_img" alt="profile">
+                    <img :src="previewImgSrc" alt="profile">
                     <input class="image-input" type="file" @change="imageSelect" accept="image/*">
                 </div>
                 <div class="form-control" :class="{invalid: !formData.username.isValid}">
@@ -71,6 +71,7 @@ export default {
         return {
             isFormValid: true,
             selectedImage: null,
+            previewImage: null,
             formData: {
                 username: {
                     val: '',
@@ -105,14 +106,17 @@ export default {
             return this.$store.getters['auth/userId'];
         },
         user() {
-            return this.$store.getters['user/user'];
+            return this.$store.getters['user/userDetail'];
+        },
+        previewImgSrc() {
+            return this.previewImage === null ? require('@/assets/images/person.png') : this.previewImage;
         }
     },
     created() {
         // user storeに現在保存されているuser情報が、自分の情報であるかを確認
         if (this.userId !== this.user.user_id) {
             // もし自分の情報でなければ、自分の情報にセットする
-            this.$store.dispatch('user/loadUserData', {
+            this.$store.dispatch('user/loadUserDetail', {
                 userId: this.userId
             }).then(() => {
                 // load完了後にformをinitする
@@ -130,6 +134,10 @@ export default {
             this.formData.major = this.user.major;
             this.formData.email = this.user.email;
             this.formData.intro = this.user.intro;
+
+            if (this.user.prof_img != null) {
+                this.previewImage = this.user.prof_img;
+            }
         },  
         addSkill() {
             // if skill level is not selected, not to add to the list.
@@ -155,14 +163,24 @@ export default {
             this.skills.splice(index, 1);
         },  
         imageSelect(event) {
-            console.log(event);
             this.selectedImage = event.target.files[0];
+
+            if (this.selectedImage != null) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.previewImage = e.target.result;
+                }
+                reader.readAsDataURL(this.selectedImage);
+            } else {
+                if (this.user.prof_img != null) {
+                    this.previewImage = this.user.prof_img;
+                } else {
+                    this.previewImage = null;
+                }
+            }
         },
         clearValidity(input) {
-            this.formData.this[input].isValid = true;
-        },
-        currentState() {
-            // load current user profile state
+            this.formData[input].isValid = true;
         },
         formValidation() {
             this.isFormValid = true;
@@ -194,7 +212,10 @@ export default {
                 major: this.formData.major,
             };
 
-            this.$store.dispatch('user/updateUserData', updateData);
+            this.$store.dispatch('user/updateUserData', updateData)
+            .then( () => {
+                this.$router.replace({ name: 'userprofile', params: { userId: this.userId} });
+            })
         }
     }
 }
@@ -211,7 +232,7 @@ form h1 {
 }
 
 .form-control {
-    margin-bottom: 1rem;
+    margin: 0.5rem 0;
 }
 
 .form-control p {
@@ -219,11 +240,15 @@ form h1 {
     font-size: 14px;
 }
 
+.profile-image {
+    margin: 2rem 0;
+}
+
 .profile-image img {
+    max-width: 128px;
+    max-height: 128px;
     width: auto;
     height: auto;
-    max-width: 200px;
-    max-height: 200px;
     border-radius: 128px;
 }
 

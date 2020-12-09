@@ -1,28 +1,19 @@
 <template>
-    <div class="idea-element">
-        <div class="profile">
-            <router-link :to="userLink"><img src="user.prof_img" alt="image"></router-link>
+    <div class="idea" >
+        <div class="idea-header" @click.prevent="ideaPressed">
+            <router-link :to="ideaLink">{{ title }}</router-link>
         </div>
-        <div class="card-body">
-            <div class="skills">
-                <BaseSkill
-                    v-for="skill in skillsList"
-                    :key="skill.skill_id"
-                    :tagname="skill.skill_name"
-                    class="skill-tag"
-                ></BaseSkill>
+        <div class="tags">
+        </div>
+        <div class="overview">
+            <p>{{ content }}</p>
+        </div>
+        <div class="idea-footer">
+            <div class="profile">
+                <router-link :to="userLink"><img :src="profileImage" alt="profile"></router-link>
             </div>
-            <div class="title">
-                <h2>{{ title }}</h2>
-            </div>
-            <div class="content">
-                <p>{{ content }}</p>
-            </div>
-            <div class="detail-button">
-                <router-link :to="detailLink">詳細</router-link>
-            </div>
-            <div class="footer">
-                <small>{{ date }}</small>
+            <div class="date">
+                <small>{{ idea_date }}</small>
             </div>
         </div>
     </div>
@@ -30,115 +21,93 @@
 
 <script>
 export default {
-    data() {
-        return {
-            skillsList: [],
-        };
-    },
+    props: ['idea_id', 'user_id', 'title', 'overview', 'background', 'passion', 'idea_img', 'idea_date'],
     computed: {
-        detailLink() {
+        content() {
+            return this.overview;
+        },
+        userDetail() {
+            return this.$store.getters['user/userDetail'];
+        },
+        ideaLink() {
             return { name: 'ideaDetail', params: { ideaId: this.idea_id } };
         },
         userLink() {
-            return { name: 'userprofile', params: { userId: this.user_id }}
+            return { name: 'userprofile', params: { userId: this.user_id } };
         },
-        requiredSkills() {
-            return this.$store.getters['idea/requiredSkills'];
+        profileImage() {
+            return this.userDetail.prof_img === null ? require('@/assets/images/person.png') : this.userDetail.prof_img
         }
     },
-    props: ['idea_id', 'user_id', 'title', 'content', 'date'],
     created() {
-        for (const skill of this.requiredSkills) {
-            if (skill.idea_id == this.idea_id) {
-                this.skillsList.push(skill);
-            }
-        }
-    }
+        this.$store.dispatch("user/loadUserDetail", {
+            userId: this.user_id
+        }).catch( err => {
+            console.log(err);
+        });
+    },
 }
 </script>
 
 <style scoped>
-.idea-element {
-    width: 45%;
-    text-align: center;
-    background-color: #ffffff;
-    margin: 2rem auto;
+.idea {
+    width: 100%;
+    height: 15rem;
+    background-color: #fff;
+    padding: 1rem;
+    transition: all 0.5s ease-out;
+    border-bottom: 1px solid #dddddd;
 }
 
-.idea-element:hover {
-    transition: all 0.25s ease-in;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+.idea:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
-.profile {
-    background-color: #f7f2e9;
+.idea-header {
+    padding: 1rem 0;
 }
 
-.profile img{
-    width: 128px;
-    height: 128px;
-    border-radius: 128px;
-    margin: 1rem 0;
+.idea-header a {
+    color: #000;
+    display: block;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 1px solid #cccccc;
+    transition: all 0.25s ease-out;
+}
+
+.idea-header a:hover {
+    color: #ffa600;
+    border-bottom: 1.2px solid #ffbb3c;
+}
+
+.overview {
+    text-align: left;
+    height: 7rem;
+}
+
+.idea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.idea-footer .profile {
     cursor: pointer;
 }
 
-.card-body {
-    background: linear-gradient(to top, #ffe0a7, #ffeece);
-    display: grid;
-    grid-template-rows: 0.1fr 1fr 1.2fr .25fr 0.1fr;
-    grid-template-areas:
-                "skills"
-                "title"
-                "content"
-                "detail"
-                "footer";
+.idea-footer .profile img {
+    z-index: 10;
+    background-color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 36px;
+    transition: all 0.25s ease-out;
+    padding: .15rem;
 }
 
-.card-body .skills {
-    grid-area: skills;
-    display: flex;
-    flex: wrap;
-}
-
-.card-body .skills .skill-tag {
-    margin: 0 auto;
-}
-
-.card-body .title {
-    grid-area: title;
-    padding: 0 1rem;
-    height: 5rem;
-}
-
-.card-body .title h2 {
-    font-size: 18px;
-    font-weight: bold;
-    border-bottom: 1px solid #000000;
-}
-
-.card-body .content {
-    grid-area: content;
-}
-
-.card-body .detail-button {
-    grid-area: detail;
-}
-
-.card-body .detail-button button {
-    width: 60%;
-}
-
-.card-body .detail-button button:hover {
-    background-color: #f5f5f5;
-}
-
-.card-body .detail-button button:focus {
-    background-color: #eeeeee;
-}
-
-.card-body .footer {
-    grid-area: footer;
-    text-align: right;
-    padding: 1rem 2rem 1rem 0;
+.idea-footer .profile img:hover {
+    box-shadow: 0 1px 2px #0005;
 }
 </style>
