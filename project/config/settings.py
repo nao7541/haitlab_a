@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -157,6 +158,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
 # django-allauth用の設定

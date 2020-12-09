@@ -4,6 +4,7 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
+from django_filters import rest_framework as filters
 
 from user.models import CustomUser
 from idea.models import PostIdea, Comment
@@ -44,9 +45,20 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+class TagFilter(filters.FilterSet):
+
+    # フィルタの定義
+    tag_name = filters.CharFilter(field_name="tag_name", lookup_expr='contains')
+
+    class Meta:
+        model = Tag
+        fields = ['tag_name',]
+
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = TagFilter
 
 class UserTagMapViewSet(viewsets.ModelViewSet):
     queryset = UserTagMap.objects.all()
