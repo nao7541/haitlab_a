@@ -7,16 +7,16 @@ import store from './store'
 import BaseCard from '@/components/UI/BaseCard.vue';
 import BaseButton from '@/components/UI/BaseButton.vue';
 import BaseCheckBox from '@/components/UI/BaseCheckBox.vue';
-import BaseSkill from '@/components/UI/BaseSkill.vue';
+import BaseTag from '@/components/UI/BaseTag.vue';
 import vuetify from './plugins/vuetify';
 
 //---------- Font Awesome ----------//
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUser, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faTimes, faTag } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookSquare, faTwitterSquare } from '@fortawesome/free-brands-svg-icons';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add(faUser, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faFacebookSquare, faTwitterSquare, faEdit);
+library.add(faUser, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faTimes, faTag, faFacebookSquare, faTwitterSquare, faEdit);
 Vue.component('FontAwesomeIcon', FontAwesomeIcon);
 
 Vue.config.productionTip = false
@@ -24,7 +24,7 @@ Vue.config.productionTip = false
 Vue.component('BaseCard', BaseCard);
 Vue.component('BaseButton', BaseButton);
 Vue.component('BaseCheckBox', BaseCheckBox);
-Vue.component('BaseSkill', BaseSkill);
+Vue.component('BaseTag', BaseTag);
 
 new Vue({
   router,

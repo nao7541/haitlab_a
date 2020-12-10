@@ -1,7 +1,7 @@
 <template>
     <div id="settings">
         <BaseCard>
-            <form @submit.prevent="updateProfile">
+            <form @submit.prevent="updateProfile" v-if="loadComplete">
                 <h1>Edit My Profile</h1>
                 <div class="form-control profile-image">
                     <img :src="previewImgSrc" alt="profile">
@@ -29,35 +29,8 @@
                     <label for="intro">Self Introduction</label>
                     <textarea id="intro" name="intro" rows="10" cols="30" v-model.trim="formData.intro"></textarea>
                 </div>
-                <div class="form-control" :class="{invalid: !skill.level.isValid}">
-                    <h4 class="skill-input-title">Skill Tags</h4>
-                    <p v-if="!skill.level.isValid">Select level please.</p>
-                    <div class="skill-input">
-                        <input type="text" placeholder="Enter a Skill" class="skill-input-text" v-model.trim="skill.name">
-                        <select name="levels" class="levels" v-model="skill.level.val">
-                            <option disabled value="">Your Level</option>
-                            <option v-for="op in levelOptions"
-                                :key="op.level"
-                                :val="op.level"
-                            >
-                                {{ op.level }}
-                            </option>
-                        </select>
-                        <button type="button" @click="addSkill">Add</button>
-                    </div>
-                    <div class="tags">
-                        <!-- skills to add -->
-                        <BaseSkill v-for="(sk, index) in inputSkills"
-                            :key="index"
-                            :name="sk.name"
-                            :level="sk.level"
-                        >
-                            <template #delete-icon>
-                                <!-- <span @click="removeSkill(index)"><FontAwesomeIcon :icon="['fas', 'times']" size="sm" /></span> -->
-                            </template>
-                        </BaseSkill>
-                        <!-- stored skills -->
-                    </div>
+                <div class="form-control">
+                    <InputTag :tags="inputTags" :maximum="5"/>
                 </div>
                 <BaseButton class="submit-btn">Update</BaseButton>
             </form>
@@ -66,9 +39,17 @@
 </template>
 
 <script>
+import apiHelper from '@/services/apiHelper.js';
+import InputTag from '@/components/Tag/InputTag.vue';
+
 export default {
+    components: {
+        InputTag,
+    },
     data() {
         return {
+            userDetail: null,
+            loadComplete: false,
             isFormValid: true,
             selectedImage: null,
             previewImage: null,
@@ -85,83 +66,48 @@ export default {
                 email: null,
                 intro: '',
             },
-            inputSkills: [],
-            skill: {
-                name: '',
-                level: {
-                    val: '',
-                    isValid: true,
-                }
-            },
-            levelOptions: [
-                { level: 'beginner' },
-                { level: 'intermediate' },
-                { level: 'advanced' },
-                { level: 'expert' },
-            ]
+            tags: [],    // 現時点でDBに格納されているtags
+            inputTags: [], // ユーザーの入力を反映したtags
         }
     },
     computed: {
         userId() {
             return this.$store.getters['auth/userId'];
         },
-        user() {
-            return this.$store.getters['user/userDetail'];
-        },
         previewImgSrc() {
             return this.previewImage === null ? require('@/assets/images/person.png') : this.previewImage;
         }
     },
     created() {
-        // user storeに現在保存されているuser情報が、自分の情報であるかを確認
-        if (this.userId !== this.user.user_id) {
-            // もし自分の情報でなければ、自分の情報にセットする
-            this.$store.dispatch('user/loadUserDetail', {
-                userId: this.userId
-            }).then(() => {
-                // load完了後にformをinitする
-                this.initUserForm();
-            }).catch( errorMsg => {
-                console.log(errorMsg);
-            });
-        } 
+        apiHelper.loadUserDetail(this.userId)
+        .then( res => {
+            this.userDetail = res;
+
+            return apiHelper.loadUserTags(this.userId);
+        }).then( res => {
+            // tag_nameのみを取り出す
+            this.tags = res;
+            this.inputTags = res.map((tag) => tag.tag_name);
+
+            this.initUserForm();
+            this.loadComplete = true;
+        }).catch (err => {
+            console.log("error to load user detail at setting page: ", err);
+        })
     },
     methods: {
         initUserForm() {
             // すでに登録されている情報をフォームに反映する
-            this.formData.username.val = this.user.username;
-            this.formData.univ.val = this.user.univ_name;
-            this.formData.major = this.user.major;
-            this.formData.email = this.user.email;
-            this.formData.intro = this.user.intro;
+            this.formData.username.val = this.userDetail.username;
+            this.formData.univ.val = this.userDetail.univ_name;
+            this.formData.major = this.userDetail.major;
+            this.formData.email = this.userDetail.email;
+            this.formData.intro = this.userDetail.intro;
 
-            if (this.user.prof_img != null) {
-                this.previewImage = this.user.prof_img;
+            if (this.userDetail.prof_img != null) {
+                this.previewImage = this.userDetail.prof_img;
             }
-        },  
-        addSkill() {
-            // if skill level is not selected, not to add to the list.
-            if (this.skill.level.val === '') {
-                this.skill.level.isValid = false;
-                return;
-            }
-
-            // add a new skill to the skill list
-            this.inputSkills.push({
-                name: this.skill.name,
-                level: this.skill.level.val,
-            });
-
-            // clear skill input
-            this.skill.name = '';
-            this.skill.level = {
-                val: '',
-                isValid: true,
-            };
-        },
-        removeSkill(index) {
-            this.skills.splice(index, 1);
-        },  
+        }, 
         imageSelect(event) {
             this.selectedImage = event.target.files[0];
 
@@ -172,8 +118,8 @@ export default {
                 }
                 reader.readAsDataURL(this.selectedImage);
             } else {
-                if (this.user.prof_img != null) {
-                    this.previewImage = this.user.prof_img;
+                if (this.userDetail.prof_img != null) {
+                    this.previewImage = this.userDetail.prof_img;
                 } else {
                     this.previewImage = null;
                 }
@@ -195,6 +141,15 @@ export default {
                 this.isFormValid = false;
             }
         },
+        arrayEqual(x, y) {
+            if (!Array.isArray(x)) return false;
+            if (!Array.isArray(y)) return false;
+            if (x.length != y.length) return false;
+            for (const item of x) {
+                if (!y.includes(item)) return false;
+            }
+            return true;
+        },
         updateProfile() {
             this.formValidation();
 
@@ -211,11 +166,50 @@ export default {
                 univ_name: this.formData.univ.val,
                 major: this.formData.major,
             };
-
-            this.$store.dispatch('user/updateUserData', updateData)
+            
+            // userDetailの更新
+            apiHelper.updateUserDetail(updateData)
             .then( () => {
-                this.$router.replace({ name: 'userprofile', params: { userId: this.userId} });
+                const tag_names = this.tags.map((tag) => tag.tag_name);
+                // step1 タグの更新の有無を確認
+                if (this.arrayEqual(tag_names, this.inputTags)) {
+                    return;
+                }
+
+                // step2 追加された要素を確認
+                const newTags = [];
+                for (const tag of this.inputTags) {
+                    if (!tag_names.includes(tag)) {
+                        newTags.push(tag);
+                    }
+                }
+
+                // step3 削除された要素を確認
+                const delTags = [];
+                for (const tag of tag_names) {
+                    if (!this.inputTags.includes(tag)) {
+                        // 配列に追加するのはタグ名でなく、タグのid
+                        const target = this.tags.find((t) => {
+                            return t.tag_name == tag
+                        });
+                        delTags.push(target.tag_id);
+                    }
+                }
+
+                // step4 削除された要素があればideaTagMapより削除する
+                // TODO django-filterないと無理だね。userTagMapにてtag_idに対して消さないといけないから
+                // if (delTags.length > 0) {
+                //     for (const tag of delTags) {
+                        
+                //     }
+                // }
+
+            }).catch( err => {
+                console.log("error to update user detail: ", err);
             })
+
+            // 設定変更後は自分のプロフィール画面に戻る
+            this .$router.replace({ name: 'userprofile', params: { userId: this.userId} });
         }
     }
 }
@@ -287,29 +281,6 @@ form h1 {
 
 .form-control textarea:focus {
     border: 2px solid #ffb01e99;
-}
-
-.skill-input-title {
-    text-align: left;
-    font-weight: bold;
-}
-
-.skill-input {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.skill-input-text {
-    width: 100%;
-}
-
-.skill-input .levels {
-    margin-left: auto;
-}
-
-.levels,    
-.skill-input > button {
-    padding: 0.5rem;
 }
 
 .submit-btn {
