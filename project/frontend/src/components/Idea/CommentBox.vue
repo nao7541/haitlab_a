@@ -1,7 +1,7 @@
 <template>
-    <div class="comment-box">
+    <div class="comment-box" v-if="loadComplete">
         <div class="comment-side">
-            <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
+            <img :src="userDetail.prof_img" @click="imagePressed">
         </div>
         <div class="comment-body">
             <div class="comment-header">
@@ -16,20 +16,32 @@
 </template>
 
 <script>
+import apiHelper from '@/services/apiHelper.js';
 export default {
     props: ['userId'],
     computed: {
-        userDetail() {
-            return this.$store.getters['user/userDetail'];
-        },
         userLink() {
-            return { name: 'userprofile', params: { userId: this.userId } };
+            return { name: 'userprofile', params: { userId: this.userDetail.user_id } };
         }
     },
+    data() {
+        return {
+            userDetail: null,
+            loadComplete: false,
+        }
+    },
+    methods: {
+        imagePressed() {
+            this.$router.replace(this.userLink);
+        },
+    },
     created() {
-        // propsで受け取ったuserIdをもとに、ユーザーの詳細情報を取得
-        this.$store.dispatch('user/loadUserDetail',{
-            userId: this.userId
+        apiHelper.loadUserDetail(this.userId)
+        .then( res => {
+            this.userDetail = res;
+            this.loadComplete = true;
+        }).catch( err => {
+            console.log("error to load userDetail at CommentBox: ", err);
         });
     }
 }
@@ -50,6 +62,7 @@ export default {
     width: 48px;
     height: 48px;
     border-radius: 48px;
+    cursor: pointer;
 }
 
 .comment-box .comment-body {

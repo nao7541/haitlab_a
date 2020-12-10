@@ -1,16 +1,17 @@
 <template>
-    <div class="idea" >
-        <div class="idea-header" @click.prevent="ideaPressed">
+    <div class="idea" v-if="loadComplete">
+        <div class="idea-header">
             <router-link :to="ideaLink">{{ title }}</router-link>
         </div>
         <div class="tags">
+            <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
         </div>
         <div class="overview">
             <p>{{ content }}</p>
         </div>
         <div class="idea-footer">
             <div class="profile">
-                <router-link :to="userLink"><img :src="profileImage" alt="profile"></router-link>
+                <img :src="profileImage" alt="profile" @click="imagePressed">
             </div>
             <div class="date">
                 <small>{{ idea_date }}</small>
@@ -20,14 +21,14 @@
 </template>
 
 <script>
+import apiHelper from '@/services/apiHelper.js';
+
 export default {
     props: ['idea_id', 'user_id', 'title', 'overview', 'background', 'passion', 'idea_img', 'idea_date'],
     computed: {
         content() {
+            // TODO overviewより文字数を制限して返す
             return this.overview;
-        },
-        userDetail() {
-            return this.$store.getters['user/userDetail'];
         },
         ideaLink() {
             return { name: 'ideaDetail', params: { ideaId: this.idea_id } };
@@ -36,14 +37,42 @@ export default {
             return { name: 'userprofile', params: { userId: this.user_id } };
         },
         profileImage() {
-            return this.userDetail.prof_img === null ? require('@/assets/images/person.png') : this.userDetail.prof_img
+            return this.userDetail.prof_img === null ? require('@/assets/images/person.png') : this.userDetail.prof_img;
+        },
+        loadComplete() {
+            return this.loadTag && this.loadUser;
         }
     },
+    data() {
+        return {
+            userDetail: null,
+            tags: [],
+            loadTag: false,
+            loadUser: false,
+        }
+    },
+    methods: {
+        imagePressed() {
+            this.$router.replace(this.userLink);
+        },
+    },
     created() {
-        this.$store.dispatch("user/loadUserDetail", {
-            userId: this.user_id
+        // user_idよりユーザー情報を取得
+        apiHelper.loadUserDetail(this.user_id)
+        .then( res => {
+            this.userDetail = res;
+            this.loadUser = true;
         }).catch( err => {
-            console.log(err);
+            console.log("error to load userDetail at IdeaElement: ", err);
+        });
+
+        // idea_idよりタグを取得
+        apiHelper.loadIdeaTags(this.idea_id) 
+        .then( res => {
+            this.tags = res;
+            this.loadTag = true;
+        }).catch( err => {
+            console.log("error to load idea tags at IdeaElement: ", err);
         });
     },
 }
@@ -52,7 +81,6 @@ export default {
 <style scoped>
 .idea {
     width: 100%;
-    height: 15rem;
     background-color: #fff;
     padding: 1rem;
     transition: all 0.5s ease-out;
@@ -80,6 +108,12 @@ export default {
 .idea-header a:hover {
     color: #ffa600;
     border-bottom: 1.2px solid #ffbb3c;
+}
+
+.tags::after {
+    content: "";
+    display: block;
+    clear: both;
 }
 
 .overview {
