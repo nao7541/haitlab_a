@@ -1,14 +1,17 @@
 from rest_framework import viewsets, generics, mixins
 from rest_framework.permissions import IsAuthenticated
-from user.models import CustomUser, Skill
-from idea.models import PostIdea, RequiredSkill, Comment
-from event.models import Event
-from .serializers import UserSerializer, EventSerializer, SkillSerializer, IdeaSerializer, RequiredSkillSerializer, CommentSerializer
-from .permissions import IsAuthorOrReadOnly, IsSkillAuthorOrReadOnly
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
+from django_filters import rest_framework as filters
+
+from user.models import CustomUser
+from idea.models import PostIdea, Comment
+from event.models import Event
+from tag.models import Tag, UserTagMap, IdeaTagMap
+from .serializers import UserSerializer, EventSerializer, IdeaSerializer, CommentSerializer, TagSerializer, UserTagMapSerializer, IdeaTagMapSerializer
+from .permissions import IsAuthorOrReadOnly
 
 class UserViewset(mixins.RetrieveModelMixin,
                 mixins.UpdateModelMixin,
@@ -16,18 +19,13 @@ class UserViewset(mixins.RetrieveModelMixin,
                 mixins.DestroyModelMixin,
                 viewsets.GenericViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
-    serializer_class = UserSerializer
     queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
 
 class EventViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
-    serializer_class = EventSerializer
     queryset = Event.objects.all()
-
-class SkillViewset(viewsets.ModelViewSet):
-    permission_classes = (IsSkillAuthorOrReadOnly,)
-    serializer_class = SkillSerializer
-    queryset = Skill.objects.all()
+    serializer_class = EventSerializer
 
 class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
@@ -42,12 +40,30 @@ class IdeaViewset(viewsets.ModelViewSet):
     queryset = PostIdea.objects.all()
     serializer_class = IdeaSerializer
 
-class RequiredSkillViewset(viewsets.ModelViewSet):
-
-    queryset = RequiredSkill.objects.all()
-    serializer_class = RequiredSkillSerializer
-
 class CommentViewSet(viewsets.ModelViewSet):
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+class TagFilter(filters.FilterSet):
+
+    # フィルタの定義
+    tag_name = filters.CharFilter(field_name="tag_name", lookup_expr='contains')
+
+    class Meta:
+        model = Tag
+        fields = ['tag_name',]
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = TagFilter
+
+class UserTagMapViewSet(viewsets.ModelViewSet):
+    queryset = UserTagMap.objects.all()
+    serializer_class = UserTagMapSerializer
+
+class IdeaTagMapViewSet(viewsets.ModelViewSet):
+    queryset = IdeaTagMap.objects.all()
+    serializer_class = IdeaTagMapSerializer
