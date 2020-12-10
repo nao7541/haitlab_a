@@ -1,29 +1,34 @@
 <template>
     <IdeaBoard
+        v-if="loadComplete"
         title="新着アイデア"
         :ideas="ideas"
     />
 </template>
 
 <script>
-import IdeaBoard from '@/components/Idea/IdeaBoard.vue'
+import apiHelper from '@/services/apiHelper.js';
+import IdeaBoard from '@/components/Idea/IdeaBoard.vue';
 
 export default {
     components: {
         IdeaBoard,
     },
-    computed: {
-        ideas() {
-            return this.$store.getters['idea/ideas'];
-        },
-    },
-    methods: {
-        loadIdeas() {
-            this.$store.dispatch('idea/loadIdeas');
+    data() {
+        return {
+            ideas: [],
+            loadComplete: false,
         }
     },
     created() {
-        this.loadIdeas();
+        apiHelper.loadIdeas()
+        .then( res => {
+            this.ideas = res;
+
+            this.loadComplete = true;        
+        }).catch( err => {
+            console.log(err);
+        });
     }
 }
 </script>

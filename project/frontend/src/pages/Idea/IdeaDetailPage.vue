@@ -1,6 +1,6 @@
 <template>
     <div id="idea-detail">
-        <div class="idea">
+        <div class="idea" v-if="loadComplete">
             <section class="container idea-header">
                 <div class="title">
                     <h1>{{ ideaDetail.title }}</h1>
@@ -8,6 +8,9 @@
                 <div class="profile">
                     <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
                 </div>
+            </section>
+            <section class="tags">
+                <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
             </section>
             <section class="container idea-body">
                 <div class="sub-container overview">
@@ -72,6 +75,7 @@
 </template>
 
 <script>
+import apiHelper from '@/services/apiHelper.js';
 import CommentBox from '@/components/Idea/CommentBox.vue';
 
 export default {
@@ -80,26 +84,22 @@ export default {
     },
     data() {
         return {
+            userDetail: null,
+            ideaDetail: null,
             ideaId: null,
+            comments: [],
+            tags: [],
+            loadComplete: false,
             isFormValid: true,
             commentInput: '',
         };
     },
     computed: {
         userLink() {
-            return { name: 'userprofile', params: { userId: this.user_id }};
+            return { name: 'userprofile', params: { userId: this.userDetail.user_id }};
         },
         myUserId() {
             return this.$store.getters['auth/userId'];
-        },
-        ideaDetail() {
-            return this.$store.getters['idea/ideaDetail'];
-        },
-        userDetail() {
-            return this.$store.getters['user/userDetail'];
-        },
-        comments() {
-            return this.$store.getters['idea/comments'];
         },
     },
     methods: {
@@ -125,35 +125,49 @@ export default {
             }
 
             // コメントを投稿
-            this.$store.dispatch('idea/postComment', {
+            apiHelper.postComment({
                 idea_id: this.ideaId,
                 user_id: this.myUserId,
                 comment: this.commentInput
+            }).then( res => {
+                console.log(res);
+            }).catch( err => {
+                console.log("error to post comment: ", err);
             });
 
             this.commentInput = ''; // コメントの初期化
-            //TODO: コメント投稿後の画面遷移
-            // this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId }}); // リロード
-        }
+            //TODO: コメント投稿後の画面遷移でトップに画面上部に戻れるようにする
+            this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId }}); // reload
+        },
     },
     created() {
         // router paramsより本アイデアのideaIdを取得
         this.ideaId = this.$route.params['ideaId'];
         
-        //TODO: async/awaitに書き換える 
-        //TODO: comments filteringはdjangoで準備が整い次第書き換え
-        // ideaIdをキーとしてideaの詳細情報を取得
-        this.$store.dispatch('idea/loadIdeaDetail', {
-            ideaId: this.ideaId
-        }).then( () => {
-            // 詳細情報より投稿ユーザーのIDを取得
-            // ユーザーIDをもとにユーザーの詳細情報を取得
-            this.$store.dispatch('user/loadUserDetail', {
-                userId: this.ideaDetail.user_id
-            });
-            console.log(this.ideaDetail);
-        }).then( () => {
-            this.$store.dispatch('idea/loadComments');
+        apiHelper.loadIdeaDetail(this.ideaId)
+        .then( res => {
+            // idea情報を取得
+            this.ideaDetail = res;
+
+            // tag情報を取得
+            return apiHelper.loadIdeaTags(this.ideaDetail.idea_id);
+        }).then( res => {
+            this.tags = res;
+
+            return apiHelper.loadUserDetail(this.ideaDetail.user_id);
+        }).then( res => {
+            // user情報を取得
+            this.userDetail = res;
+
+            return apiHelper.loadComments(this.ideaId);
+        }).then( res => {
+            // コメントを取得
+            this.comments = res;
+
+            // 必要なロードが完了
+            this.loadComplete = true;
+        }).catch( err => {
+            console.log("error to load idea detail: ", err);
         });
     }}
 </script>
@@ -211,6 +225,16 @@ export default {
     border-radius: 64px;
 }
 
+.tags {
+    margin: 0 2rem;
+}
+
+.tags::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
 .comments {
     color: #fff;
     background-color: #182b3e;
@@ -235,7 +259,6 @@ export default {
     min-height: 10rem;
     border-bottom: 1px solid #ccc;
 }
-
 
 .comment-form {
     margin: 1rem 0;

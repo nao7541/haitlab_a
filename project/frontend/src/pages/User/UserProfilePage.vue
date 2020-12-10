@@ -1,25 +1,28 @@
 <template>
-    <div id="profile-page">
+    <div id="profile-page" v-if="loadComplete">
         <section class="side">
             <div class="profile">
                 <div class="profile-image">
-                    <img :src="user.prof_img" alt="profile">
+                    <img :src="userDetail.prof_img" alt="profile">
                 </div>
-                <h1>{{ user.username }}</h1>
+                <h1>{{ userDetail.username }}</h1>
                 <div class="intro">
-                    <p>{{ user.intro }}</p>
+                    <p>{{ userDetail.intro }}</p>
+                </div>
+                <div class="tag" v-if="tags.length > 0">
+                    <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
                 </div>
                 <div class="info">
                     <span><FontAwesomeIcon :icon="['fas', 'envelope']" size="lg"/></span>
-                    <span><a :href="mailAddress">{{ user.email }}</a></span>
+                    <span><a :href="mailAddress">{{ userDetail.email }}</a></span>
                 </div>
                 <div class="info">
                     <span><FontAwesomeIcon :icon="['fas', 'university']" size="lg"/></span>
-                    <span>{{ user.univ_name }}</span>
+                    <span>{{ userDetail.univ_name }}</span>
                 </div>
                 <div class="info">
                     <span><FontAwesomeIcon :icon="['fas', 'book-open']" size="lg"/></span>
-                    <span>{{ user.major }}</span>
+                    <span>{{ userDetail.major }}</span>
                 </div>
                 <div class="edit-profile" v-if="isMyProfile">
                     <router-link to="/settings">
@@ -40,6 +43,7 @@
 </template>
 
 <script>
+import apiHelper from '@/services/apiHelper.js'
 import IdeaBoard from '@/components/Idea/IdeaBoard.vue';
 
 export default {
@@ -48,47 +52,49 @@ export default {
     },
     data() {
         return {
+            userDetail: null,
+            loadComplete: false,
             isMyProfile: false,
             postIdeas: [],
+            tags: []
         }
     },
     computed: {
         myUserId() {
             return this.$store.getters['auth/userId'];
         },
-        user() {
-            return this.$store.getters['user/userDetail'];
-        },
         mailAddress() {
-            return "mailto:" + this.user.contact;
-        },  
-        ideas() {
-            return this.$store.getters['idea/ideas'];
-        },
+            return "mailto:" + this.userDetail.contact;
+        }
     },
     created() {
         // パラメータとして渡されたuserid
         const paramUserId = this.$route.params['userId'];
         // ローカルに保存しているuserIdと比較して、自分のページか否かを確かめる
-        if (paramUserId === this.myUserId) {
+        if (paramUserId == this.myUserId) {
             // 自分のページであるならtrue
             this.isMyProfile = true;
         }
 
-        // ユーザー情報の取得
-        this.$store.dispatch('user/loadUserDetail', {
-            userId: paramUserId
-        });
+        apiHelper.loadUserDetail(paramUserId) 
+        .then( res => {
+            this.userDetail = res;
 
-        // ユーザーの投稿アイデアの取得
-        // TODO フィルタリングでユーザーの投稿したアイデアのみをAPIより取得する
-        // this.$store.dispatch('idea/loadUserIdeas');
-        this.$store.dispatch('idea/loadIdeas')
-        .then( () => {
-            for (const idea of this.ideas) {
-                this.postIdeas.push(idea);
-            }
-        })
+            // userのタグを取得
+            return apiHelper.loadUserTags(paramUserId);
+        }).then( res => {
+            this.tags = res;
+
+            return apiHelper.loadFilteredIdeas(paramUserId);
+        }).then ( res => {
+            // ユーザーが投稿したアイデアのみを抽出
+            this.postIdeas = res;
+
+            // ロード完了
+            this.loadComplete = true;
+        }).catch ( err => {
+            console.log("error to load user profile: ", err);
+        });
     }
 }
 </script>
@@ -136,12 +142,23 @@ export default {
 
 .side .profile .intro {
     text-align: left;
-    margin: 1rem 0 2rem 0;
+    margin: 1rem 0;
     border-bottom: 1px solid #eee;
 }
 
 .side .profile p {
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.side .tag {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.side .tag::after {
+    content: "";
+    display: block;
+    clear: both;
 }
 
 .side .info {   
