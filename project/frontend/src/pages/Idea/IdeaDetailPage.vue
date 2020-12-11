@@ -1,61 +1,65 @@
 <template>
     <div id="idea-detail">
         <div class="idea" v-if="loadComplete">
-            <section class="container idea-header">
-                <div class="title">
-                    <h1>{{ ideaDetail.title }}</h1>
-                </div>
-                <div class="profile">
-                    <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
-                </div>
-            </section>
-            <section class="tags">
-                <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
-            </section>
-            <section class="container idea-body">
-                <div class="sub-container overview">
-                    <div class="sub-title">
-                        <p>アイデアの概要</p>
+            <main class="main-content">
+                <section class="container idea-header">
+                    <div class="title">
+                        <h1>{{ ideaDetail.title }}</h1>
                     </div>
-                    <div class="content">
-                        <p>{{ ideaDetail.overview }}</p>
+                    <div class="tags">
+                        <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
                     </div>
-                </div>
-                <div class="sub-container background">
-                    <div class="sub-title">
-                        <p>アイデアの背景</p>
+                </section>
+                <section class="container idea-body">
+                    <div class="sub-container overview">
+                        <div class="sub-title">
+                            <p>Overview</p>
+                        </div>
+                        <div class="content">
+                            <p>{{ ideaDetail.overview }}</p>
+                        </div>
                     </div>
-                    <div class="content">
-                        <p>{{ ideaDetail.background }}</p>
+                    <div class="sub-container background">
+                        <div class="sub-title">
+                            <p>Background</p>
+                        </div>
+                        <div class="content">
+                            <p>{{ ideaDetail.background }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="sub-container passion">
-                    <div class="sub-title">
-                        <p>アイデアへのオモイ</p>
+                    <div class="sub-container passion">
+                        <div class="sub-title">
+                            <p>Passion</p>
+                        </div>
+                        <div class="content">
+                            <p>{{ ideaDetail.passion }}</p>
+                        </div>
                     </div>
-                    <div class="content">
-                        <p>{{ ideaDetail.passion }}</p>
+                    <div class="idea-footer comment-post">
+                        <CommentBox :userId="myUserId">
+                            <template #message>
+                                <form class="comment-form" @submit.prevent="postComment">
+                                    <input type="text" placeholder="コメントを入力" v-model.trim="commentInput">
+                                    <div class="post-button">
+                                        <button>POST</button>
+                                    </div>
+                                </form>
+                            </template>
+                        </CommentBox>
                     </div>
-                </div>
-            </section>
-            <section class="container idea-footer">
-                
-            </section>
-            <section class="container comments">
-                <h1>コメント</h1>
-                <div class="comment-post">
-                    <CommentBox :userId="myUserId">
-                        <template #message>
-                            <form class="comment-form" @submit.prevent="postComment">
-                                <input type="text" placeholder="コメントを入力" v-model.trim="commentInput">
-                                <div>
-                                    <button>POST</button>
-                                </div>
-                            </form>
-                        </template>
-                    </CommentBox>
-                </div>
-                <div class="comment-list">
+                </section>
+            </main>
+            <section class="sidebar">
+                <section class="profile">
+                    <div class="profile-image">
+                        <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
+                    </div>
+                    <h1>{{ userDetail.username }}</h1>
+                    <div class="intro">
+                        <p>{{ userDetail.intro }}</p>
+                    </div>
+                </section>
+                <section class="comment-list">
                     <CommentBox 
                         v-for="comment in comments"
                         :key="comment.id"
@@ -68,7 +72,7 @@
                             <p>{{ comment.comment }}</p>
                         </template>
                     </CommentBox>
-                </div>
+                </section>
             </section>
         </div>
     </div>
@@ -174,14 +178,35 @@ export default {
 
 <style scoped>
 .idea {
-    width: 60%;
-    background-color: #fff;
-    margin: 2rem auto;
+    width: 80%;
+    margin: 2rem auto 0;
+    display: flex;
+    justify-content: space-between;
 }
 
 .container {
-    padding: 2rem;
-    margin: 1rem 0;
+    padding: 1rem;
+}
+
+.idea-header {
+    margin-bottom: 1rem;
+    text-align: left;
+    color: #000;
+}
+
+.idea-header .title {
+    font-size: 26px;
+    margin-bottom: 0.5rem;
+}
+
+.idea-header .tags::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.idea-header .tags .base-tag {
+    background-color: #fff;
 }
 
 .container .sub-container {
@@ -198,70 +223,13 @@ export default {
     font-size: 18px;
 }
 
-.idea-header {
-    text-align: left;
-    color: #fff;
-    background-color: #182b3e;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.idea-header .title {
-    font-size: 26px;
-}
-
-.idea-header .profile {
-    text-align: center;
-    width: 64px;
-    height: 64px;   
-}
-
-.idea-header .profile img {
-    text-align: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 64px;
-}
-
-.tags {
-    margin: 0 2rem;
-}
-
-.tags::after {
-    content: "";
-    display: block;
-    clear: both;
-}
-
-.comments {
-    color: #fff;
-    background-color: #182b3e;
-    margin-top: 5rem;
-}
-
-.comments h1 {
-    margin-bottom: 1rem;
-}
-
-.comment-post .comment-box,
-.comment-list .comment-box {
-    padding: 1rem;
-}
-
-.comment-post .comment-box {
-    color: #182b3e;
+.idea-body {
     background-color: #fff;
 }
 
-.comment-list .comment-box {
-    min-height: 10rem;
-    border-bottom: 1px solid #ccc;
-}
-
-.comment-form {
-    margin: 1rem 0;
+.idea-footer {
+    border-top: 1px solid #bbb;
+    margin-top: 10rem;
 }
 
 .comment-form input {
@@ -276,7 +244,7 @@ export default {
     border-bottom: 2px solid #ffb01e;
 }
 
-.comment-form div {
+.comment-form .post-button {
     text-align: right;
 }
 
@@ -294,7 +262,57 @@ export default {
     background-color: #ffb01e;
 }
 
-.comment-list .message {
+.sidebar {
+    width: 20rem;
+}
+
+.sidebar .profile {
+    min-height: 10rem;
+    background-color: #fff;
+    padding: 1rem;
+    margin: 0 0 2rem 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px #0005;
+    text-align: center;
+}
+
+.sidebar .profile-image {
+    margin: 0 auto;
+    width: 84px;
+    height: 84px;
+    border-radius: 84px;
+    background-color: #eee;
+    position: relative;
+}
+
+.sidebar .profile-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 80px;
+}
+
+.sidebar .profile h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.sidebar .profile .intro {
+    text-align: left;
     margin: 1rem 0;
+}
+
+.sidebar .comment-list {
+    background-color: #fff;
+    margin-left: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px #0005;
+}
+
+.comment-list .comment-box {
+    border-bottom: 1px solid #ccc;
 }
 </style>

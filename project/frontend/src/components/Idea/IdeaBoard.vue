@@ -33,13 +33,14 @@ export default {
 
 <style scoped>
 .board-header {
-    color: #fff;
-    background-color: #182b3e;
+    color: #000;
+    font-size: 24px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    margin-bottom: 1rem;
 }
 
 .idea-list {
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
