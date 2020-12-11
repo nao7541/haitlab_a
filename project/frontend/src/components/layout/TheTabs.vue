@@ -6,7 +6,6 @@
         <router-link to="/ideas/new">新着</router-link>
         <router-link to="/ideas/trend">トレンド</router-link>
         <router-link to="/ideas/tag">タグ別</router-link>
-        <router-link to="/ideas/event">イベント別</router-link>
     </div>
 </template>
 
@@ -15,11 +14,11 @@
     width: 10rem;
     min-height: 100vh;
     height: 100%;
-    background-color: #182b3e;
+    color: #000;
+    background-color: #ffe0a7;
 }
 
 .title {
-    color: #fff;
     font-weight: bold;
     padding: 0.5rem 1rem;
     text-align: left;
@@ -27,8 +26,8 @@
 }
 
 .tabs a {
+    color: #000;
     text-decoration: none;
-    color: #fff;
     font-size: 18px;
     font-weight: bold;
     padding: .5rem;
@@ -39,12 +38,11 @@
 
 .tabs a:hover {
     color: #182b3e;
-    background-color: #dbb774;
+    background-color: #ffb575;
 }
 
 .router-link-active {
-    color: #182b3e !important;
-    background-color: #ffd588 !important;
+    background-color: #ffa14e !important;
     border-right: 3px solid #ffa14e;
 }
 </style>

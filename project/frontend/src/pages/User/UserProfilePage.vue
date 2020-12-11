@@ -35,7 +35,7 @@
 
         <section class="content">
             <IdeaBoard
-                title="過去に投稿したアイデア"
+                title="投稿したアイデア"
                 :ideas="postIdeas"
             />
         </section>
@@ -102,7 +102,7 @@ export default {
 <style scoped>
 #profile-page {
     width: 80%;
-    margin: 2rem auto;
+    margin: 2rem auto 0;
     display: flex;
     justify-content: flex-start;
 }
@@ -175,7 +175,6 @@ export default {
 }
 
 .content {
-    background-color: #ccc;
     width: 100%;
 }
 
@@ -203,42 +202,4 @@ export default {
 .side .edit-profile a:focus {
     background-color: #478d36;
 }
-
-
-/* 
-.info-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.info-line {
-    height: 2.5rem;
-    border-bottom: 1px solid #bbbbbb;
-}
-
-.info-title {
-    color: #111111;
-    font-size: 14px;
-}
-
-.mail {
-    text-decoration: none;
-    color: #000000;
-}
-
-.mail:hover {
-    color: #555555;
-}
-
-.main-content {
-    width: 65%;
-    text-align: left;
-    padding: 1rem;
-}
-
-.topic {
-    font-weight: bold;
-    border-bottom: 1px solid #cccccc;
-} */
 </style>
