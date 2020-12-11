@@ -21,7 +21,7 @@ export default {
 
 <style scoped>
 #ideas-page {
-    width: 60%;
+    width: 80%;
     margin: 2rem auto 0;
     display: flex;
     justify-content: flex-start;
