@@ -196,5 +196,15 @@ export default {
     },
     async postUserTag() {
 
+    },
+
+    // ------------------------------ Event ------------------------------ //
+    //TODO: django-filterによりsortした結果を返す
+    async loadNewEvents() {
+        const url = '/events/';
+        const response = await api.get(url);
+        const events = await response.data;
+
+        return events;
     }
 }

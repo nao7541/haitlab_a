@@ -23,10 +23,12 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 // User Pages
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
 import SettingsPage from '@/pages/User/SettingsPage.vue';
-import MessageListPage from '@/pages/User/MessageListPage.vue';
+import MessageHomePage from '@/pages/User/MessageHomePage.vue';
 import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 // Event pages
-import EventListPage from '@/pages/Event/EventListPage.vue';
+import EventHomePage from '@/pages/Event/EventHomePage.vue';
+import NewEventsPage from '@/pages/Event/NewEventsPage';
+import ComingEventsPage from '@/pages/Event/ComingEventsPage';
 
 //---------- import vuex ----------//
 import store from '@/store/index.js';
@@ -93,12 +95,12 @@ const routes = [
                 // メッセージ一覧画面
                 name: 'messages',
                 path: 'messages',
-                component: MessageListPage,
+                component: MessageHomePage,
                 meta: { requiresAuth: true },
                 children: [
                     {
                         name: 'messageDisplay',
-                        path: 'username',
+                        path: 'message/:userId',
                         component: MessageDisplayPage,
                     }
                 ]
@@ -107,7 +109,12 @@ const routes = [
                 // イベント一覧画面
                 name: 'events',
                 path: 'events',
-                component: EventListPage,
+                component: EventHomePage,
+                redirect: { name: 'newEvents' },
+                children: [
+                    { name: 'newEvents', path: 'new', component: NewEventsPage },
+                    { name: 'comingEvents', path: 'coming', component: ComingEventsPage }
+                ]
             },
         ]
     },
