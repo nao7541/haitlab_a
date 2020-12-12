@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import viewsets, generics, mixins
 from rest_framework.permissions import IsAuthenticated
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
@@ -24,8 +26,12 @@ class UserViewset(mixins.RetrieveModelMixin,
 
 class EventViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
-    queryset = Event.objects.all()
+    # 開催時期が近い順に並び替える
+    queryset = Event.objects.order_by('event_schedule')
     serializer_class = EventSerializer
+    # 現在時刻を過ぎたイベントについては表示しない
+    def get_queryset(self):
+        return Event.objects.all().filter(event_schedule__gt=datetime.now())
 
 class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
@@ -60,8 +66,8 @@ class TagViewSet(viewsets.ModelViewSet):
     filter_class = TagFilter
 
 class UserTagFilter(filters.FilterSet):
-    # Userモデルのusernameでフィルタリング
-    user = filters.CharFilter(field_name="user__username", lookup_expr='icontains')
+    # Userモデルのuser_idでフィルタリング
+    user = filters.CharFilter(field_name="user__user_id", lookup_expr='icontains')
 
     class Meta:
         model = UserTagMap
@@ -74,8 +80,8 @@ class UserTagMapViewSet(viewsets.ModelViewSet):
     filter_class = UserTagFilter
 
 class IdeaTagFilter(filters.FilterSet):
-    # PostIdeaモデルのtitleでフィルタリング
-    idea = filters.CharFilter(field_name="idea__title", lookup_expr='icontains')
+    # PostIdeaモデルのidea_idでフィルタリング
+    idea = filters.CharFilter(field_name="idea__idea_id", lookup_expr='icontains')
 
     class Meta:
         model = IdeaTagMap
