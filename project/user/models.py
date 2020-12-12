@@ -80,19 +80,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
-
-    #def __str__(self):
-    #    return self.user_id
-""" class Skill(models.Model):
-    # スキルのID
-    skill_id = models.AutoField(primary_key=True, verbose_name='スキルID')
-    # そのスキルを持つユーザー
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    # スキルの名前
-    skill_name = models.CharField(max_length=20, verbose_name='スキル名')
-    # スキルの熟練度
-    skill_level = models.CharField(max_length=20, verbose_name="持っているスキルのレベル", null=True,blank=True)
-
-    def __str__(self):
-        return str(self.user_id)+ "_" + str(self.skill_name)
- """
