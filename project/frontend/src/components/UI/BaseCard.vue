@@ -17,6 +17,5 @@
 
 .shading { 
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.26);
-
 }
 </style>

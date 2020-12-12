@@ -25,15 +25,15 @@ export default {
     border-bottom: 1px solid #dddddd;
 }
 
-.event-element:hover {
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.26);
-}
-
 .header {
     border-bottom: 1px solid #eeeeee;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header a:hover {
+    color: #ffa600;
 }
 
 .title {
@@ -43,10 +43,6 @@ export default {
     text-decoration: none;
     color: #000;
     transition: all 0.3s ease;
-}
-
-.title:hover {
-    border-bottom: 1px solid #000;
 }
 
 .date {

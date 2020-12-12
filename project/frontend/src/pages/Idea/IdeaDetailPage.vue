@@ -184,6 +184,10 @@ export default {
     justify-content: space-between;
 }
 
+.main-content {
+    width: 100%;
+}
+
 .container {
     padding: 1rem;
 }
