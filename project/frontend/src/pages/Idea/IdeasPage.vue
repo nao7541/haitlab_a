@@ -1,20 +1,26 @@
 <template>
     <div id="ideas-page">
         <section class="side">
-           <TheTabs />
+            <BaseTab title="アイデア">
+                <template #links>
+                    <router-link to="/ideas/new">新着</router-link>
+                    <router-link to="/ideas/trend">トレンド</router-link>
+                    <router-link to="/ideas/tag">タグ別</router-link>
+                </template>
+            </BaseTab>
         </section>
-        <section class="content">    
+        <section class="content"> 
             <router-view />
         </section>
+        <FloatingButton />
     </div>
 </template>
 
 <script>
-import TheTabs from '@/components/layout/TheTabs.vue';
-
+import FloatingButton from '@/components/Idea/FloatingButton.vue';
 export default {
     components: {
-        TheTabs,
+        FloatingButton
     }
 }
 </script>
