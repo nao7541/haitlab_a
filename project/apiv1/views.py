@@ -46,8 +46,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
 class TagFilter(filters.FilterSet):
-
-    # フィルタの定義
+    # タグ名でフィルタリング
     tag_name = filters.CharFilter(field_name="tag_name", lookup_expr='contains')
 
     class Meta:
@@ -60,10 +59,30 @@ class TagViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = TagFilter
 
+class UserTagFilter(filters.FilterSet):
+    # Userモデルのusernameでフィルタリング
+    user = filters.CharFilter(field_name="user__username", lookup_expr='icontains')
+
+    class Meta:
+        model = UserTagMap
+        fields = ['user',]
+
 class UserTagMapViewSet(viewsets.ModelViewSet):
     queryset = UserTagMap.objects.all()
     serializer_class = UserTagMapSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = UserTagFilter
+
+class IdeaTagFilter(filters.FilterSet):
+    # PostIdeaモデルのtitleでフィルタリング
+    idea = filters.CharFilter(field_name="idea__title", lookup_expr='icontains')
+
+    class Meta:
+        model = IdeaTagMap
+        fields = ['idea',]
 
 class IdeaTagMapViewSet(viewsets.ModelViewSet):
     queryset = IdeaTagMap.objects.all()
     serializer_class = IdeaTagMapSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = IdeaTagFilter
