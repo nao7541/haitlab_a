@@ -2,25 +2,42 @@
     <header>
         <h1><router-link to="/">カムトル</router-link></h1>
         <nav>
-            <ul class="nav-links">
-                <div v-if="!isLoggedIn">
-                    <li><router-link to="/events">イベント一覧</router-link></li>
-                    <li><router-link to="/signup">新規登録</router-link></li>
-                    <li><router-link to="/login">ログイン</router-link></li>
-                </div>
-                <div v-if="isLoggedIn">
-                    <li><router-link class="post" to="/post">アイデア投稿</router-link></li>
-                    <li><router-link to="/events">イベント一覧</router-link></li>
-                    <li><BaseButton @buttonEvent="logout">ログアウト</BaseButton></li>
-                    <li><router-link :to="userLink"><FontAwesomeIcon :icon="['fas', 'user']" size="lg"/></router-link></li>
-                </div>
-            </ul>
+            <div class="nav-links">
+                <ul>
+                    <div v-if="!isLoggedIn" class="nav-link-container">
+                        <li class="nav-link"><router-link to="/events">イベント一覧</router-link></li>
+                        <li class="nav-link"><router-link to="/signup">新規登録</router-link></li>
+                        <li class="nav-link"><router-link to="/login">ログイン</router-link></li>
+                    </div>
+                    <div v-if="isLoggedIn && loadComplete" class="nav-link-container">
+                        <li class="nav-link"><router-link to="/events">イベント一覧</router-link></li>
+                        <li class="nav-link"></li>
+                        <li class="nav-link profile">
+                            <img :src="profileImage" alt="profile" @click="imagePressed">
+                            <div class="dropdown">
+                                <ul>
+                                    <li class="dropdown-link"><router-link :to="userLink">マイページ</router-link></li>
+                                    <li class="dropdown-link"><a href="#" @click="logout">ログアウト</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
         </nav>
     </header>
 </template>
 
 <script>
+import apiHelper from '@/services/apiHelper.js';
+
 export default {
+    data() {
+        return {
+            user: null,
+            loadComplete: false,
+        }
+    },
     computed: {
         userId() {
             return this.$store.getters['auth/userId'];
@@ -30,22 +47,38 @@ export default {
         },
         userLink() {
             return { name: 'userprofile', params: { userId: this.userId } };
-        }
+        },
+        profileImage() {
+            return this.user.prof_img;
+        },
     },
     methods: {
         logout() {
             this.$store.dispatch('auth/logout')
-            this.$router.replace(''); // ログイン後は/ideasへ自動的に遷移させる
+            this.$router.replace('/'); // ログイン後は/ideasへ自動的に遷移させる
+        },
+        imagePressed() {
+            this.$router.replace(this.userLink);
         }
+    },
+    created() {
+        apiHelper.loadUserDetail(this.userId)
+        .then( res => {
+            this.user = res;
+
+            this.loadComplete = true;
+        }).catch( err => {
+            console.log("error to get userDetail at TheHeader: ", err);
+        })
     }
 }
 </script>
 
 <style scoped>
 header {
+    top: 0;
     width: 100%;
     height: 10vh;
-    padding: 1rem 0;
     background-color: #fff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     color: #000;
@@ -65,46 +98,72 @@ li, a {
     text-decoration: none;
 }
 
-.nav-links {
+.nav-links ul {
     list-style: none;
 }
 
-.nav-links li {
-    display: inline-block;
-    padding: 0 1rem;
+.nav-link-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
-.nav-links li button {
-    padding: .5rem 1rem;
+.nav-links .nav-link:not(:nth-last-child(1)) {
+    margin-right: 1rem;
 }
 
-.nav-links li span {
-    cursor: pointer;
-}
-
-.nav-links li a {
+.nav-links .nav-link a {
     transition: all 0.3s ease 0s;
 }
 
-.nav-links li a:hover,
-.nav-links li a:active {
+.nav-links .nav-link a:hover,
+.nav-links .nav-link a:active {
     color: #ffbb3c;
 }
 
-/* .nav-links button {
-    color: #fff;
-} */
-
-.post {
-    color: #000;
-    padding: .5rem 2rem;
-    background-color: #ffe0a7;
-    border-radius: 4px;
+.nav-links .profile {
+    position: relative;
+    width: 50px;
+    height: 50px;
 }
 
-.post:hover,
-.post:active {
-    color: #000000 !important;
-    background-color: #ffbb3c;
+.nav-links .profile img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    cursor: pointer;
+}
+
+.nav-link .dropdown {
+    background-color: #333;
+    width: 10rem;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    transform: translateY(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.nav-link:hover > .dropdown {
+    transform: translate(0, 0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dropdown-link {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.dropdown-link a {
+    display: block;
+    color: #fff;
+    width: 100%;
 }
 </style>
