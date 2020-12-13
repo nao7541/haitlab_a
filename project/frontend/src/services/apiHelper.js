@@ -37,6 +37,13 @@ export default {
             }});
         return response;
     },
+    async loadAllUsers() {
+        const url = '/users/';
+        const response = await api.get(url);
+        const responseData = await response.data;
+        
+        return responseData;
+    },
 
 
     // ------------------------------ Idea ------------------------------ //
