@@ -80,7 +80,7 @@ export default {
     created() {
         apiHelper.loadUserDetail(this.userId)
         .then( res => {
-            this.myUserDetail = res;
+            this.userDetail = res;
 
             return apiHelper.loadUserTags(this.userId);
         }).then( res => {
@@ -99,14 +99,14 @@ export default {
     methods: {
         initUserForm() {
             // すでに登録されている情報をフォームに反映する
-            this.formData.username.val = this.myUserDetail.username;
-            this.formData.univ.val = this.myUserDetail.univ_name;
-            this.formData.major = this.myUserDetail.major;
-            this.formData.email = this.myUserDetail.email;
-            this.formData.intro = this.myUserDetail.intro;
+            this.formData.username.val = this.userDetail.username;
+            this.formData.univ.val = this.userDetail.univ_name;
+            this.formData.major = this.userDetail.major;
+            this.formData.email = this.userDetail.email;
+            this.formData.intro = this.userDetail.intro;
 
-            if (this.myUserDetail.prof_img != null) {
-                this.previewImage = this.myUserDetail.prof_img;
+            if (this.userDetail.prof_img != null) {
+                this.previewImage = this.userDetail.prof_img;
             }
         }, 
         imageSelect(event) {
@@ -119,8 +119,8 @@ export default {
                 }
                 reader.readAsDataURL(this.selectedImage);
             } else {
-                if (this.myUserDetail.prof_img != null) {
-                    this.previewImage = this.myUserDetail.prof_img;
+                if (this.userDetail.prof_img != null) {
+                    this.previewImage = this.userDetail.prof_img;
                 } else {
                     this.previewImage = null;
                 }
@@ -164,6 +164,7 @@ export default {
             }
 
             const updateData = {
+                userDetail: null,
                 userId: this.userId,
                 username: this.formData.username.val,
                 email: this.formData.email,
@@ -173,7 +174,7 @@ export default {
                 major: this.formData.major,
             };
             
-            // myUserDetailの更新
+            // userDetailの更新
             apiHelper.updateUserDetail(updateData)
             .catch( err => {
                 console.log("error to update user detail: ", err);

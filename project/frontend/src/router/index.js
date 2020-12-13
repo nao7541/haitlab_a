@@ -23,6 +23,7 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 // User Pages
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
 import SettingsPage from '@/pages/User/SettingsPage.vue';
+import UserSearchPage from '@/pages/User/UserSearchPage.vue';
 import MessageHomePage from '@/pages/User/MessageHomePage.vue';
 import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 // Event pages
@@ -58,7 +59,7 @@ const routes = [
             {
                 // アイデア詳細画面
                 name: 'ideaDetail',
-                path: '/ideas/:ideaId',
+                path: 'ideas/:ideaId',
                 component: IdeaDetailPage,
                 props: true,
             },
@@ -90,6 +91,11 @@ const routes = [
                 path: 'settings',
                 component: SettingsPage,
                 meta: { requiresAuth: true },
+            },
+            {
+                name: 'userSearch',
+                path: 'user/search',
+                component: UserSearchPage,
             },
             {
                 // メッセージ一覧画面

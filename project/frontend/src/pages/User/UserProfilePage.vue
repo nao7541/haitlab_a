@@ -9,7 +9,7 @@
                 <div class="intro">
                     <p>{{ userDetail.intro }}</p>
                 </div>
-                <div class="tag" v-if="tags.length > 0">
+                <div class="tag">
                     <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
                 </div>
                 <div class="info">

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-// import apiHelper from '@/services/apiHelper.js'
+import apiHelper from '@/services/apiHelper.js'
 import IdeaBoard from '@/components/Idea/IdeaBoard.vue'
 
 export default {
@@ -17,16 +17,26 @@ export default {
     data() {
         return {
             ideas: [],
+            myTags: [],
             loadComplete: false,
         }
     },
     computed: {
-        myUserDetail() {
-            return this.$store.getters['myInfo/myUserDetail'];
+        myUserId() {
+            return this.$store.getters['auth/userId'];
         }
+    },
+    created() {
+        apiHelper.loadUserTags(this.myUserId)
+        .then( res => {
+            this.myTags = res;
+
+            this.loadComplete = true;
+            console.log(this.myTags);
+        }).catch( err => {
+            console.log("error to load usertag at recommendIdeaPage: ", err);
+        })
+
     }
-    // created() {
-    //     apiHelper.
-    // }
 }
 </script>
