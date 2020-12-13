@@ -3,6 +3,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, PermissionsMixin
 from django.utils import timezone
 
+from event.models import Event
+
 # Create your models here.
 
 class UserManager(UserManager):
@@ -80,3 +82,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
+
+class EventStock(models.Model):
+    stock_id = models.AutoField(primary_key=True, verbose_name="ストックID")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="保存したユーザー")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name="ユーザーが保存したイベント")
+
+    def __str__(self):
+        return str(self.user) + '_' + str(self.event)

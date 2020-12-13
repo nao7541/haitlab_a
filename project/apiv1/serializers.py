@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from user.models import CustomUser
+from user.models import CustomUser, EventStock
 from idea.models import PostIdea, Comment
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
@@ -41,3 +41,8 @@ class IdeaTagMapSerializer(serializers.ModelSerializer):
     class Meta:
         model = IdeaTagMap
         fields = ('ideatag_id', 'idea', 'tag')
+
+class EventStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventStock
+        fields = ('stock_id', 'user', 'event')
