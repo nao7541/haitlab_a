@@ -37,7 +37,7 @@ class UserManager(UserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    # ユーザーのID (idのみだとわかりにくかったため、変更)
+    # ユーザーのID
     user_id = models.AutoField(primary_key=True, verbose_name="ユーザーID")
     # ユーザー名
     username = models.CharField(max_length=20, verbose_name='ユーザー名', unique=True)

@@ -12,7 +12,7 @@ from user.models import CustomUser, EventStock
 from idea.models import PostIdea, Comment
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
-from .serializers import (UserSerializer, EventSerializer, IdeaSerializer, 
+from .serializers import (UserSerializer, EventSerializer, IdeaSerializer,
                         CommentSerializer, TagSerializer, UserTagMapSerializer,
                         IdeaTagMapSerializer, EventStockSerializer)
 from .permissions import IsAuthorOrReadOnly
