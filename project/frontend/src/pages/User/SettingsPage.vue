@@ -48,7 +48,6 @@ export default {
     },
     data() {
         return {
-            userDetail: null,
             loadComplete: false,
             isFormValid: true,
             selectedImage: null,
@@ -81,13 +80,15 @@ export default {
     created() {
         apiHelper.loadUserDetail(this.userId)
         .then( res => {
-            this.userDetail = res;
+            this.myUserDetail = res;
 
             return apiHelper.loadUserTags(this.userId);
         }).then( res => {
             // tag_nameのみを取り出す
             this.tags = res;
-            this.inputTags = res.map((tag) => tag.tag_name);
+            if (res != null) {
+                this.inputTags = res.map((tag) => tag.tag_name);
+            }
 
             this.initUserForm();
             this.loadComplete = true;
@@ -98,14 +99,14 @@ export default {
     methods: {
         initUserForm() {
             // すでに登録されている情報をフォームに反映する
-            this.formData.username.val = this.userDetail.username;
-            this.formData.univ.val = this.userDetail.univ_name;
-            this.formData.major = this.userDetail.major;
-            this.formData.email = this.userDetail.email;
-            this.formData.intro = this.userDetail.intro;
+            this.formData.username.val = this.myUserDetail.username;
+            this.formData.univ.val = this.myUserDetail.univ_name;
+            this.formData.major = this.myUserDetail.major;
+            this.formData.email = this.myUserDetail.email;
+            this.formData.intro = this.myUserDetail.intro;
 
-            if (this.userDetail.prof_img != null) {
-                this.previewImage = this.userDetail.prof_img;
+            if (this.myUserDetail.prof_img != null) {
+                this.previewImage = this.myUserDetail.prof_img;
             }
         }, 
         imageSelect(event) {
@@ -118,8 +119,8 @@ export default {
                 }
                 reader.readAsDataURL(this.selectedImage);
             } else {
-                if (this.userDetail.prof_img != null) {
-                    this.previewImage = this.userDetail.prof_img;
+                if (this.myUserDetail.prof_img != null) {
+                    this.previewImage = this.myUserDetail.prof_img;
                 } else {
                     this.previewImage = null;
                 }
@@ -140,6 +141,11 @@ export default {
                 this.formData.univ.isValid = false;
                 this.isFormValid = false;
             }
+        },
+        //TODO reload上手くいかない
+        reload() {
+            // 設定変更後は自分のプロフィール画面に戻る
+            this.$router.replace({ name: 'userprofile', params: { userId: this.userId} });
         },
         arrayEqual(x, y) {
             if (!Array.isArray(x)) return false;
@@ -167,49 +173,33 @@ export default {
                 major: this.formData.major,
             };
             
-            // userDetailの更新
+            // myUserDetailの更新
             apiHelper.updateUserDetail(updateData)
-            .then( () => {
-                const tag_names = this.tags.map((tag) => tag.tag_name);
-                // step1 タグの更新の有無を確認
-                if (this.arrayEqual(tag_names, this.inputTags)) {
-                    return;
-                }
-
-                // step2 追加された要素を確認
-                const newTags = [];
-                for (const tag of this.inputTags) {
-                    if (!tag_names.includes(tag)) {
-                        newTags.push(tag);
-                    }
-                }
-
-                // step3 削除された要素を確認
-                const delTags = [];
-                for (const tag of tag_names) {
-                    if (!this.inputTags.includes(tag)) {
-                        // 配列に追加するのはタグ名でなく、タグのid
-                        const target = this.tags.find((t) => {
-                            return t.tag_name == tag
-                        });
-                        delTags.push(target.tag_id);
-                    }
-                }
-
-                // step4 削除された要素があればideaTagMapより削除する
-                // TODO django-filterないと無理だね。userTagMapにてtag_idに対して消さないといけないから
-                // if (delTags.length > 0) {
-                //     for (const tag of delTags) {
-                        
-                //     }
-                // }
-
-            }).catch( err => {
+            .catch( err => {
                 console.log("error to update user detail: ", err);
             })
 
-            // 設定変更後は自分のプロフィール画面に戻る
-            this .$router.replace({ name: 'userprofile', params: { userId: this.userId} });
+            // タグの追加 / 更新
+            // もしタグ未登録なら追加して終了
+            if (this.tags == null) {
+                for (const tag of this.inputTags) {
+                    apiHelper.postUserTag(this.userId, tag)
+                }
+
+                this.reload();
+            } else if (!this.arrayEqual(this.tags.map((tag) => tag.tag_name), this.inputTags)) {
+                // もしタグに変更があるなら既存のタグを全削除してから、新しいタグを追加する
+                apiHelper.deleteAllUserTag(this.userId)
+                .then( () => {
+                    for (const tag of this.inputTags) {
+                        apiHelper.postUserTag(this.userId, tag);
+                    }
+                }).catch(err => {
+                    console.log("error to update tag: ", err)
+                })
+            } else {
+                this.reload();
+            }
         }
     }
 }

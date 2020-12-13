@@ -2,6 +2,13 @@ import api from '@/services/api.js';
 
 export default {
     // ------------------------------ User ------------------------------ //
+    async loadUserDetailByName(username) {
+        const url = '/users/?username=' + username;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
     async loadUserDetail(userId) {
         // userIdをキーとしてuserの詳細情報を取得
         const url = '/users/' + userId + '/';
@@ -112,22 +119,16 @@ export default {
     },
 
     // ------------------------------ Tags ------------------------------ //
-    // TODO: django-filterによるフィルタリング実装
     async loadIdeaTags(ideaId) {
         const tag_url = '/tag/';
-        const ideatag_url = '/idea_tag/';
-        const tagIds = [];
+        const ideatag_url = '/idea_tag/?idea=' + ideaId;
         const tags = [];
 
         // パラメータとして渡されたideaIdをもとに、マッチするアイテムを取得
         // tagそのものでなく、tagのidを取得する点に注意
         let response = await api.get(ideatag_url);
         let loadTags = await response.data;
-        for (const tag of loadTags) {
-            if (tag.idea == ideaId) {
-                tagIds.push(tag.tag);
-            }
-        }
+        const tagIds = loadTags.map((tag) => tag.tag);
 
         // ここで実際のタグの名前を取得
         for (const tagId of tagIds) {
@@ -138,22 +139,19 @@ export default {
 
         return tags;
     },
-    // TODO: django-filterによるフィルタリング
     async loadUserTags(userId) {
         const tag_url = '/tag/';
-        const usertag_url = '/user_tag/';
-        const tagIds = [];
+        const usertag_url = '/user_tag/?user=' + userId;
         const tags = [];
 
         // パラメータとして渡されたideaIdをもとに、マッチするアイテムを取得
         // tagそのものでなく、tagのidを取得する点に注意
         let response = await api.get(usertag_url);
         let loadTags = await response.data;
-        for (const tag of loadTags) {
-            if (tag.user == userId) {
-                tagIds.push(tag.tag);
-            }
+        if (loadTags.length === 0) {
+            return;
         }
+        const tagIds = loadTags.map((tag) => tag.tag);
 
         // ここで実際のタグの名前を取得
         for (const tagId of tagIds) {
@@ -165,20 +163,16 @@ export default {
         return tags;
     },
     async postIdeaTag(ideaId, tagName) {
-        // TODO django-filter
         // step1 tag tableに存在するか確認
-        let response = await api.get('/tag/');
-        let tagAll = await response.data; 
-
-        let target = tagAll.find( (tag) => {
-            return tag.tag_name === tagName;
-        });
+        const url = '/tag/?tag_name=' + tagName;
+        let response = await api.get(url);
+        let target = await response.data; 
         
         // step2 tag tableに追加もしくは、idを取得
         let tagId;
-        if (target != null) {
+        if (target.length > 0) {
             // もし見つかったらそのtag_idを取得
-            tagId = target.tag_id;
+            tagId = target[0].tag_id;
         } else {
             // もし見つからなかったら追加する
             response = await api.post('/tag/', {
@@ -192,14 +186,50 @@ export default {
             idea: ideaId,
             tag: tagId
         });
-        return response;
+        let result = await response.data;
+        return result;
     },
-    async postUserTag() {
+    async postUserTag(userId, tagName) {
+        // step1 tag tableに存在するか確認
+        const url = '/tag/?tag_name=' + tagName;
+        let response = await api.get(url);
+        let target = await response.data; 
+        
+        // step2 tag tableに追加もしくは、idを取得
+        let tagId;
+        if (target.length > 0) {
+            // もし見つかったらそのtag_idを取得
+            tagId = target[0].tag_id;
+        } else {
+            // もし見つからなかったら追加する
+            response = await api.post('/tag/', {
+                tag_name: tagName
+            });
+            tagId = await response.data.tag_id;
+        }
 
+        // step2 idea tag mapに追加
+        response = await api.post('/user_tag/', {
+            user: userId,
+            tag: tagId
+        });
+        let result = await response.data;
+        return result;
+    },
+    async deleteAllUserTag(userId) {
+        // 既存のタグを取得
+        let url = '/user_tag/?user=' + userId;
+        let response = await api.get(url);
+        let tags = await response.data;
+
+        // 全削除
+        for (const tag of tags) {
+            url = '/user_tag/' + tag.usertag_id + '/';
+            response = await api.delete(url);
+        }
     },
 
     // ------------------------------ Event ------------------------------ //
-    //TODO: django-filterによりsortした結果を返す
     async loadNewEvents() {
         const url = '/events/';
         const response = await api.get(url);
