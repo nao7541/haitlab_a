@@ -58,11 +58,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'dj_rest_auth',
     'dj_rest_auth.registration',
-<<<<<<< HEAD
-    'django_filters',
-=======
     'django_filters'
->>>>>>> 720d8465980e7907c0b9d67bfdda7c2923d9fb1d
 ]
 
 MIDDLEWARE = [
