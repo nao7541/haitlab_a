@@ -6,6 +6,11 @@ export default {
     namespaced: true,
     state() {
         return {
+            myUserData: {
+                userId: null,
+                username: '',
+            },
+            myTags: []
         }
     },
     getters,

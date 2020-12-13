@@ -3,25 +3,21 @@
         <h1><router-link to="/">カムトル</router-link></h1>
         <nav>
             <div class="nav-links">
-                <ul>
-                    <div v-if="!isLoggedIn" class="nav-link-container">
-                        <li class="nav-link"><router-link to="/events">イベント一覧</router-link></li>
-                        <li class="nav-link"><router-link to="/signup">新規登録</router-link></li>
-                        <li class="nav-link"><router-link to="/login">ログイン</router-link></li>
-                    </div>
-                    <div v-if="isLoggedIn && loadComplete" class="nav-link-container">
-                        <li class="nav-link"><router-link to="/events">イベント一覧</router-link></li>
-                        <li class="nav-link"></li>
-                        <li class="nav-link profile">
-                            <img :src="profileImage" alt="profile" @click="imagePressed">
-                            <div class="dropdown">
-                                <ul>
-                                    <li class="dropdown-link"><router-link :to="userLink">マイページ</router-link></li>
-                                    <li class="dropdown-link"><a href="#" @click="logout">ログアウト</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    </div>
+                <ul class="nav-link-container">
+                    <li class="nav-link"><router-link to="/user/search">仲間を探す</router-link></li>
+                    <li class="nav-link"><router-link to="/">アイデアを探す</router-link></li>
+                    <li class="nav-link"><router-link to="/events">イベントを探す</router-link></li>
+                    <li class="nav-link" v-if="!isLoggedIn"><router-link to="/signup">新規登録</router-link></li>
+                    <li class="nav-link" v-if="!isLoggedIn"><router-link to="/login">ログイン</router-link></li>
+                    <li class="nav-link profile" v-if="isLoggedIn && loadComplete">
+                        <img :src="profileImage" alt="profile">
+                        <div class="dropdown">
+                            <ul>
+                                <li class="dropdown-link"><router-link :to="userLink">マイページ</router-link></li>
+                                <li class="dropdown-link"><a href="#" @click="logout">ログアウト</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -57,9 +53,6 @@ export default {
             this.$store.dispatch('auth/logout')
             this.$router.replace('/'); // ログイン後は/ideasへ自動的に遷移させる
         },
-        imagePressed() {
-            this.$router.replace(this.userLink);
-        }
     },
     created() {
         apiHelper.loadUserDetail(this.userId)

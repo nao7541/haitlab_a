@@ -5,7 +5,8 @@
                 <template #links>
                     <router-link to="/ideas/new">新着</router-link>
                     <router-link to="/ideas/trend">トレンド</router-link>
-                    <router-link to="/ideas/tag">タグ別</router-link>
+                    <router-link to="/ideas/recommend">おすすめ</router-link>
+                    <router-link to="/ideas/tag">タグ</router-link>
                 </template>
             </BaseTab>
         </section>
