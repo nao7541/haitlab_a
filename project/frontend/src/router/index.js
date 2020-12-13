@@ -7,8 +7,8 @@ import HomePage from '@/pages/HomePage.vue';
 import IdeasPage from '@/pages/Idea/IdeasPage.vue';
 import NewIdeasPage from '@/pages/Idea/NewIdeasPage.vue';
 import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
-import EventIdeasPage from '@/pages/Idea/EventIdeasPage';
 import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
+import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 // Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
@@ -52,7 +52,7 @@ const routes = [
                     { name: 'newIdeas',   path: 'new',   component: NewIdeasPage   },
                     { name: 'trendIdeas', path: 'trend', component: TrendIdeasPage },
                     { name: 'tagIdeas',   path: 'tag',   component: TagIdeasPage   },
-                    { name: 'eventIdeas', path: 'event', component: EventIdeasPage },
+                    { name: 'RecommendIdeasPage', path: 'recommend', component: RecommendIdeasPage },
                 ]
             },
             {
