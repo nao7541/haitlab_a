@@ -30,7 +30,7 @@ class PostIdea(models.Model):
        return "No. " + str(self.idea_id)
 
 
-
+""" 
 class RequiredSkill(models.Model):
     class Meta:
         db_table = "Required_Skill"
@@ -41,7 +41,7 @@ class RequiredSkill(models.Model):
 
     def __str__(self):
         return str(self.idea_id)
-
+ """
 
 
 class Comment(models.Model):

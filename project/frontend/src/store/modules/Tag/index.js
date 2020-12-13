@@ -6,10 +6,6 @@ export default {
     namespaced: true,
     state() {
         return {
-            ideas: [],
-            idea: null,
-            comments: [],
-            requiredSkills: [],
         }
     },
     getters,

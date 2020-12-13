@@ -1,13 +1,9 @@
 <template>
     <div class="event-element">
         <div class="header">
-            <div class="title">
-                <a :href="url">{{ name }}</a>
-            </div>
-            <div class="info">
-                <h3 class="date">{{ schedule }}</h3>
-                <small class="location"><FontAwesomeIcon style="marginRight: .5rem" :icon="['fas', 'map-marker-alt']"/>{{ location }}</small>
-            </div>
+            <a class="title" :href="url">{{ name }}</a>
+            <small class="location"><FontAwesomeIcon style="marginRight: .5rem" :icon="['fas', 'map-marker-alt']"/>{{ location }}</small>
+            <h3 class="date">{{ schedule }}</h3>
         </div>
         <div class="content">
             <p>{{ detail }}</p>
@@ -24,6 +20,7 @@ export default {
 <style scoped>
 .event-element {
     padding: 2rem;
+    height: 20rem;
     transition: all .5s ease-out;
     border-bottom: 1px solid #dddddd;
 }
@@ -33,14 +30,14 @@ export default {
 }
 
 .header {
-    padding-bottom: 0.5rem;
     border-bottom: 1px solid #eeeeee;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.header a {
+.title {
+    margin-right: auto;
     font-size: 28px;
     font-weight: bold;
     text-decoration: none;
@@ -48,18 +45,13 @@ export default {
     transition: all 0.3s ease;
 }
 
-.header a:hover {
-    color: #ffbb3c;
+.title:hover {
+    border-bottom: 1px solid #000;
 }
 
-.info .date,
-.info .location {
-    display: block;
-    padding: .5rem 2rem;
-}
-
-.info .date {
-    color: #ff1b1b;
+.date {
+    margin-left: 1rem;
+    color: #ff4e4e;
 }
 
 .content {

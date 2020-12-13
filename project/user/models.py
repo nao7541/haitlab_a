@@ -83,7 +83,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     #def __str__(self):
     #    return self.user_id
-class Skill(models.Model):
+""" class Skill(models.Model):
     # スキルのID
     skill_id = models.AutoField(primary_key=True, verbose_name='スキルID')
     # そのスキルを持つユーザー
@@ -95,3 +95,4 @@ class Skill(models.Model):
 
     def __str__(self):
         return str(self.user_id)+ "_" + str(self.skill_name)
+ """

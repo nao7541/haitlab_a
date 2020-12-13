@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'idea',
     'apiv1',
     'event',
+    'tag',
     # サードパーティーのライブラリ
     'corsheaders',
     'allauth',
@@ -57,7 +58,11 @@ INSTALLED_APPS = [
     'rest_auth',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+<<<<<<< HEAD
     'django_filters',
+=======
+    'django_filters'
+>>>>>>> 720d8465980e7907c0b9d67bfdda7c2923d9fb1d
 ]
 
 MIDDLEWARE = [
@@ -158,6 +163,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
 # django-allauth用の設定
