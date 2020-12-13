@@ -29,21 +29,6 @@ class PostIdea(models.Model):
    def __str__(self):
        return "No. " + str(self.idea_id)
 
-
-""" 
-class RequiredSkill(models.Model):
-    class Meta:
-        db_table = "Required_Skill"
-
-    idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE)
-    skill_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
-    skill_level = models.CharField(verbose_name='スキルレベル', max_length=30, null=True, blank=True)
-
-    def __str__(self):
-        return str(self.idea_id)
- """
-
-
 class Comment(models.Model):
     class Meta:
         db_table = "Comment"
