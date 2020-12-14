@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
-# table User import
+
 from user.models import CustomUser
+from event.models import Event
 # Create your models here.
 
 
@@ -22,15 +23,29 @@ class PostIdea(models.Model):
    # 投稿 画像
    idea_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="投稿画像") # upload_to settings - MEDIA_ROOT以下のファイル保存先
    # 投稿した日時
-   idea_date = models.DateField(input_formats=settings.DATE_INPUT_FORMATS, verbose_name="投稿日")
+   idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日")
    # 状態
    state = models.CharField(max_length=100, verbose_name='状態')
+   # ターゲット
+   target = models.CharField(max_length=100, verbose_name='ターゲット')
+   # 人材募集
+   offer = models.CharField(max_length=100, verbose_name='人材募集')
+   # 期日
+   deadline = models.CharField(max_length=30, verbose_name='期日')
+   # ユニークさ
+   uniqueness = models.IntegerField(default=0, verbose_name='ユニークさ')
+   # 新規性
+   novelty = models.IntegerField(default=0, verbose_name='新規性')
+   # 実現可能性
+   possibility = models.IntegerField(default=0, verbose_name='実現可能性')
+   # イベント外部キー
+   event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, verbose_name='イベント')
 
    def __str__(self):
        return "No. " + str(self.idea_id)
 
 
-""" 
+
 class RequiredSkill(models.Model):
     class Meta:
         db_table = "Required_Skill"
@@ -41,7 +56,7 @@ class RequiredSkill(models.Model):
 
     def __str__(self):
         return str(self.idea_id)
- """
+
 
 
 class Comment(models.Model):
@@ -54,7 +69,7 @@ class Comment(models.Model):
     # コメントを送ったユーザ
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="コメントユーザ")
     # コメントを送った日時
-    comment_date = models.DateField(input_formats=settings.DATE_INPUT_FORMATS, verbose_name="コメント投稿日")
+    comment_date = models.DateTimeField(default=timezone.now, verbose_name="コメント投稿日")
     # コメント
     comment = models.TextField(max_length=255, verbose_name="コメント")
 
