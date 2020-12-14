@@ -1,23 +1,29 @@
 <template>
     <div id="user-search">
-        <InputTag :tags="tags"/>
-        <UserBoard :users="users" />
+        <section class="side">
+            <UserSideBar />
+        </section>
+        <section class="content">
+            <UserBoard 
+                title="お探しのユーザー" 
+                :users="users" 
+            />
+        </section>
     </div>
 </template>
 
 <script>
 import apiHelper from '@/services/apiHelper.js';
-import InputTag from '@/components/Tag/InputTag.vue';
+import UserSideBar from '@/components/User/UserSideBar.vue';
 import UserBoard from '@/components/User/UserBoard.vue';
 
 export default {
     components: {
-        InputTag,
+        UserSideBar,
         UserBoard,
     },
     data() {
         return {
-            tags: [],
             users: [],
         }
     },
@@ -36,6 +42,11 @@ export default {
 #user-search {
     margin: 2rem auto 0;
     width: 80%;
-    background-color: #fff;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.content {
+    width: 100%;
 }
 </style>

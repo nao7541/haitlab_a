@@ -19,7 +19,7 @@ export default {
 
 <style scoped>
 .event-element {
-    padding: 2rem;
+    padding: 1rem 2rem;
     height: 20rem;
     transition: all .5s ease-out;
     border-bottom: 1px solid #dddddd;

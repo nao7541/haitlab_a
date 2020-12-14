@@ -21,7 +21,6 @@
 }
 
 .board-content {
-    padding: 0 2rem;
     background-color: #fff;
 }
 </style>

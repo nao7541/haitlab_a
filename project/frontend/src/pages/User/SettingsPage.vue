@@ -4,7 +4,7 @@
             <form @submit.prevent="updateProfile" v-if="loadComplete">
                 <h1>Edit My Profile</h1>
                 <div class="form-control profile-image">
-                    <img :src="previewImgSrc" alt="profile">
+                    <img :src="previewImage" alt="profile">
                     <input class="image-input" type="file" @change="imageSelect" accept="image/*">
                 </div>
                 <div class="form-control" :class="{invalid: !formData.username.isValid}">
@@ -73,9 +73,6 @@ export default {
         userId() {
             return this.$store.getters['auth/userId'];
         },
-        previewImgSrc() {
-            return this.previewImage === null ? require('@/assets/images/person.png') : this.previewImage;
-        }
     },
     created() {
         apiHelper.loadUserDetail(this.userId)
@@ -119,11 +116,7 @@ export default {
                 }
                 reader.readAsDataURL(this.selectedImage);
             } else {
-                if (this.userDetail.prof_img != null) {
-                    this.previewImage = this.userDetail.prof_img;
-                } else {
-                    this.previewImage = null;
-                }
+                this.previewImage = this.userDetail.prof_img;
             }
         },
         clearValidity(input) {
@@ -230,10 +223,8 @@ form h1 {
 }
 
 .profile-image img {
-    max-width: 128px;
-    max-height: 128px;
-    width: auto;
-    height: auto;
+    width: 128px;
+    height: 128px;
     border-radius: 128px;
 }
 

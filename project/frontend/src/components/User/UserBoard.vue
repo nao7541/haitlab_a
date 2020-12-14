@@ -1,13 +1,18 @@
 <template>
-    <div class="user-board">
-        <UserElement v-for="(user, id) in users"
-            :key="id"
-            :userId="user.user_id"
-            :username="user.username"
-            :profImg="user.prof_img"
-            :intro="user.intro"
-        />
-    </div>
+    <BaseBoard>
+        <template #header>
+            <h1>{{ title }}</h1>
+        </template>
+        <template #content>
+            <UserElement v-for="(user, id) in users"
+                :key="id"
+                :userId="user.user_id"
+                :username="user.username"
+                :profImg="user.prof_img"
+                :intro="user.intro"
+            />
+        </template>
+    </BaseBoard>
 </template>
 
 <script>
@@ -16,6 +21,6 @@ export default {
     components: {
         UserElement,
     },
-    props: ['users']
+    props: ['title', 'users']
 }
 </script>
