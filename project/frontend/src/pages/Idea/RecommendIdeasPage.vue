@@ -72,7 +72,6 @@ export default {
         }).catch( err => {
             console.log("error to load usertag at recommendIdeaPage: ", err);
         })
-
     }
 }
 </script>

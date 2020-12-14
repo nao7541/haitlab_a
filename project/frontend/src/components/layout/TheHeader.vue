@@ -26,7 +26,6 @@
 
 <script>
 import apiHelper from '@/services/apiHelper.js';
-
 export default {
     data() {
         return {
@@ -58,7 +57,6 @@ export default {
         apiHelper.loadUserDetail(this.userId)
         .then( res => {
             this.user = res;
-
             this.loadComplete = true;
         }).catch( err => {
             console.log("error to get userDetail at TheHeader: ", err);
