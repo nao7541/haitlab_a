@@ -146,6 +146,14 @@ export default {
 
         return tags;
     },
+    // パラメータとしてタグのIDを渡して、そのIDを持つアイデアを取得
+    async loadIdeaTagsByTag(tagId) {
+        const url = '/idea_tag/?tag=' + tagId;
+        const response = await api.get(url);
+        const tags = await response.data;
+
+        return tags;
+    },
     async loadUserTags(userId) {
         const tag_url = '/tag/';
         const usertag_url = '/user_tag/?user=' + userId;
