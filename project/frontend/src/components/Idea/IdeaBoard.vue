@@ -1,9 +1,9 @@
 <template>
-    <div class="idea-board">
-        <div class="board-header">
+    <BaseBoard>
+        <template #header>
             <h1>{{ title }}</h1>
-        </div>
-        <div class="idea-list">
+        </template>
+        <template #content>
             <IdeaElement
                 v-for="idea in ideas"
                 :key="idea.idea_id"
@@ -16,8 +16,8 @@
                 :idea_img="idea.idea_img"
                 :idea_date="idea.idea_date"
             ></IdeaElement>
-        </div>
-    </div>
+        </template>
+    </BaseBoard>
 </template>
 
 <script>
@@ -30,19 +30,3 @@ export default {
     props: ['title', 'ideas']
 }
 </script>
-
-<style scoped>
-.board-header {
-    color: #fff;
-    background-color: #182b3e;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-}
-
-.idea-list {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-</style>

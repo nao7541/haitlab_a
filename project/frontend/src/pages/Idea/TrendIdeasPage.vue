@@ -1,6 +1,6 @@
 <template>
     <IdeaBoard
-        title="注目のアイデア"
+        title="トレンド"
         :ideas="ideas"
     />
 </template>
