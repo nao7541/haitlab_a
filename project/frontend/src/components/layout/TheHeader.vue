@@ -25,24 +25,16 @@
 </template>
 
 <script>
-import apiHelper from '@/services/apiHelper.js';
-
 export default {
-    data() {
-        return {
-            user: null,
-            loadComplete: false,
-        }
-    },
     computed: {
-        userId() {
-            return this.$store.getters['auth/userId'];
+        myUserDetail() {
+            return this.$store.getters['myInfo/myUserDetail'];
         },
         isLoggedIn() {
             return this.$store.getters['auth/isLoggedIn'];
         },
         userLink() {
-            return { name: 'userprofile', params: { userId: this.userId } };
+            return { name: 'userprofile', params: { userId: this.myUserDetail.user_id } };
         },
         profileImage() {
             return this.user.prof_img;
@@ -54,16 +46,6 @@ export default {
             this.$router.replace('/'); // ログイン後は/ideasへ自動的に遷移させる
         },
     },
-    created() {
-        apiHelper.loadUserDetail(this.userId)
-        .then( res => {
-            this.user = res;
-
-            this.loadComplete = true;
-        }).catch( err => {
-            console.log("error to get userDetail at TheHeader: ", err);
-        })
-    }
 }
 </script>
 
