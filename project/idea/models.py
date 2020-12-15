@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
-# table User import
+
 from user.models import CustomUser
+from event.models import Event
 # Create your models here.
 
 
@@ -25,9 +26,35 @@ class PostIdea(models.Model):
    idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日")
    # 状態
    state = models.CharField(max_length=100, verbose_name='状態')
+   # ターゲット
+   target = models.CharField(max_length=100, verbose_name='ターゲット')
+   # 人材募集
+   offer = models.CharField(max_length=100, verbose_name='人材募集')
+   # 期日
+   deadline = models.CharField(max_length=30, verbose_name='期日')
+   # ユニークさ
+   uniqueness = models.IntegerField(default=0, verbose_name='ユニークさ')
+   # 新規性
+   novelty = models.IntegerField(default=0, verbose_name='新規性')
+   # 実現可能性
+   possibility = models.IntegerField(default=0, verbose_name='実現可能性')
+   # イベント外部キー
+   event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, verbose_name='イベント')
 
    def __str__(self):
        return "No. " + str(self.idea_id)
+
+
+class RequiredSkill(models.Model):
+    class Meta:
+        db_table = "Required_Skill"
+
+    idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE)
+    skill_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
+    skill_level = models.CharField(verbose_name='スキルレベル', max_length=30, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.idea_id)
 
 class Comment(models.Model):
     class Meta:
