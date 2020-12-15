@@ -18,8 +18,7 @@ class EventSerializer(serializers.ModelSerializer):
 class IdeaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostIdea
-        fields = ('idea_id', 'user_id', 'title', 'overview', 'background', 'passion', 'idea_image', 'idea_date', 'state','target','offer','deadline','uniqueness','novelty','possibility','event_id')
-
+        fields = ('idea_id', 'user_id', 'title', 'overview', 'background', 'passion', 'idea_image', 'idea_date', 'state', 'target', 'offer', 'deadline', 'uniqueness', 'novelty', 'possibility', 'event_id')
 
 class CommentSerializer(serializers.ModelSerializer):
 

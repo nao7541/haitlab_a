@@ -5,7 +5,6 @@ from user.models import CustomUser
 from event.models import Event
 # Create your models here.
 
-
 class PostIdea(models.Model):
    class Meta:
        db_table = "Post_Idea"
@@ -17,7 +16,7 @@ class PostIdea(models.Model):
    # タイトル
    title = models.CharField(default="Idea Title", max_length=100, verbose_name='タイトル')
    # 投稿 文字列
-   overview = models.TextField(max_length=500, verbose_name="概要", blank=True, null=True)
+   overview = models.TextField(max_length=500, blank=True, null=True, verbose_name="概要")
    background = models.TextField(max_length=500, blank=True, null=True, verbose_name="背景")
    passion = models.TextField(max_length=500, blank=True, null=True, verbose_name="思い")
    # 投稿 画像
@@ -43,18 +42,6 @@ class PostIdea(models.Model):
 
    def __str__(self):
        return "No. " + str(self.idea_id)
-
-
-class RequiredSkill(models.Model):
-    class Meta:
-        db_table = "Required_Skill"
-
-    idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE)
-    skill_name = models.CharField(verbose_name='スキル名', max_length=30, null=True, blank=True)
-    skill_level = models.CharField(verbose_name='スキルレベル', max_length=30, null=True, blank=True)
-
-    def __str__(self):
-        return str(self.idea_id)
 
 class Comment(models.Model):
     class Meta:
