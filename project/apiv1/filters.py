@@ -15,11 +15,11 @@ class UserFilter(filters.FilterSet):
 
 class IdeaFilter(filters.FilterSet):
     # ユーザーIDでフィルタリング
-    user_id = filters.CharFilter(field_name="user_id", lookup_expr='exact')
+    user_id = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = PostIdea
-        fields = ['user_id',]
+        fields = ['user_id', 'state']
 
 class TagFilter(filters.FilterSet):
     # タグ名でフィルタリング
