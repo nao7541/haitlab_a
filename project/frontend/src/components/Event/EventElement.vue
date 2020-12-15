@@ -19,14 +19,10 @@ export default {
 
 <style scoped>
 .event-element {
-    padding: 2rem;
+    padding: 1rem 2rem;
     height: 20rem;
     transition: all .5s ease-out;
     border-bottom: 1px solid #dddddd;
-}
-
-.event-element:hover {
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.26);
 }
 
 .header {
@@ -36,6 +32,10 @@ export default {
     align-items: center;
 }
 
+.header a:hover {
+    color: #ffa600;
+}
+
 .title {
     margin-right: auto;
     font-size: 28px;
@@ -43,10 +43,6 @@ export default {
     text-decoration: none;
     color: #000;
     transition: all 0.3s ease;
-}
-
-.title:hover {
-    border-bottom: 1px solid #000;
 }
 
 .date {

@@ -8,7 +8,7 @@
 .card {
     text-align: center;
     background-color: #ffffff;
-    margin: 2rem auto;
+    margin: 2rem auto 0;
 }
 
 .rounded {
@@ -17,6 +17,5 @@
 
 .shading { 
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.26);
-
 }
 </style>

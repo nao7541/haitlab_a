@@ -82,13 +82,8 @@ export default {
 .idea {
     width: 100%;
     background-color: #fff;
-    padding: 1rem;
-    transition: all 0.5s ease-out;
+    padding: 1rem 2rem;
     border-bottom: 1px solid #dddddd;
-}
-
-.idea:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
 .idea-header {

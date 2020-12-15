@@ -1,6 +1,6 @@
 <template>
     <IdeaBoard
-        title="タグにヒットしたアイデア"
+        title="タグからアイデアを探す"
         :ideas="ideas"
     />
 </template>

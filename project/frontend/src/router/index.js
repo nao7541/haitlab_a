@@ -7,8 +7,8 @@ import HomePage from '@/pages/HomePage.vue';
 import IdeasPage from '@/pages/Idea/IdeasPage.vue';
 import NewIdeasPage from '@/pages/Idea/NewIdeasPage.vue';
 import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
-import EventIdeasPage from '@/pages/Idea/EventIdeasPage';
 import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
+import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 // Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
@@ -23,10 +23,13 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 // User Pages
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
 import SettingsPage from '@/pages/User/SettingsPage.vue';
-import MessageListPage from '@/pages/User/MessageListPage.vue';
+import UserSearchPage from '@/pages/User/UserSearchPage.vue';
+import MessageHomePage from '@/pages/User/MessageHomePage.vue';
 import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 // Event pages
-import EventListPage from '@/pages/Event/EventListPage.vue';
+import EventHomePage from '@/pages/Event/EventHomePage.vue';
+import NewEventsPage from '@/pages/Event/NewEventsPage';
+import ComingEventsPage from '@/pages/Event/ComingEventsPage';
 
 //---------- import vuex ----------//
 import store from '@/store/index.js';
@@ -50,13 +53,13 @@ const routes = [
                     { name: 'newIdeas',   path: 'new',   component: NewIdeasPage   },
                     { name: 'trendIdeas', path: 'trend', component: TrendIdeasPage },
                     { name: 'tagIdeas',   path: 'tag',   component: TagIdeasPage   },
-                    { name: 'eventIdeas', path: 'event', component: EventIdeasPage },
+                    { name: 'RecommendIdeasPage', path: 'recommend', component: RecommendIdeasPage },
                 ]
             },
             {
                 // アイデア詳細画面
                 name: 'ideaDetail',
-                path: '/ideas/:ideaId',
+                path: 'ideas/:ideaId',
                 component: IdeaDetailPage,
                 props: true,
             },
@@ -90,15 +93,20 @@ const routes = [
                 meta: { requiresAuth: true },
             },
             {
+                name: 'userSearch',
+                path: 'user/search',
+                component: UserSearchPage,
+            },
+            {
                 // メッセージ一覧画面
                 name: 'messages',
                 path: 'messages',
-                component: MessageListPage,
+                component: MessageHomePage,
                 meta: { requiresAuth: true },
                 children: [
                     {
                         name: 'messageDisplay',
-                        path: 'username',
+                        path: 'message/:userId',
                         component: MessageDisplayPage,
                     }
                 ]
@@ -107,7 +115,12 @@ const routes = [
                 // イベント一覧画面
                 name: 'events',
                 path: 'events',
-                component: EventListPage,
+                component: EventHomePage,
+                redirect: { name: 'newEvents' },
+                children: [
+                    { name: 'newEvents', path: 'new', component: NewEventsPage },
+                    { name: 'comingEvents', path: 'coming', component: ComingEventsPage }
+                ]
             },
         ]
     },

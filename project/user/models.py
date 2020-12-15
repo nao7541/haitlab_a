@@ -3,6 +3,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, PermissionsMixin
 from django.utils import timezone
 
+from event.models import Event
+
 # Create your models here.
 
 class UserManager(UserManager):
@@ -35,14 +37,14 @@ class UserManager(UserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    # ユーザーのID (idのみだとわかりにくかったため、変更)
+    # ユーザーのID
     user_id = models.AutoField(primary_key=True, verbose_name="ユーザーID")
     # ユーザー名
     username = models.CharField(max_length=20, verbose_name='ユーザー名', unique=True)
     # メールアドレス
     email = models.EmailField('メールアドレス')
     # プロフィール画像
-    prof_img = models.ImageField(upload_to='user/', verbose_name='プロフィール画像', null=True, blank=True)
+    prof_img = models.ImageField(upload_to='user/', verbose_name='プロフィール画像', null=True, blank=True, default='user/default.png')
     # 自己紹介文
     intro = models.TextField(verbose_name='自己紹介', max_length=300, null=True, blank=True)
     # 大学名
@@ -81,18 +83,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    #def __str__(self):
-    #    return self.user_id
-""" class Skill(models.Model):
-    # スキルのID
-    skill_id = models.AutoField(primary_key=True, verbose_name='スキルID')
-    # そのスキルを持つユーザー
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    # スキルの名前
-    skill_name = models.CharField(max_length=20, verbose_name='スキル名')
-    # スキルの熟練度
-    skill_level = models.CharField(max_length=20, verbose_name="持っているスキルのレベル", null=True,blank=True)
+class EventStock(models.Model):
+    stock_id = models.AutoField(primary_key=True, verbose_name="ストックID")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="保存したユーザー")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name="ユーザーが保存したイベント")
 
     def __str__(self):
-        return str(self.user_id)+ "_" + str(self.skill_name)
- """
+        return str(self.user) + '_' + str(self.event)

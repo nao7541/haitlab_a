@@ -1,16 +1,14 @@
 <template>
     <div class="comment-box" v-if="loadComplete">
-        <div class="comment-side">
+        <div class="comment-header">
             <img :src="userDetail.prof_img" @click="imagePressed">
+            <h3>{{ userDetail.username }}</h3>
         </div>
-        <div class="comment-body">
-            <div class="comment-header">
-                <h3>{{ userDetail.username }}</h3>
-                <slot name="date"></slot>
-            </div>
-            <div class="message">
-                <slot name="message"></slot>
-            </div>
+        <div class="message">
+            <slot name="message"></slot>
+        </div>
+        <div class="comment-footer">
+            <slot name="date"></slot>
         </div>
     </div>
 </template>
@@ -49,35 +47,39 @@ export default {
 
 <style scoped>
 .comment-box {
+    color: #000;
+    background-color: #fff;
+    padding: 1rem;
+    min-height: 10rem;
+    position: relative;
+}
+
+.comment-header {
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.comment-box .comment-side {
-    text-align: center;
-    width: 10rem;
-    border-right: 1px solid #ccc;
-}
-
-.comment-box .comment-side img {
-    width: 48px;
-    height: 48px;
-    border-radius: 48px;
+.comment-header img {
+    width: 36px;
+    height: 36px;
+    border-radius: 36px;
     cursor: pointer;
 }
 
-.comment-box .comment-body {
-    width: 100%;
-    margin-left: auto;
-    padding-left: 1rem;
-}
-
-.comment-box .comment-body .comment-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.comment-box .comment-body .comment-header h3 {
-    font-size: 24px;
+.comment-header h3 {
+    font-size: 18px;
     font-weight: bold;
+    margin-left: 1rem;
+}
+
+.message {
+    margin: 0.5rem 0;
+}
+
+.comment-footer {
+    color: #777;
+    position: absolute;
+    bottom: 0;
 }
 </style>
