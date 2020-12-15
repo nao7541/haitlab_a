@@ -16,8 +16,8 @@ class PostIdea(models.Model):
    # タイトル
    title = models.CharField(default="Idea Title", max_length=100, verbose_name='タイトル')
    # 投稿 文字列
-   overview = models.TextField(max_length=500, verbose_name="概要")
-   background = models.TextField(max_length=500,  blank=True, null=True, verbose_name="背景")
+   overview = models.TextField(max_length=500, verbose_name="概要", blank=True, null=True)
+   background = models.TextField(max_length=500, blank=True, null=True, verbose_name="背景")
    passion = models.TextField(max_length=500, blank=True, null=True, verbose_name="思い")
    # 投稿 画像
    idea_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="投稿画像") # upload_to settings - MEDIA_ROOT以下のファイル保存先
