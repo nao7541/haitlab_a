@@ -38,7 +38,7 @@ class PostIdea(models.Model):
    # 実現可能性
    possibility = models.IntegerField(default=0, verbose_name='実現可能性')
    # イベント外部キー
-   event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, verbose_name='イベント')
+   event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True, verbose_name='イベント')
 
    def __str__(self):
        return "No. " + str(self.idea_id)
