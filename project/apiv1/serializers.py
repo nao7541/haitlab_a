@@ -1,14 +1,35 @@
 from rest_framework import serializers
 
-from user.models import CustomUser, EventStock
+from user.models import CustomUser, EventStock, UserFollowing
 from idea.models import PostIdea, Comment
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 
+class FollowingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserFollowing
+        fields = ("relation_id", "following_user_id", "created")
+
+class FollowersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = ("relation_id", "user_id", "created")
+
 class UserSerializer(serializers.ModelSerializer):
+    following = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomUser
-        fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name', 'major')
+        fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name',
+                'major', 'following', "followers",)
+
+    def get_following(self, obj):
+        return FollowingSerializer(obj.following.all(), many=True).data
+
+    def get_followers(self, obj):
+        return FollowersSerializer(obj.followers.all(), many=True).data
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:

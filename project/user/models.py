@@ -83,6 +83,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
+class UserFollowing(models.Model):
+    relation_id = models.AutoField(primary_key=True, verbose_name="関係ID")
+    # フォローした人のid
+    user_id = models.ForeignKey(CustomUser, related_name="following", on_delete=models.CASCADE)
+    # フォローされた人のid
+    following_user_id = models.ForeignKey(CustomUser, related_name="followers", on_delete=models.CASCADE)
+    # フォローした日時を表示
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user_id) + '_' + str(self.following_user_id)
+
 class EventStock(models.Model):
     stock_id = models.AutoField(primary_key=True, verbose_name="ストックID")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="保存したユーザー")
