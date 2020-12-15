@@ -44,8 +44,6 @@ class PostIdea(models.Model):
    def __str__(self):
        return "No. " + str(self.idea_id)
 
-<<<<<<< HEAD
-
 
 class RequiredSkill(models.Model):
     class Meta:
@@ -58,10 +56,6 @@ class RequiredSkill(models.Model):
     def __str__(self):
         return str(self.idea_id)
 
-
-
-=======
->>>>>>> fa563381a43d5df67c94a4a036c1224b2769d617
 class Comment(models.Model):
     class Meta:
         db_table = "Comment"
