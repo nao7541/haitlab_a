@@ -29,15 +29,29 @@
                         <span>Edit Profile</span>
                         <FontAwesomeIcon :icon="['far', 'edit']" size="lg" />
                     </router-link>
-                </div> 
+                </div>
             </div>
         </section>
 
-        <section class="content">
-            <IdeaBoard
-                title="投稿したアイデア"
-                :ideas="postIdeas"
-            />
+        <section class="content"> 
+            <div v-if="isMyProfile">
+                <div class="content-header">
+                    <ul>
+                        <li><router-link :to="postPageLink">投稿済み</router-link></li>
+                        <li><router-link :to="savedPageLink">保存中</router-link></li>
+                        <li><router-link :to="stockPageLink">ストック</router-link></li>
+                    </ul>
+                </div>
+                <div class="content-page">
+                    <router-view />
+                </div>
+            </div>
+            <div v-if="!isMyProfile">
+                <IdeaBoard
+                    title="投稿したアイデア"
+                    :ideas="postIdeas"
+                />
+            </div>
         </section>
     </div>
 </template>
@@ -48,7 +62,7 @@ import IdeaBoard from '@/components/Idea/IdeaBoard.vue';
 
 export default {
     components: {
-        IdeaBoard,
+        IdeaBoard
     },
     data() {
         return {
@@ -65,6 +79,15 @@ export default {
         },
         mailAddress() {
             return "mailto:" + this.userDetail.contact;
+        },
+        postPageLink() {
+            return { name: 'postIdeas'};
+        },
+        savedPageLink() {
+            return { name: 'savedIdeas' };
+        },
+        stockPageLink() {
+            return { name: 'stockEvents' };
         }
     },
     created() {
@@ -201,5 +224,34 @@ export default {
 
 .side .edit-profile a:focus {
     background-color: #478d36;
+}
+
+.content {
+    background-color: #fff;
+}
+
+.content-header {
+    padding: 1rem 5rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.content-header ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.content-header li > a {
+    padding: 1rem 3rem;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+}
+
+.router-link-active {
+    border-bottom: 2px solid #ffbb3c;
 }
 </style>

@@ -50,8 +50,6 @@ export default {
                     });
                 });
 
-                console.log(results)
-
                 // 3. アイデアのidよりアイデアそのものを読み込む
                 promises = [];
                 ideaIds.forEach( ideaId => {

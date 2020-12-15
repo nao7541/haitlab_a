@@ -63,17 +63,10 @@ export default {
         return ideas;
     },
     async loadFilteredIdeas(userId) {
-        // TODO 上のloadIdeas使ってもう少しコード綺麗にする
-        const url = '/ideas/';
+        const url = '/ideas/?user_id=' + userId;
         const response = await api.get(url);
-        const ideas = await response.data;
-        const filteredIdeas = [];
+        const filteredIdeas = await response.data;
 
-        for (const idea of ideas) {
-            if (idea.user_id == userId) {
-                filteredIdeas.push(idea);
-            }
-        }
         return filteredIdeas;
     },
     async postIdea(ideaData) {

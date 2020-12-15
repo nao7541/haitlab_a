@@ -131,6 +131,7 @@ li, a {
 
 .nav-link .dropdown {
     background-color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     width: 10rem;
     position: absolute;
     top: 100%;
