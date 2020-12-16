@@ -3,10 +3,11 @@ from rest_framework.routers import SimpleRouter, DefaultRouter
 
 from .views import (UserViewset, EventViewset, IdeaViewset, CommentViewSet,
                 TagViewSet, UserTagMapViewSet,
-                IdeaTagMapViewSet, EventStockViewSet)
+                IdeaTagMapViewSet, EventStockViewSet, UserFollowingViewSet)
 
 router = DefaultRouter()
 router.register('users', UserViewset, basename='user')
+router.register('user_following', UserFollowingViewSet, basename='user_following')
 router.register('events', EventViewset, basename='event')
 router.register('ideas', IdeaViewset, basename='ideas')
 router.register('comment', CommentViewSet, basename='comment')
