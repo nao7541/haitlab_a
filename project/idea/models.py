@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils import timezone
-# table User import
-from user.models import CustomUser
-# Create your models here.
 
+from user.models import CustomUser
+from event.models import Event
+# Create your models here.
 
 class PostIdea(models.Model):
    class Meta:
@@ -16,7 +16,7 @@ class PostIdea(models.Model):
    # タイトル
    title = models.CharField(default="Idea Title", max_length=100, verbose_name='タイトル')
    # 投稿 文字列
-   overview = models.TextField(max_length=500, verbose_name="概要", blank=True, null=True)
+   overview = models.TextField(max_length=500, blank=True, null=True, verbose_name="概要")
    background = models.TextField(max_length=500, blank=True, null=True, verbose_name="背景")
    passion = models.TextField(max_length=500, blank=True, null=True, verbose_name="思い")
    # 投稿 画像
@@ -25,6 +25,20 @@ class PostIdea(models.Model):
    idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日")
    # 状態
    state = models.CharField(max_length=100, verbose_name='状態')
+   # ターゲット
+   target = models.CharField(max_length=100, verbose_name='ターゲット')
+   # 人材募集
+   offer = models.CharField(max_length=100, verbose_name='人材募集')
+   # 期日
+   deadline = models.CharField(max_length=30, verbose_name='期日')
+   # ユニークさ
+   uniqueness = models.IntegerField(default=0, verbose_name='ユニークさ')
+   # 新規性
+   novelty = models.IntegerField(default=0, verbose_name='新規性')
+   # 実現可能性
+   possibility = models.IntegerField(default=0, verbose_name='実現可能性')
+   # イベント外部キー
+   event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True, verbose_name='イベント')
 
    def __str__(self):
        return "No. " + str(self.idea_id)
