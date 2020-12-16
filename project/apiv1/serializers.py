@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('user_id', 'username', 'email', 'prof_img', 'intro', 'univ_name',
-                'major', 'following', "followers",)
+                'major', 'portfolio' ,'following', "followers",)
 
     def get_following(self, obj):
         return FollowingSerializer(obj.following.all(), many=True).data
