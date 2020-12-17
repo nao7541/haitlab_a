@@ -32,14 +32,26 @@ export default {
             // 1. 自分のタグを取得
             this.myTags = res;
 
+            // タグが未登録ならreturn
+            if (this.myTags == null) {
+                this.loadComplete = true;
+                return;
+            }    
+
             let promises = [];
             this.myTags.forEach( tag => {
                 promises.push(apiHelper.loadIdeaTagsByTag(tag.tag_id));
             });
             Promise.all(promises)
             .then( results => {
+                if (results == null) {
+                    this.loadComplete = true;
+                    return;
+                }
+                
                 // 2. 自分の持つ各タグがつけられているアイデアのidを全取得
                 const ideaIds = [];
+
                 results.forEach( result => {
                     // tagは配列で返されるため2重ループ
                     result.forEach( tag => {

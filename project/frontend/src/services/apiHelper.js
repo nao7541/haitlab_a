@@ -44,6 +44,13 @@ export default {
         
         return responseData;
     },
+    async authUser(url, data) {
+        // 新規登録、ログインどちらもここで行う
+        let response = await api.post(url, data);
+        let responseData = await response.data;
+
+        return responseData;
+    },
 
 
     // ------------------------------ Idea ------------------------------ //
@@ -55,15 +62,22 @@ export default {
         
         return ideaDetail;
     },
-    async loadIdeas() {
-        const url = '/ideas/';
+    async loadPostIdeas() {
+        const url = '/ideas/?state=post';
         const response = await api.get(url);
         const ideas = await response.data;
         
         return ideas;
     },
-    async loadFilteredIdeas(userId) {
-        const url = '/ideas/?user_id=' + userId;
+    async loadFilteredPostIdeas(userId) {
+        const url = '/ideas/?user_id=' + userId + '&state=post';
+        const response = await api.get(url);
+        const filteredIdeas = await response.data;
+
+        return filteredIdeas;
+    },
+    async loadFilteredDraftIdeas(userId) {
+        const url = '/ideas/?user_id=' + userId + '&state=draft';
         const response = await api.get(url);
         const filteredIdeas = await response.data;
 
@@ -78,6 +92,7 @@ export default {
         formData.append('background', ideaData.background);
         formData.append('passion', ideaData.passion);
         formData.append('state', ideaData.state);
+        formData.append('offer', ideaData.offer );
         
         if(ideaData.idea_image !== null) {
             formData.append('idea_image', ideaData.idea_image);
@@ -244,5 +259,38 @@ export default {
         const events = await response.data;
 
         return events;
+    },
+
+    // ------------------------------ Event Stock ------------------------------ //
+    async loadStockEvents(userId) {
+        // フィルタリングしてuerのストックしているイベントをすべて取得
+        const url = '/event_stock/?user=' + userId;
+        const response = await api.get(url);
+        const data = await response.data;
+
+        return data;
+    },
+    async stockEvent(eventId, userId) {
+        const url = '/event_stock/';
+        const response = await api.post(url, {
+            user: userId,
+            event: eventId,
+        });
+        const responseData = await response.data;
+        return responseData;
+    },
+    async unStockEvent(eventId, userId) {
+        // eventId, userIdからstock_idの取得
+        let url = '/event_stock/?user=' + userId + '&event=' + eventId;
+        let response = await api.get(url);
+        let data = await response[0].data;
+
+        // 削除
+        const stockId = data[0].stock_id;
+        url = '/event_stock/' + stockId + '/';
+        response = await api.delete(url);
+        data = await response.data;
+
+        return data;
     }
 }

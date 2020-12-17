@@ -1,13 +1,34 @@
 <template>
-    <div class="floating-button">
-        <div class="bulb">
-            <router-link to="/post"><FontAwesomeIcon :icon="['far', 'lightbulb']" size="4x" /></router-link>
+    <div class="floating-button" :class="fixed">
+        <div class="bulb" :class="bgColor">
+            <router-link :to="linkTo">
+                <slot name="icon"></slot>
+            </router-link>
         </div>
     </div>
 </template>
 
+<script>
+export default {
+    props: {
+        linkTo: {
+            type: String,
+            required: true,
+        },
+        bgColor: {
+            type: String,
+            required: false,
+        },
+        fixed: {
+            type: String,
+            default: 'fixed'
+        }
+    }
+}
+</script>
+
 <style scoped>
-.floating-button {
+.fixed {
     position: fixed;
     bottom: 50px;
     right: 50px;
@@ -19,11 +40,18 @@
     border-radius: 80px;
     display: block;
     position: relative;
+}
+
+.orange {
     background-color: #ffbb3c;
 }
 
+.gray {
+    background-color: #999;
+}
+
 .floating-button .bulb a {
-    color: rgb(248, 255, 155);
+    color: #fff;
     position: absolute;
     top: 50%;
     left: 50%;

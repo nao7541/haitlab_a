@@ -21,7 +21,7 @@ export default {
         }
     },
     created() {
-        apiHelper.loadIdeas()
+        apiHelper.loadPostIdeas()
         .then( res => {
             this.ideas = res;
 

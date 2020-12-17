@@ -1,36 +1,46 @@
 import api from '@/services/api.js';
+import apiHelper from '../../../services/apiHelper';
 
 export default {
     auth(context, payload) {
         const url = payload.url;
         const data = payload.data;
-        return api.post(url, data)
-        .then(response => {
-            const key = response.data.key;
+        let key = null;
+        
+        apiHelper.authUser(url, data)
+        .then( res => {
+            // tokenをlocalに保存する
+            key = res.key;
             localStorage.setItem('token', key);
 
-            // 登録したユーザー情報をDBより取得
-            api.get('/users/')
-            .then(response => {
-                const users = response.data;
-                for (const user of users) {
-                    // もしuserを見つけたら、userIdをローカルに保存
-                    if (user.username === payload.data.username) {
-                        const userId = user.user_id;
-                        localStorage.setItem('userId', userId);
-                        context.commit('setUser', {
-                            userId: userId,
-                            token: key,
-                        });
-                        break;
-                    }
+            // TODO: django-filterで簡略化
+            // return apiHelper.loadUserDetailByName(payload.data.username)
+            return apiHelper.loadAllUsers()
+        }).then( res => {
+            const users = res;
+            
+            for (const user of users) {
+                // もしuserを見つけたら、userIdをローカルに保存
+                if (user.username === payload.data.username) {
+                    const userId = user.user_id;
+                    localStorage.setItem('userId', userId);
+                    context.commit('setUser', {
+                        userId: userId,
+                        token: key,
+                    });
+                    break;
                 }
-            }).catch(errorMsg => {
-                console.log(errorMsg)
-            });
-        }).catch( errorMessage => {
-            console.error(errorMessage);
-        });
+            }
+        // }).then( res => {
+        //     const userId = res.user_id;
+        //     localStorage.setItem('userId', userId);
+        //     context.commit('setUser', {
+        //         userId: userId,
+        //         token: key,
+        //     });
+        }).catch( err => {
+            console.log("error at authUser: ", err);
+        })
     },
     signup(context, payload) {
         context.dispatch('auth', {
@@ -61,6 +71,10 @@ export default {
             context.commit('setUser', {
                 userId: userId,
                 token: token
+            });
+            context.commit('loginSetup', {
+                myData: context.rootState.myData,
+                myUserId: userId,
             });
         }
     },

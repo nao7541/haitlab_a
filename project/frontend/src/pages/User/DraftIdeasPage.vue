@@ -1,7 +1,7 @@
 <template>
-    <div id="post-ideas">
+    <div id="saved-ideas">
         <IdeaElement
-            v-for="idea in postIdeas"
+            v-for="idea in draftIdeas"
             :key="idea.idea_id"
             :idea_id="idea.idea_id"
             :user_id="idea.user_id"
@@ -25,7 +25,7 @@ export default {
     },
     data() {
         return {
-            postIdeas: [],
+            draftIdeas: [],
             loadComplete: false,
         }
     },
@@ -35,9 +35,9 @@ export default {
         }
     },
     created() {
-        apiHelper.loadFilteredPostIdeas(this.myUserId)
+        apiHelper.loadFilteredDraftIdeas(this.myUserId)
         .then( res => {
-            this.postIdeas = res;
+            this.draftIdeas = res;
             this.loadComplete = true;
         }).catch( err => {
             console.log("error to get ideas at PostIdeasPage: ", err);

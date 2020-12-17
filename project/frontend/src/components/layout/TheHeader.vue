@@ -52,16 +52,22 @@ export default {
             this.$store.dispatch('auth/logout')
             this.$router.replace('/'); // ログイン後は/ideasへ自動的に遷移させる
         },
+        loadUserDetail() {
+            apiHelper.loadUserDetail(this.userId)
+            .then( res => {
+                this.user = res;
+                this.loadComplete = true;
+            }).catch( err => {
+                console.log("error to get userDetail at TheHeader: ", err);
+            })
+        }
     },
-    created() {
-        apiHelper.loadUserDetail(this.userId)
-        .then( res => {
-            this.user = res;
-            this.loadComplete = true;
-        }).catch( err => {
-            console.log("error to get userDetail at TheHeader: ", err);
-        })
-    }
+    beforeMount () {
+        if (this.userId) {
+            // userがセットされている時のみ
+            this.loadUserDetail();
+        }
+    },
 }
 </script>
 

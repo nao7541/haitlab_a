@@ -10,7 +10,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     modules: {
         auth:  AuthModule,
-        MyData: MyDataModule,
+        myData: MyDataModule,
     },
 });
 
