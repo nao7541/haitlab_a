@@ -231,7 +231,9 @@ export default {
                 return apiHelper.loadIdeaTags(this.ideaId)
             }).then( res => {
                 // タグの読み込み
-                this.tags = res;
+                this.tags = res.map( (tag) => {
+                    return tag.tag_name;
+                });
 
                 this.loadComplete = true;
             }).catch( err => {
