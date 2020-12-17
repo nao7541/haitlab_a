@@ -32,4 +32,8 @@ textarea {
 textarea::-webkit-scrollbar {
     display: none;
 }
+
+textarea:focus {
+    border-color: #ffbb3c;
+}
 </style>

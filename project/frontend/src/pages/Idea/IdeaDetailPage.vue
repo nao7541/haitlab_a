@@ -6,6 +6,9 @@
                     <div class="title">
                         <h1>{{ ideaDetail.title }}</h1>
                     </div>
+                    <div class="edit" v-if="this.isMyIdea">
+                        <router-link :to="editLink">編集する</router-link>
+                    </div>
                     <div class="tags">
                         <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
                     </div>
@@ -96,11 +99,15 @@ export default {
             loadComplete: false,
             isFormValid: true,
             commentInput: '',
+            isMyIdea: false,
         };
     },
     computed: {
         userLink() {
             return { name: 'userprofile', params: { userId: this.userDetail.user_id }};
+        },
+        editLink() {
+            return '/post/edit/' + this.ideaId;
         },
         myUserId() {
             return this.$store.getters['auth/userId'];
@@ -153,6 +160,11 @@ export default {
             // idea情報を取得
             this.ideaDetail = res;
 
+            // 取得したアイデア情報より、自分のアイデアかを確認
+            if (this.myUserId == this.ideaDetail.user_id) {
+                this.isMyIdea = true;
+            }
+
             // tag情報を取得
             return apiHelper.loadIdeaTags(this.ideaDetail.idea_id);
         }).then( res => {
@@ -201,6 +213,24 @@ export default {
 .idea-header .title {
     font-size: 26px;
     margin-bottom: 0.5rem;
+}
+
+.idea-header .edit {
+    margin: 1rem 0;
+}
+
+.idea-header .edit a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #12da00;
+    border-radius: 4px;
+    padding: 0.4rem 1.25rem;
+}
+
+.idea-header .edit a:hover {
+    background-color: #0fb800;
 }
 
 .idea-header .tags::after {

@@ -107,6 +107,30 @@ export default {
 
         return data;
     },
+    async putIdea(ideaData, ideaId) {
+        const url = '/ideas/' + ideaId + '/';
+        const formData = new FormData();
+        formData.append('user_id', ideaData.user_id);
+        formData.append('title', ideaData.title);
+        formData.append('overview', ideaData.overview);
+        formData.append('background', ideaData.background);
+        formData.append('passion', ideaData.passion);
+        formData.append('state', ideaData.state);
+        formData.append('offer', ideaData.offer );
+        
+        if(ideaData.idea_image !== null) {
+            formData.append('idea_image', ideaData.idea_image);
+        }
+
+        const response = await api.put(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        const data = await response.data;
+
+        return data;
+    },
 
     // ------------------------------ Comments ------------------------------ //
     async loadComments(ideaId) {

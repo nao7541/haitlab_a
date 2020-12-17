@@ -80,23 +80,24 @@ export default {
         ResizableTextarea,
     },
     props: {
-        title: {
-            val: { type: String },
-            isValid: { type: Boolean},
-            required: true,
-        },
-        overview: { type: String, required: true },
-        background: { type: String, required: true, },
-        passion: { type: String, required: true },
-        offer: { type: String, required: true },
-        previewImage: { required: true },
-        tags: { type: Array, required: true },
+        ideaId: { required: false, default: null },
+        formType: { type: String, required: true }, // edit or post
     },
     data() {
         return {
-            ideaId: null,
+            retIdeaId: null, // ideaをpostもしくはputしてreturnされてきた結果より取得したID
             uploadedImage: null,
             isFormValid: true,
+            title: {
+                val: '',
+                isValid: true,
+            },
+            overview: '',
+            background: '',
+            passion: '',
+            offer: '',
+            previewImage: null,
+            tags: [],
         }
     },
     computed: {
@@ -119,6 +120,20 @@ export default {
                 this.title.isValid = false;
             }
         },
+        registerTag() {
+            const promises = [];
+            for (const tag of this.tags) {
+                promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
+            }
+
+            Promise.all(promises)
+            .then( () => {
+                // 全ての非同期処理が完了してからIdea詳細ページに画面遷移
+                this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
+            }).catch( err => {
+                console.log("error to register tag at IdeaForm: ", err);
+            });
+        },
         registerIdea(state) {
             const ideaData = {
                 user_id: this.userId,
@@ -132,30 +147,39 @@ export default {
                 offer: this.offer,
             }
 
-            // 1. Ideaをpostする
-            apiHelper.postIdea(ideaData)
-            .then( res => {
-                this.ideaId = res.idea_id;
+            if (this.formType === 'new') {
+                // Ideaをpostする
+                apiHelper.postIdea(ideaData)
+                .then( res => {
+                    this.retIdeaId = res.idea_id;
 
-                if (this.tags.length > 0) {
-                    // 2. tagがある場合はtagをpostする
-                    const promises = [];
-                    for (const tag of this.tags) {
-                        promises.push(apiHelper.postIdeaTag(this.ideaId, tag));
+                    // tagがある場合はtagをpostする
+                    if (this.tags.length > 0) {
+                        this.registerTag();
+                    } else {
+                        // Idea詳細ページに画面遷移
+                        this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
                     }
+                }).catch( err => {
+                    console.log("error to post new idea: ", err);
+                });
+            } else if (this.formType === 'edit') {
+                // Ideaをputする
+                apiHelper.putIdea(ideaData, this.ideaId)
+                .then( res => {
+                    this.retIdeaId = res.idea_id;
 
-                    Promise.all(promises)
-                    .then( () => {
-                        // 全ての非同期処理が完了してからIdea詳細ページに画面遷移
-                        this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId } });
-                    })
-                } else {
-                    // Idea詳細ページに画面遷移
-                    this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId } });
-                }
-            }).catch( err => {
-                console.log("error to post new idea: ", err);
-            });
+                    // tagがある場合はtagをpostする
+                    if (this.tags.length > 0) {
+                        this.registerTag();
+                    } else {
+                        // Idea詳細ページに画面遷移
+                        this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
+                    }
+                }).catch( err => {
+                    console.log("error to post new idea: ", err);
+                });
+            }
         },
         postIdea() {
             // 投稿できるか否かの確認
@@ -188,6 +212,31 @@ export default {
             } else {
                 this.previewImage = null;
             }
+        }
+    },
+    created() {
+        // 編集の場合は、既存のデータをまず読み込む
+        if (this.formType === 'edit') {
+            apiHelper.loadIdeaDetail(this.ideaId)
+            .then( res => {
+                // ideaの詳細を読み込み
+                const idea = res;
+                this.title.val = idea.title;
+                this.overview = idea.overview;
+                this.background = idea.background;
+                this.passion = idea.passion;
+                this.offer = idea.offer;
+                this.previewImage = idea.idea_image;
+
+                return apiHelper.loadIdeaTags(this.ideaId)
+            }).then( res => {
+                // タグの読み込み
+                this.tags = res;
+
+                this.loadComplete = true;
+            }).catch( err => {
+                console.log("error to load IdeaDetail at EditIdeaPage: ", err);
+            })
         }
     }
 }
