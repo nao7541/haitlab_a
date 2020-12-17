@@ -33,8 +33,8 @@ class PostIdea(models.Model):
    offer = models.CharField(max_length=100, blank=True, null=True, verbose_name='人材募集')
    # 期日
    deadline = models.CharField(max_length=30, blank=True, null=True, verbose_name='期日')
-   # ユニークさ
-   uniqueness = models.IntegerField(default=0, blank=True, null=True, verbose_name='ユニークさ')
+   # 面白さ
+   interesting = models.IntegerField(default=0, blank=True, null=True, verbose_name='面白さ')
    # 新規性
    novelty = models.IntegerField(default=0, blank=True, null=True, verbose_name='新規性')
    # 実現可能性
