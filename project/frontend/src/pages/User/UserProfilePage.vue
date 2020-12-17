@@ -38,7 +38,7 @@
                 <div class="content-header">
                     <ul>
                         <li><router-link :to="postPageLink">投稿済み</router-link></li>
-                        <li><router-link :to="savedPageLink">保存中</router-link></li>
+                        <li><router-link :to="draftPageLink">下書き</router-link></li>
                         <li><router-link :to="stockPageLink">ストック</router-link></li>
                     </ul>
                 </div>
@@ -83,8 +83,8 @@ export default {
         postPageLink() {
             return { name: 'postIdeas'};
         },
-        savedPageLink() {
-            return { name: 'savedIdeas' };
+        draftPageLink() {
+            return { name: 'draftIdeas' };
         },
         stockPageLink() {
             return { name: 'stockEvents' };
@@ -108,7 +108,7 @@ export default {
         }).then( res => {
             this.tags = res;
 
-            return apiHelper.loadFilteredIdeas(paramUserId);
+            return apiHelper.loadFilteredPostIdeas(paramUserId);
         }).then ( res => {
             // ユーザーが投稿したアイデアのみを抽出
             this.postIdeas = res;

@@ -7,6 +7,7 @@
             <EventElement
                 v-for="event in events"
                 :key="event.event_id"
+                :eventId="event.event_id"
                 :name="event.event_name"
                 :detail="event.event_detail"
                 :schedule="event.event_schedule"
