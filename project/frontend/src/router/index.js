@@ -24,7 +24,7 @@ import UserSearchPage from '@/pages/User/UserSearchPage.vue';
 import MessageHomePage from '@/pages/User/MessageHomePage.vue';
 import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 import PostIdeasPage from '@/pages/User/PostIdeasPage.vue';
-import SavedIdeasPage from '@/pages/User/SavedIdeasPage.vue';
+import DraftIdeasPage from '@/pages/User/DraftIdeasPage.vue';
 import StockEventsPage from '@/pages/User/StockEventsPage.vue';
 // Event pages
 import EventHomePage from '@/pages/Event/EventHomePage.vue';
@@ -87,7 +87,7 @@ const routes = [
                 redirect: { name: 'postIdeas' },
                 children: [
                     { name: 'postIdeas',   path: 'post',         component: PostIdeasPage  },
-                    { name: 'savedIdeas',  path: 'saved',        component: SavedIdeasPage },
+                    { name: 'draftIdeas',  path: 'draft',        component: DraftIdeasPage },
                     { name: 'stockEvents', path: 'events/stock', component: StockEventsPage},
                 ]
             },
@@ -136,9 +136,10 @@ const routes = [
         path: '/post',
         component: IdeaPostPage,
         meta: { requiresAuth: true },
+        redirect: { name: 'postNewIdea' },
         children: [
             { name: 'postNewIdea',  path: 'new',  component: PostNewIdeaPage },
-            { name: 'editIdea',     path: 'edit', component: EditIdeaPage    },
+            { name: 'editIdea',     path: 'edit/:ideaId', component: EditIdeaPage },
         ]
     },
     {
