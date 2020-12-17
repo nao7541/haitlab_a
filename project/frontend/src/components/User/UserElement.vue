@@ -32,8 +32,8 @@
                     </div>
                     <div class="reputation-item">
                         <div class="title">
-                            <FontAwesomeIcon class="icon" :icon="['fas', 'search']" size="lg"></FontAwesomeIcon>
-                            <span>ユニークさ</span>
+                            <FontAwesomeIcon class="icon" :icon="['fas', 'bolt']" size="lg"></FontAwesomeIcon>
+                            <span>面白さ</span>
                         </div>
                         <div class="val">
                             34
@@ -50,8 +50,8 @@
                     </div>
                     <div class="reputation-item">
                         <div class="title">
-                            <FontAwesomeIcon class="icon" :icon="['far', 'grin-tongue-wink']" size="lg">面白さ</FontAwesomeIcon>
-                            <span>面白さ</span>
+                            <FontAwesomeIcon class="icon" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
+                            <span>新規性</span>
                         </div>
                         <div class="val">
                             100

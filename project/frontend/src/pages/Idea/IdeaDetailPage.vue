@@ -1,10 +1,35 @@
 <template>
     <div id="idea-detail">
         <div class="idea" v-if="loadComplete">
+            <section class="left-sidebar">
+                <div class="reputation">
+                    <div class="icon-btn interesting">
+                        <div class="popup">
+                            <span>面白さ</span>
+                        </div>
+                        <FontAwesomeIcon class="icon" :icon="['fas', 'bolt']" size="lg"></FontAwesomeIcon>
+                    </div>
+                    <div class="icon-btn novelty">
+                        <div class="popup">
+                            <span>新規性</span>
+                        </div>
+                        <FontAwesomeIcon class="icon" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
+                    </div>
+                    <div class="icon-btn possibility">
+                        <div class="popup">
+                            <span>実現可能性</span>
+                        </div>
+                        <FontAwesomeIcon class="icon" :icon="['fas', 'dollar-sign']" size="lg"></FontAwesomeIcon>
+                    </div>
+                </div>
+            </section>
             <main class="main-content">
                 <section class="container idea-header">
                     <div class="title">
                         <h1>{{ ideaDetail.title }}</h1>
+                    </div>
+                    <div class="edit" v-if="this.isMyIdea">
+                        <router-link :to="editLink">編集する</router-link>
                     </div>
                     <div class="tags">
                         <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
@@ -13,7 +38,7 @@
                 <section class="container idea-body">
                     <div class="sub-container overview">
                         <div class="sub-title">
-                            <p>Overview</p>
+                            <p>概要</p>
                         </div>
                         <div class="content">
                             <p>{{ ideaDetail.overview }}</p>
@@ -21,15 +46,23 @@
                     </div>
                     <div class="sub-container background">
                         <div class="sub-title">
-                            <p>Background</p>
+                            <p>背景</p>
                         </div>
                         <div class="content">
                             <p>{{ ideaDetail.background }}</p>
                         </div>
                     </div>
+                    <div class="sub-container offer">
+                        <div class="sub-title">
+                            <p>募集要件</p>
+                        </div>
+                        <div class="content">
+                            <p>{{ ideaDetail.offer }}</p>
+                        </div>
+                    </div>
                     <div class="sub-container passion">
                         <div class="sub-title">
-                            <p>Passion</p>
+                            <p>熱意</p>
                         </div>
                         <div class="content">
                             <p>{{ ideaDetail.passion }}</p>
@@ -49,7 +82,7 @@
                     </div>
                 </section>
             </main>
-            <section class="sidebar">
+            <section class="right-sidebar">
                 <section class="profile">
                     <div class="profile-image">
                         <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
@@ -96,11 +129,15 @@ export default {
             loadComplete: false,
             isFormValid: true,
             commentInput: '',
+            isMyIdea: false,
         };
     },
     computed: {
         userLink() {
             return { name: 'userprofile', params: { userId: this.userDetail.user_id }};
+        },
+        editLink() {
+            return '/post/edit/' + this.ideaId;
         },
         myUserId() {
             return this.$store.getters['auth/userId'];
@@ -153,6 +190,11 @@ export default {
             // idea情報を取得
             this.ideaDetail = res;
 
+            // 取得したアイデア情報より、自分のアイデアかを確認
+            if (this.myUserId == this.ideaDetail.user_id) {
+                this.isMyIdea = true;
+            }
+
             // tag情報を取得
             return apiHelper.loadIdeaTags(this.ideaDetail.idea_id);
         }).then( res => {
@@ -184,6 +226,54 @@ export default {
     justify-content: space-between;
 }
 
+.left-sidebar {
+    width: 10rem;
+}
+
+.icon-btn {
+    margin: 2rem auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.26);
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+}
+
+.icon-btn:hover {
+    background-color: #ffcf76;
+}
+
+.icon-btn .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.popup {
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #1e1e1eaa;
+    border-radius: 4px;
+    color: #fff;
+    text-align: center;
+    width: 6rem;
+    padding: 0.1rem 0.5rem;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.icon-btn:hover > .popup {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+
 .main-content {
     width: 100%;
 }
@@ -203,6 +293,24 @@ export default {
     margin-bottom: 0.5rem;
 }
 
+.idea-header .edit {
+    margin: 1rem 0;
+}
+
+.idea-header .edit a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #12da00;
+    border-radius: 4px;
+    padding: 0.4rem 1.25rem;
+}
+
+.idea-header .edit a:hover {
+    background-color: #0fb800;
+}
+
 .idea-header .tags::after {
     content: "";
     display: block;
@@ -218,8 +326,8 @@ export default {
 }
 
 .container .sub-title {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 24px;
+    font-weight: bold;
     border-bottom: 1px solid #ccc;
 }
 
@@ -266,11 +374,11 @@ export default {
     background-color: #ffb01e;
 }
 
-.sidebar {
+.right-sidebar {
     width: 20rem;
 }
 
-.sidebar .profile {
+.right-sidebar .profile {
     min-height: 10rem;
     background-color: #fff;
     padding: 1rem;
@@ -280,7 +388,7 @@ export default {
     text-align: center;
 }
 
-.sidebar .profile-image {
+.right-sidebar .profile-image {
     margin: 0 auto;
     width: 84px;
     height: 84px;
@@ -289,7 +397,7 @@ export default {
     position: relative;
 }
 
-.sidebar .profile-image img {
+.right-sidebar .profile-image img {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -299,17 +407,17 @@ export default {
     border-radius: 80px;
 }
 
-.sidebar .profile h1 {
+.right-sidebar .profile h1 {
     font-size: 24px;
     font-weight: bold;
 }
 
-.sidebar .profile .intro {
+.right-sidebar .profile .intro {
     text-align: left;
     margin: 1rem 0;
 }
 
-.sidebar .comment-list {
+.right-sidebar .comment-list {
     background-color: #fff;
     margin-left: 0.5rem;
     border-radius: 4px;

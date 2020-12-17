@@ -136,7 +136,7 @@ li, a {
 }
 
 .nav-link .dropdown {
-    background-color: #333;
+    background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     width: 10rem;
     position: absolute;
@@ -145,7 +145,7 @@ li, a {
     transform: translateY(10px);
     opacity: 0;
     pointer-events: none;
-    transition: 0.5s;
+    transition: 0.25s;
 }
 
 .nav-link:hover > .dropdown {
@@ -160,8 +160,6 @@ li, a {
 }
 
 .dropdown-link a {
-    display: block;
-    color: #fff;
-    width: 100%;
+    color: #000;
 }
 </style>

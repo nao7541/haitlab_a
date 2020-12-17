@@ -2,7 +2,7 @@
     <div class="event-element">
         <div class="header">
             <a class="title" :href="url">{{ name }}</a>
-            <span class="stock" @click="stockEvent"><FontAwesomeIcon :icon="['fas', 'download']" size="lg" /></span>
+            <span class="stock" @click="stockEvent"><FontAwesomeIcon :icon="['far', 'bookmark']" size="lg" /></span>
             <small class="location"><FontAwesomeIcon style="marginRight: .5rem" :icon="['fas', 'map-marker-alt']"/>{{ location }}</small>
             <h3 class="date">{{ schedule }}</h3>
         </div>
