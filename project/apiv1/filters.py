@@ -6,12 +6,12 @@ from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 
 class UserFilter(filters.FilterSet):
-    # ユーザーIDでフィルタリング
-    user_id = filters.CharFilter(field_name="user_id", lookup_expr='exact')
+    # ユーザーID, usernameでフィルタリング
+    user_id = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = CustomUser
-        fields = ['user_id',]
+        fields = ['user_id', 'username']
 
 class IdeaFilter(filters.FilterSet):
     # ユーザーIDでフィルタリング
@@ -46,9 +46,9 @@ class IdeaTagFilter(filters.FilterSet):
         fields = ['idea', 'tag']
 
 class EventStockFilter(filters.FilterSet):
-    # user_idでフィルタリング
-    user = filters.CharFilter(field_name="user_id", lookup_expr='exact')
+    # user_id, event_idでフィルタリング
+    user = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = EventStock
-        fields = ['user',]
+        fields = ['user', 'event']

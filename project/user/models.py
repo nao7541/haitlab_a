@@ -52,6 +52,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # 専攻
     major = models.CharField(verbose_name='学部・学科・専攻', max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    # ポートフォリオ
+    portfolio = models.URLField(verbose_name='ポートフォリオ', null=True, blank=True)
     # 使わないからNoneにしておく
     first_name = None
     last_name = None
