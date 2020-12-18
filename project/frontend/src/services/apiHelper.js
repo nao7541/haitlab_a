@@ -7,7 +7,7 @@ export default {
         const response = await api.get(url);
         const responseData = await response.data;
 
-        return responseData;
+        return responseData[0];
     },
     async loadUserDetail(userId) {
         // userIdをキーとしてuserの詳細情報を取得
@@ -284,6 +284,13 @@ export default {
 
         return events;
     },
+    async loadEventDetail(eventId) {
+        const url = '/events/' + eventId + '/';
+        const response = await api.get(url);
+        const event = await response.data;
+
+        return event;
+    },
 
     // ------------------------------ Event Stock ------------------------------ //
     async loadStockEvents(userId) {
@@ -294,7 +301,7 @@ export default {
 
         return data;
     },
-    async stockEvent(eventId, userId) {
+    async addEventStock(eventId, userId) {
         const url = '/event_stock/';
         const response = await api.post(url, {
             user: userId,
@@ -303,11 +310,11 @@ export default {
         const responseData = await response.data;
         return responseData;
     },
-    async unStockEvent(eventId, userId) {
+    async removeEventStock(eventId, userId) {
         // eventId, userIdからstock_idの取得
         let url = '/event_stock/?user=' + userId + '&event=' + eventId;
         let response = await api.get(url);
-        let data = await response[0].data;
+        let data = await response.data;
 
         // 削除
         const stockId = data[0].stock_id;

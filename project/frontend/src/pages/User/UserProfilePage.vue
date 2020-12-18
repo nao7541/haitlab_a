@@ -70,7 +70,8 @@ export default {
             loadComplete: false,
             isMyProfile: false,
             postIdeas: [],
-            tags: []
+            tags: [],
+            paramUserId: null,
         }
     },
     computed: {
@@ -90,35 +91,40 @@ export default {
             return { name: 'stockEvents' };
         }
     },
+    methods: {
+        loadUserData() {
+            apiHelper.loadUserDetail(this.paramUserId) 
+            .then( res => {
+                this.userDetail = res;
+
+                // userのタグを取得
+                return apiHelper.loadUserTags(this.paramUserId);
+            }).then( res => {
+                this.tags = res;
+
+                return apiHelper.loadFilteredPostIdeas(this.paramUserId);
+            }).then ( res => {
+                // ユーザーが投稿したアイデアのみを抽出
+                this.postIdeas = res;
+
+                // ロード完了
+                this.loadComplete = true;
+            }).catch ( err => {
+                console.log("error to load user profile: ", err);
+            });
+        }
+    },
     created() {
         // パラメータとして渡されたuserid
-        const paramUserId = this.$route.params['userId'];
+        this.paramUserId = this.$route.params['userId'];
         // ローカルに保存しているuserIdと比較して、自分のページか否かを確かめる
-        if (paramUserId == this.myUserId) {
+        if (this.paramUserId == this.myUserId) {
             // 自分のページであるならtrue
             this.isMyProfile = true;
         }
 
-        apiHelper.loadUserDetail(paramUserId) 
-        .then( res => {
-            this.userDetail = res;
-
-            // userのタグを取得
-            return apiHelper.loadUserTags(paramUserId);
-        }).then( res => {
-            this.tags = res;
-
-            return apiHelper.loadFilteredPostIdeas(paramUserId);
-        }).then ( res => {
-            // ユーザーが投稿したアイデアのみを抽出
-            this.postIdeas = res;
-
-            // ロード完了
-            this.loadComplete = true;
-        }).catch ( err => {
-            console.log("error to load user profile: ", err);
-        });
-    }
+        this.loadUserData();
+    },
 }
 </script>
 

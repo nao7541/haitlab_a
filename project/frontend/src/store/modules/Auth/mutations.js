@@ -14,7 +14,12 @@ export default {
     loginSetup(state, payload) {
         apiHelper.loadStockEvents(payload.myUserId)
         .then( res => {
-            payload.myData = res;
+            // resは自分のuserIDを含むevent_stockのアイテム
+            const eventIDs = [];
+            for (const eventStock of res) {
+                eventIDs.push(eventStock.event);
+            }
+            payload.myData.myEventIDs = eventIDs;
         }).catch ( err => {
             console.log("fail to login setup for stock events: ", err);
         })
