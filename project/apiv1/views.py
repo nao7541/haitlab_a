@@ -9,16 +9,16 @@ from rest_auth.social_serializers import TwitterLoginSerializer
 from django_filters import rest_framework as filters
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Comment
+from idea.models import PostIdea, Comment, ReputationMap
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 from .serializers import (UserSerializer, EventSerializer, IdeaSerializer,
                         CommentSerializer, TagSerializer, UserTagMapSerializer,
                         IdeaTagMapSerializer, EventStockSerializer, FollowingSerializer,
-                        FollowersSerializer)
+                        FollowersSerializer, ReputationSerializer)
 from .permissions import IsAuthorOrReadOnly
 from .filters import (UserFilter, IdeaFilter, TagFilter, UserTagFilter,
-                    IdeaTagFilter, EventStockFilter)
+                    IdeaTagFilter, EventStockFilter, ReputationFilter)
 
 class UserViewset(mixins.RetrieveModelMixin,
                 mixins.UpdateModelMixin,
@@ -58,6 +58,12 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+class ReputationViewSet(viewsets.ModelViewSet):
+    queryset = ReputationMap.objects.all()
+    serializer_class = ReputationSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = ReputationFilter
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
