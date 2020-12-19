@@ -13,11 +13,11 @@ import vuetify from './plugins/vuetify';
 
 //---------- Font Awesome ----------//
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUser, faUsers, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faTimes, faTag, faBolt, faBrain, faComments, faDollarSign, faHome, faBookmark} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faUsers, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faTimes, faTag, faBolt, faBrain, faComments, faDollarSign, faHome, faBookmark, faSearch} from '@fortawesome/free-solid-svg-icons';
 import { faFacebookSquare, faTwitterSquare } from '@fortawesome/free-brands-svg-icons';
 import { faEdit, faLightbulb } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add(faUser, faUsers, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faTimes, faTag, faBolt, faBrain, faComments, faDollarSign, faHome, faBookmark,
+library.add(faUser, faUsers, faMapMarkerAlt, faCheck, faEnvelope, faUniversity, faBookOpen, faTimes, faTag, faBolt, faBrain, faComments, faDollarSign, faHome, faBookmark, faSearch,
             faFacebookSquare, faTwitterSquare, 
             faEdit, faLightbulb);
 Vue.component('FontAwesomeIcon', FontAwesomeIcon);

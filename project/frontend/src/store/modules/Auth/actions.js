@@ -34,7 +34,7 @@ export default {
                 'password1': payload.password1,
                 'password2': payload.password2,
             },
-        }); 
+        });
     },
     login(context, payload) {
         context.dispatch('auth', {
@@ -44,11 +44,6 @@ export default {
                 'email': payload.email,
                 'password': payload.password,
             },
-        });
-        // TODO 他のstateを余りいじくらない方が良いよね、mutationsで操作すべき
-        context.commit('loginSetup', {
-            myData: context.rootState.myData,
-            myUserId: payload.username,
         });
     },
     autoLogin(context) {

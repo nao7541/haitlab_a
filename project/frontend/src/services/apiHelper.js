@@ -131,6 +131,37 @@ export default {
 
         return data;
     },
+    async publishIdea(ideaData, ideaId) {
+        const url = '/ideas/' + ideaId + '/';
+        const formData = new FormData();
+        formData.append('user_id', ideaData.user_id);
+        formData.append('title', ideaData.title);
+        formData.append('overview', ideaData.overview);
+        formData.append('background', ideaData.background);
+        formData.append('passion', ideaData.passion);
+        formData.append('state', 'post');
+        formData.append('offer', ideaData.offer );
+        
+        if(ideaData.idea_image !== null) {
+            formData.append('idea_image', ideaData.idea_image);
+        }
+
+        const response = await api.put(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        const data = await response.data;
+
+        return data;
+    },
+    async deleteIdea(ideaId) {
+        const url = '/ideas/' + ideaId + '/';
+        const response = await api.delete(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
 
     // ------------------------------ Comments ------------------------------ //
     async loadComments(ideaId) {
@@ -158,6 +189,14 @@ export default {
     },
 
     // ------------------------------ Tags ------------------------------ //
+    // tagの名前でタグを検索する
+    async loadTagsByName(tagName) {
+        const url = '/tag/?tag_name=' + tagName;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData[0];
+    },
     async loadIdeaTags(ideaId) {
         const tag_url = '/tag/';
         const ideatag_url = '/idea_tag/?idea=' + ideaId;
@@ -178,7 +217,7 @@ export default {
 
         return tags;
     },
-    // パラメータとしてタグのIDを渡して、そのIDを持つアイデアを取得
+    // パラメータとしてタグのIDを渡して,そのタグと一緒に格納されているアイデアを一括で取得
     async loadIdeaTagsByTag(tagId) {
         const url = '/idea_tag/?tag=' + tagId;
         const response = await api.get(url);
@@ -323,5 +362,34 @@ export default {
         data = await response.data;
 
         return data;
+    },
+
+    // ------------------------------ Reputation Map ------------------------------ //
+    async addReputation(ideaId, userId, name) {
+        //TODO django側で実装後に再確認
+        const url = '/reputation_map/';
+        const response = await api.post(url, {
+            idea: ideaId,
+            user: userId,
+            name: name,
+        });
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async removeReputation(repMapId) {
+        //TODO django側で実装後に再確認
+        const url = '/reputation_map/' + repMapId + '/';
+        const response = await api.delete(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async loadReputation(ideaId, userId) {
+        const url = '/reputation_map/?idea=' + ideaId + '&user=' + userId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
     }
 }

@@ -68,6 +68,11 @@ export default {
             this.loadUserDetail();
         }
     },
+    watch: {
+        userId() {
+            this.loadUserDetail();
+        }
+    }
 }
 </script>
 
@@ -145,7 +150,7 @@ li, a {
     transform: translateY(10px);
     opacity: 0;
     pointer-events: none;
-    transition: 0.25s;
+    transition: all 0.3s ease-out;
 }
 
 .nav-link:hover > .dropdown {

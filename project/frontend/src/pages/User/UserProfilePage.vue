@@ -6,6 +6,10 @@
                     <img :src="userDetail.prof_img" alt="profile">
                 </div>
                 <h1>{{ userDetail.username }}</h1>
+                <div class="follow">
+                    <span>フォロワー {{ }}人</span>
+                    <span>フォロー中 {{ }}人</span>
+                </div>
                 <div class="intro">
                     <p>{{ userDetail.intro }}</p>
                 </div>
@@ -188,6 +192,13 @@ export default {
     content: "";
     display: block;
     clear: both;
+}
+
+.side .follow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0.5rem 2rem;
 }
 
 .side .info {   
