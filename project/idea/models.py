@@ -61,3 +61,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return str(self.user_id) + "to" + str(self.post_id)
+
+class ReputationMap(models.Model):
+    reputation_id = models.AutoField(primary_key=True, verbose_name='reputationのID')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='反応したユーザー')
+    idea = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name='反応先のアイデア')
+    name = models.TextField(max_length=255, verbose_name='反応')
+
+    def __str__(self):
+        return str(self.user_id) + "to" + str(self.idea_id) + '_' + str(self.name)
