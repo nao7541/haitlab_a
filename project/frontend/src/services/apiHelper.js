@@ -366,8 +366,7 @@ export default {
 
     // ------------------------------ Reputation Map ------------------------------ //
     async addReputation(ideaId, userId, name) {
-        //TODO django側で実装後に再確認
-        const url = '/reputation_map/';
+        const url = '/reputations/';
         const response = await api.post(url, {
             idea: ideaId,
             user: userId,
@@ -377,19 +376,33 @@ export default {
 
         return responseData;
     },
-    async removeReputation(repMapId) {
-        //TODO django側で実装後に再確認
-        const url = '/reputation_map/' + repMapId + '/';
+    async removeReputation(repId) {
+        const url = '/reputations/' + repId + '/';
         const response = await api.delete(url);
         const responseData = await response.data;
 
         return responseData;
     },
     async loadReputation(ideaId, userId) {
-        const url = '/reputation_map/?idea=' + ideaId + '&user=' + userId;
+        const url = '/reputations/?idea=' + ideaId + '&user=' + userId;
         const response = await api.get(url);
         const responseData = await response.data;
 
         return responseData;
+    },
+    // 引数で渡された、idea, user, nameにあうreputationのidを返す
+    async loadReputationId(ideaId, userId, name) {
+        const url = '/reputations/?idea=' + ideaId + '&user=' + userId + '&name=' + name;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData[0].reputation_id;
+    },
+    async countReputationByName(ideaId, name) {
+        const url = '/reputations/?idea=' + ideaId + '&name=' + name;
+        const response = await api.get(url);
+        const reputations = await response.data;
+
+        return reputations.length;
     }
 }

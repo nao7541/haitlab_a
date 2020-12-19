@@ -30,7 +30,7 @@
                     <textarea id="intro" name="intro" rows="10" cols="30" v-model.trim="formData.intro"></textarea>
                 </div>
                 <div class="form-control">
-                    <InputTag :tags="inputTags" :maximum="5"/>
+                    <InputTag tagLabel="タグ" :tags="inputTags" :maximum="5"/>
                 </div>
                 <BaseButton class="submit-btn">Update</BaseButton>
             </form>
