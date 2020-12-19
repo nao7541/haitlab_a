@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Comment
+from idea.models import PostIdea, Comment, ReputationMap
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 
@@ -9,7 +9,7 @@ class FollowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFollowing
-        fields = ("relation_id", "following_user_id", "created")
+        fields = ("relation_id", 'user_id' ,"following_user_id", "created")
 
 class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,6 +46,11 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('comment_id','idea_id', 'user_id', 'comment_date', 'comment')
+
+class ReputationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReputationMap
+        fields = ('reputation_id', 'user', 'idea', 'name')
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
