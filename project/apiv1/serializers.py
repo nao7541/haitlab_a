@@ -9,7 +9,7 @@ class FollowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFollowing
-        fields = ("relation_id", "following_user_id", "created")
+        fields = ("relation_id", 'user_id' ,"following_user_id", "created")
 
 class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
