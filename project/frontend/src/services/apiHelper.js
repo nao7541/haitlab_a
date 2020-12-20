@@ -51,7 +51,51 @@ export default {
 
         return responseData;
     },
+    async follow(userId, followUserId) {
+        const url = '/user_following/';
+        const response = await api.post(url, {
+            user_id: userId,
+            following_user_id: followUserId
+        });
+        const responseData = await response.data;
 
+        return responseData;
+    },
+    // パラメータに渡されたユーザーがフォローしている人を一括で読み込み
+    async loadFollowingUsers(userId) {
+        const url = '/users/' + userId + '/';
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData.following;
+    },
+    // パラメータに渡されたユーザーのフォロワーの数を一括で読み込み
+    async loadFollowers(userId) {
+        const url = '/users/' + userId + '/';
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData.followers;
+    },
+    async checkFollowing(userId, followUserId) {
+        const url = '/user_following/?user_id=' + userId + '&following_user_id=' + followUserId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        // フォローしていたらtrue, していなかったらfalse
+        return responseData.length > 0 ? true : false;
+    },
+    async stopFollowing(userId, followUserId) {
+        let url = '/user_following/?user_id=' + userId + '&following_user_id=' + followUserId;
+        let response = await api.data(url);
+        let responseData = await response.data;
+        
+        url = '/user_following/' + responseData.relation_id + '/';
+        response = await api.delete(url);
+        responseData = await response.data;
+
+        return responseData;
+    },
 
     // ------------------------------ Idea ------------------------------ //
     async loadIdeaDetail(ideaId) {
