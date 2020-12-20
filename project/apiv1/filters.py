@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from user.models import CustomUser, EventStock
+from user.models import CustomUser, EventStock, UserFollowing
 from idea.models import PostIdea, Comment, ReputationMap
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
@@ -55,8 +55,15 @@ class EventStockFilter(filters.FilterSet):
     
 class ReputationFilter(filters.FilterSet):
     # user_id, event_id, nameでフィルタリング
-    fil = filters.CharFilter(lookup_expr='exact')
+    user = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = ReputationMap
         fields = ['user', 'idea', 'name']
+
+class UserFollowingFilter(filters.FilterSet):
+    user_id = filters.CharFilter(lookup_expr='exact')
+
+    class Meta:
+        model = UserFollowing
+        fields = ['user_id', 'following_user_id']
