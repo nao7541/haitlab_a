@@ -8,14 +8,15 @@ export default {
     },
     addEventStock(state, payload) {
         // もし未ストックであるなら追加する
-        if (!state.myEventStocks) {
-            state.myEventStocks.push(payload);
+        // 追加するのはevent_idである点に注意
+        if (!state.myEventIDs.includes(payload)) {
+            state.myEventIDs.push(payload);
         }
     },
     removeEventStock(state, payload) {
         // もしストックしていたら消す
-        if (state.myEventStocks.includes(payload)) {
-            state.myEventStocks.splice(state.myEventStocks.indexOf(payload), 1);
+        if (state.myEventIDs.includes(payload)) {
+            state.myEventIDs.splice(state.myEventIDs.indexOf(payload), 1);
         }
     }
 };

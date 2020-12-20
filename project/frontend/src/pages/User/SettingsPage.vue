@@ -30,7 +30,7 @@
                     <textarea id="intro" name="intro" rows="10" cols="30" v-model.trim="formData.intro"></textarea>
                 </div>
                 <div class="form-control">
-                    <InputTag :tags="inputTags" :maximum="5"/>
+                    <InputTag tagLabel="タグ" :tags="inputTags" :maximum="5"/>
                 </div>
                 <BaseButton class="submit-btn">Update</BaseButton>
             </form>
@@ -135,11 +135,6 @@ export default {
                 this.isFormValid = false;
             }
         },
-        //TODO reload上手くいかない
-        reload() {
-            // 設定変更後は自分のプロフィール画面に戻る
-            this.$router.replace({ name: 'userprofile', params: { userId: this.userId} });
-        },
         arrayEqual(x, y) {
             if (!Array.isArray(x)) return false;
             if (!Array.isArray(y)) return false;
@@ -174,25 +169,41 @@ export default {
             })
 
             // タグの追加 / 更新
+
+            if (this.inputTags == null) return;
+
             // もしタグ未登録なら追加して終了
             if (this.tags == null) {
+                const promises = [];
                 for (const tag of this.inputTags) {
-                    apiHelper.postUserTag(this.userId, tag)
+                    promises.push(apiHelper.postUserTag(this.userId, tag));
                 }
-
-                this.reload();
+                Promise.all(promises)
+                .then( () => {
+                    // reload
+                    this.$router.go({ name: 'userprofile', params: { userId: this.userId }});   
+                }).catch( err => {
+                    console.log("error to post userTag: ", err);
+                })
             } else if (!this.arrayEqual(this.tags.map((tag) => tag.tag_name), this.inputTags)) {
                 // もしタグに変更があるなら既存のタグを全削除してから、新しいタグを追加する
                 apiHelper.deleteAllUserTag(this.userId)
                 .then( () => {
+                    const promises = [];
                     for (const tag of this.inputTags) {
-                        apiHelper.postUserTag(this.userId, tag);
+                        promises.push(apiHelper.postUserTag(this.userId, tag));
                     }
+
+                    return Promise.all(promises)
+                }).then( () => {
+                    // reload
+                    this.$router.go({ name: 'userprofile', params: { userId: this.userId }});
                 }).catch(err => {
                     console.log("error to update tag: ", err)
                 })
             } else {
-                this.reload();
+                // reload
+                this.$router.go({ name: 'userprofile', params: { userId: this.userId }});
             }
         }
     }

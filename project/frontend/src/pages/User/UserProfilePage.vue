@@ -2,49 +2,53 @@
     <div id="profile-page" v-if="loadComplete">
         <section class="side">
             <div class="profile">
-                <div class="profile-image">
-                    <img :src="userDetail.prof_img" alt="profile">
+                <div class="main-info">
+                    <div class="profile-image">
+                        <img :src="userDetail.prof_img" alt="profile">
+                    </div>
+                    <h1>{{ userDetail.username }}</h1>
+                    <div class="intro">
+                        <p>{{ userDetail.intro }}</p>
+                    </div>
+                    <div class="tag">
+                        <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
+                    </div>
+                    <div class="follow">
+                        <div class="follow-display">
+                            <router-link :to="followersLink">フォロワー {{ followers.length }}人</router-link>
+                            <router-link :to="followingLink">フォロー中 {{ followingUsers.length }}人</router-link>
+                        </div>
+                        <div class="follow__btn" v-if="!isMyProfile">
+                            <button @click="follow">{{ followLabel }}</button>
+                        </div>
+                    </div>
                 </div>
-                <h1>{{ userDetail.username }}</h1>
-                <div class="intro">
-                    <p>{{ userDetail.intro }}</p>
-                </div>
-                <div class="tag">
-                    <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
-                </div>
-                <div class="info">
-                    <span><FontAwesomeIcon :icon="['fas', 'envelope']" size="lg"/></span>
-                    <span><a :href="mailAddress">{{ userDetail.email }}</a></span>
-                </div>
-                <div class="info">
-                    <span><FontAwesomeIcon :icon="['fas', 'university']" size="lg"/></span>
-                    <span>{{ userDetail.univ_name }}</span>
-                </div>
-                <div class="info">
-                    <span><FontAwesomeIcon :icon="['fas', 'book-open']" size="lg"/></span>
-                    <span>{{ userDetail.major }}</span>
-                </div>
-                <div class="edit-profile" v-if="isMyProfile">
-                    <router-link to="/settings">
-                        <span>Edit Profile</span>
-                        <FontAwesomeIcon :icon="['far', 'edit']" size="lg" />
-                    </router-link>
+                <div class="sub-info">
+                    <div class="info-row">
+                        <span><FontAwesomeIcon :icon="['fas', 'envelope']" size="lg"/></span>
+                        <span><a :href="mailAddress">{{ userDetail.email }}</a></span>
+                    </div>
+                    <div class="info-row">
+                        <span><FontAwesomeIcon :icon="['fas', 'university']" size="lg"/></span>
+                        <span>{{ userDetail.univ_name }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span><FontAwesomeIcon :icon="['fas', 'book-open']" size="lg"/></span>
+                        <span>{{ userDetail.major }}</span>
+                    </div>
+                    <div class="edit-profile" v-if="isMyProfile">
+                        <router-link to="/settings">
+                            <span>Edit Profile</span>
+                            <FontAwesomeIcon :icon="['far', 'edit']" size="lg" />
+                        </router-link>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="content"> 
             <div v-if="isMyProfile">
-                <div class="content-header">
-                    <ul>
-                        <li><router-link :to="postPageLink">投稿済み</router-link></li>
-                        <li><router-link :to="draftPageLink">下書き</router-link></li>
-                        <li><router-link :to="stockPageLink">ストック</router-link></li>
-                    </ul>
-                </div>
-                <div class="content-page">
-                    <router-view />
-                </div>
+                <router-view />
             </div>
             <div v-if="!isMyProfile">
                 <IdeaBoard
@@ -70,7 +74,10 @@ export default {
             loadComplete: false,
             isMyProfile: false,
             postIdeas: [],
-            tags: []
+            tags: [],
+            followers: [],
+            followingUsers: [],
+            isFollowing: false,
         }
     },
     computed: {
@@ -80,44 +87,105 @@ export default {
         mailAddress() {
             return "mailto:" + this.userDetail.contact;
         },
-        postPageLink() {
-            return { name: 'postIdeas'};
+        paramUserId() {
+            return this.$route.params['userId'];
         },
-        draftPageLink() {
-            return { name: 'draftIdeas' };
+        followersLink() {
+            return { name: 'followers' };
         },
-        stockPageLink() {
-            return { name: 'stockEvents' };
+        followingLink() {
+            return { name: 'following' };
+        },
+        followLabel() {
+            return this.isFollowing ? 'フォロー解除' : 'フォロー';
+        }
+    },
+    methods: {
+        loadUserData() {
+            apiHelper.loadUserDetail(this.paramUserId) 
+            .then( res => {
+                this.userDetail = res;
+
+                // userのタグを取得
+                return apiHelper.loadUserTags(this.paramUserId);
+            }).then( res => {
+                this.tags = res;
+
+                // ユーザーが投稿したアイデアのみを抽出
+                return apiHelper.loadFilteredPostIdeas(this.paramUserId);
+            }).then ( res => {
+                this.postIdeas = res;
+
+                // ロード完了
+                this.loadComplete = true;
+            }).catch ( err => {
+                console.log("error to load user profile: ", err);
+            });
+        },
+        loadFollowData() {
+            // フォロワーの読み込み
+            return apiHelper.loadFollowers(this.paramUserId)
+            .then( res => {
+                this.followers = res;
+
+                // フォロー中のユーザーを読み込み
+                return apiHelper.loadFollowingUsers(this.paramUserId);
+            }).then( res => {
+                this.followingUsers = res;
+            }).catch( err => {
+                console.log("error to load followers, followingUsers: ", err);
+            })
+        },
+        follow() {
+            if (this.isFollowing) {
+                // フォロー済みなら、フォロー解除
+                apiHelper.stopFollowing(this.myUserId, this.paramUserId)
+                .then( () => {
+                    this.isFollowing = false;
+                }).catch( err => {
+                    console.log("error to stop following: ", err);
+                })
+            } else {
+                // フォローしていないなら、フォローする
+                apiHelper.follow(this.myUserId, this.paramUserId)
+                .then( () => {
+                    this.loadFollowData();
+                    // フォローなう
+                    this.isFollowing = true;
+                }).catch( err => {
+                    console.log("error to follow: ", err);
+                })
+            }
+        },
+        pageLoad() {
+            // ローカルに保存しているuserIdと比較して、自分のページか否かを確かめる
+            if (this.paramUserId == this.myUserId) {
+                // 自分のページであるならtrue
+                this.isMyProfile = true;
+            } else {
+                this.isMyProfile = false;
+
+                // 自分のページでない場合、訪問中のユーザーを既にフォローしているかを確認
+                apiHelper.checkFollowing(this.myUserId, this.paramUserId)
+                .then( res => {
+                    this.isFollowing = res;
+                }).catch( err => {
+                    console.log("error to check following: ", err);
+                })
+            }
+
+            this.loadUserData();
+            this.loadFollowData();
         }
     },
     created() {
-        // パラメータとして渡されたuserid
-        const paramUserId = this.$route.params['userId'];
-        // ローカルに保存しているuserIdと比較して、自分のページか否かを確かめる
-        if (paramUserId == this.myUserId) {
-            // 自分のページであるならtrue
-            this.isMyProfile = true;
+        this.pageLoad();
+    },
+    watch: {
+        // urlのパラメータが変わる度にリロード
+        paramUserId() {
+            this.pageLoad();
         }
-
-        apiHelper.loadUserDetail(paramUserId) 
-        .then( res => {
-            this.userDetail = res;
-
-            // userのタグを取得
-            return apiHelper.loadUserTags(paramUserId);
-        }).then( res => {
-            this.tags = res;
-
-            return apiHelper.loadFilteredPostIdeas(paramUserId);
-        }).then ( res => {
-            // ユーザーが投稿したアイデアのみを抽出
-            this.postIdeas = res;
-
-            // ロード完了
-            this.loadComplete = true;
-        }).catch ( err => {
-            console.log("error to load user profile: ", err);
-        });
     }
 }
 </script>
@@ -131,15 +199,20 @@ export default {
 }
 
 .side {
-    background-color: #fff;
     width: 30rem;
-    height: 100%;
+    /* height: 100%; */
     text-align: center;
-    padding: 1rem;
-    margin: 0 1rem;
+    margin-right: 5rem;
 }
 
-.side .profile-image {
+.main-info,
+.sub-info {
+    padding: 1rem;
+    margin-bottom: 2rem;
+    background-color: #fff;
+}
+
+.profile-image {
     /* TODO 画像のリサイズ */
     margin: 0 auto;
     width: 260px;
@@ -149,7 +222,7 @@ export default {
     position: relative;
 }
 
-.side .profile-image img {
+.profile-image img {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -184,7 +257,65 @@ export default {
     clear: both;
 }
 
-.side .info {   
+.follow-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+}
+
+.follow-display a {
+    text-decoration: none;
+    color: #000;
+}
+
+.follow-display a:hover {
+    border-bottom: 1px solid #000;
+}
+
+.follow__btn,
+.edit-profile {
+    margin-top: 3rem;
+}
+
+.edit-profile a,
+.follow__btn button {
+    font-size: 16px;
+    width: 100%;
+    line-height: 2.5rem;
+}
+
+.follow__btn button {
+    background-color: #ffe0a7;
+}
+
+.follow__btn button:hover {
+    background-color: #ffbb3c;
+}
+
+.follow__btn button:focus {
+    background-color: #c7912d;
+}
+
+.edit-profile a {
+    display: block;
+    text-decoration: none;
+    color: #000;
+    background-color: #6cdb51;
+}
+
+.edit-profile span {
+    margin-right: 1rem;
+}
+
+.edit-profile a:hover {
+    background-color: #62c44a;
+}
+
+.edit-profile a:focus {
+    background-color: #478d36;
+}
+
+.sub-info .info-row {   
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -192,66 +323,13 @@ export default {
     border-bottom: 1px solid #eee;
 }
 
-.side .info a {
+.sub-info .info-row a {
     text-decoration: none;
     color: #000;
 }
 
 .content {
     width: 100%;
-}
-
-.side .edit-profile {
-    margin-top: 3rem;
-    width: 100%;   
-}
-
-.side .edit-profile a {
-    display: block;
-    text-decoration: none;
-    color: #000;
-    background-color: #6cdb51;
-    padding: .5rem 0;
-}
-
-.side .edit-profile span {
-    margin-right: 1rem;
-}
-
-.side .edit-profile a:hover {
-    background-color: #62c44a;
-}
-
-.side .edit-profile a:focus {
-    background-color: #478d36;
-}
-
-.content {
     background-color: #fff;
-}
-
-.content-header {
-    padding: 1rem 5rem 0;
-    border-bottom: 1px solid #ddd;
-}
-
-.content-header ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
-}
-
-.content-header li > a {
-    padding: 1rem 3rem;
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
-}
-
-.router-link-active {
-    border-bottom: 2px solid #ffbb3c;
 }
 </style>

@@ -13,31 +13,14 @@ export default {
             key = res.key;
             localStorage.setItem('token', key);
 
-            // TODO: django-filterで簡略化
-            // return apiHelper.loadUserDetailByName(payload.data.username)
-            return apiHelper.loadAllUsers()
+            return apiHelper.loadUserDetailByName(payload.data.username)
         }).then( res => {
-            const users = res;
-            
-            for (const user of users) {
-                // もしuserを見つけたら、userIdをローカルに保存
-                if (user.username === payload.data.username) {
-                    const userId = user.user_id;
-                    localStorage.setItem('userId', userId);
-                    context.commit('setUser', {
-                        userId: userId,
-                        token: key,
-                    });
-                    break;
-                }
-            }
-        // }).then( res => {
-        //     const userId = res.user_id;
-        //     localStorage.setItem('userId', userId);
-        //     context.commit('setUser', {
-        //         userId: userId,
-        //         token: key,
-        //     });
+            const userId = res.user_id;
+            localStorage.setItem('userId', userId);
+            context.commit('setUser', {
+                userId: userId,
+                token: key,
+            });
         }).catch( err => {
             console.log("error at authUser: ", err);
         })
@@ -51,7 +34,7 @@ export default {
                 'password1': payload.password1,
                 'password2': payload.password2,
             },
-        }); 
+        });
     },
     login(context, payload) {
         context.dispatch('auth', {

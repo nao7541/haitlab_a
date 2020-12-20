@@ -26,6 +26,8 @@ import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 import PostIdeasPage from '@/pages/User/PostIdeasPage.vue';
 import DraftIdeasPage from '@/pages/User/DraftIdeasPage.vue';
 import StockEventsPage from '@/pages/User/StockEventsPage.vue';
+import FollowersPage from '@/pages/User/FollowersPage.vue';
+import FollowingPage from '@/pages/User/FollowingPage.vue';
 // Event pages
 import EventHomePage from '@/pages/Event/EventHomePage.vue';
 import NewEventsPage from '@/pages/Event/NewEventsPage';
@@ -89,6 +91,8 @@ const routes = [
                     { name: 'postIdeas',   path: 'post',         component: PostIdeasPage  },
                     { name: 'draftIdeas',  path: 'draft',        component: DraftIdeasPage },
                     { name: 'stockEvents', path: 'events/stock', component: StockEventsPage},
+                    { name: 'followers',   path: 'followers',    component: FollowersPage  },
+                    { name: 'following',   path: 'following',    component: FollowingPage  },
                 ]
             },
             {
