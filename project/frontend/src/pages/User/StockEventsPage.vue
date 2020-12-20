@@ -1,25 +1,32 @@
 <template>
-    <div id="stock-events">
-        <EventElement
-            v-for="event in events"
-            :key="event.event_id"
-            :eventId="event.event_id"
-            :name="event.event_name"
-            :detail="event.event_detail"
-            :schedule="event.event_schedule"
-            :location="event.event_location"
-            :url="event.event_url"
-        ></EventElement>
-    </div>
+    <BaseProfileContent>
+        <template #contentHeaderLinks>
+            <IdeaEventHeader />
+        </template>
+        <template #contentBody>
+            <EventElement
+                v-for="event in events"
+                :key="event.event_id"
+                :eventId="event.event_id"
+                :name="event.event_name"
+                :detail="event.event_detail"
+                :schedule="event.event_schedule"
+                :location="event.event_location"
+                :url="event.event_url"
+            ></EventElement>
+        </template>
+    </BaseProfileContent>
 </template>
 
 <script>
 import apiHelper from '@/services/apiHelper.js';
+import IdeaEventHeader from '@/components/User/IdeaEventHeader.vue';
 import EventElement from '@/components/Event/EventElement.vue';
 
 export default {
     components: {
-        EventElement
+        IdeaEventHeader,
+        EventElement,
     },
     data() {
         return {
@@ -33,7 +40,6 @@ export default {
         }
     },
     created() {
-        console.log(this.myEventIDs)
         if (this.myEventIDs != null) {
             this.eventIDs = this.myEventIDs;
 

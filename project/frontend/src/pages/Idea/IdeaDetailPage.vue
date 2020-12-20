@@ -170,7 +170,7 @@ export default {
             return (name) => {
                 return this.reputationState[name] ? 'clicked' : 'not-yet-clicked';
             }
-        }
+        },
     },
     methods: {
         //TODO: comment postの入力許可改善
@@ -237,6 +237,11 @@ export default {
             })
         },
         reputationClicked(name) { // nameはinteresting, novelty, possibility
+            // 自分のアイデアには評価できない
+            if (this.isMyIdea) {
+                return;
+            }
+
             if (this.reputationState[name]) {
                 // もし評価済みの場合は評価を外す
                 this.removeReputation(name);                
