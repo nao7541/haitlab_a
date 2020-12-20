@@ -24,5 +24,11 @@ export default {
         }).catch( err => {
             console.log("error to set myinfo tags: ", err);
         });
-    }
+    },
+    addEventStock(context, payload) {
+        context.commit('addEventStock', payload.eventId);
+    },
+    removeEventStock(context, payload) {
+        context.commit('removeEventStock', payload.eventId);
+    },
 };

@@ -10,7 +10,8 @@ export default {
                 userId: null,
                 username: '',
             },
-            myTags: []
+            myTags: [],
+            myEventIDs: [], // 格納するのはEvent Stockモデルのevent
         }
     },
     getters,

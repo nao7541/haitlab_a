@@ -1,23 +1,24 @@
 from datetime import datetime
 
 from rest_framework import viewsets, generics, mixins
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django_filters import rest_framework as filters
 
-from user.models import CustomUser, EventStock
-from idea.models import PostIdea, Comment
+from user.models import CustomUser, EventStock, UserFollowing
+from idea.models import PostIdea, Comment, ReputationMap
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 from .serializers import (UserSerializer, EventSerializer, IdeaSerializer,
                         CommentSerializer, TagSerializer, UserTagMapSerializer,
-                        IdeaTagMapSerializer, EventStockSerializer)
+                        IdeaTagMapSerializer, EventStockSerializer, FollowingSerializer,
+                        FollowersSerializer, ReputationSerializer)
 from .permissions import IsAuthorOrReadOnly
 from .filters import (UserFilter, IdeaFilter, TagFilter, UserTagFilter,
-                    IdeaTagFilter, EventStockFilter)
+                    IdeaTagFilter, EventStockFilter, ReputationFilter)
 
 class UserViewset(mixins.RetrieveModelMixin,
                 mixins.UpdateModelMixin,
@@ -58,6 +59,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+class ReputationViewSet(viewsets.ModelViewSet):
+    queryset = ReputationMap.objects.all()
+    serializer_class = ReputationSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = ReputationFilter
+
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -81,3 +88,9 @@ class EventStockViewSet(viewsets.ModelViewSet):
     serializer_class = EventStockSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = EventStockFilter
+
+class UserFollowingViewSet(viewsets.ModelViewSet):
+
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = FollowingSerializer
+    queryset = UserFollowing.objects.all()

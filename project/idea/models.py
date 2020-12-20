@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils import timezone
-# table User import
-from user.models import CustomUser
-# Create your models here.
 
+from user.models import CustomUser
+from event.models import Event
+# Create your models here.
 
 class PostIdea(models.Model):
    class Meta:
@@ -15,9 +15,11 @@ class PostIdea(models.Model):
    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="アイデア投稿ユーザ")
    # タイトル
    title = models.CharField(default="Idea Title", max_length=100, verbose_name='タイトル')
-   # 投稿 文字列
-   overview = models.TextField(max_length=500, verbose_name="概要")
-   background = models.TextField(max_length=500,  blank=True, null=True, verbose_name="背景")
+   # 概要
+   overview = models.TextField(max_length=500, blank=True, null=True, verbose_name="概要")
+   # 背景
+   background = models.TextField(max_length=500, blank=True, null=True, verbose_name="背景")
+   # 熱意、オモイ
    passion = models.TextField(max_length=500, blank=True, null=True, verbose_name="思い")
    # 投稿 画像
    idea_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="投稿画像") # upload_to settings - MEDIA_ROOT以下のファイル保存先
@@ -25,6 +27,20 @@ class PostIdea(models.Model):
    idea_date = models.DateTimeField(default=timezone.now, verbose_name="投稿日")
    # 状態
    state = models.CharField(max_length=100, verbose_name='状態')
+   # ターゲット
+   target = models.CharField(max_length=100, blank=True, null=True, verbose_name='ターゲット')
+   # 人材募集
+   offer = models.CharField(max_length=100, blank=True, null=True, verbose_name='人材募集')
+   # 期日
+   deadline = models.CharField(max_length=30, blank=True, null=True, verbose_name='期日')
+   # 面白さ
+   interesting = models.IntegerField(default=0, blank=True, null=True, verbose_name='面白さ')
+   # 新規性
+   novelty = models.IntegerField(default=0, blank=True, null=True, verbose_name='新規性')
+   # 実現可能性
+   possibility = models.IntegerField(default=0, blank=True, null=True, verbose_name='実現可能性')
+   # イベント外部キー
+   event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True, verbose_name='イベント')
 
    def __str__(self):
        return "No. " + str(self.idea_id)
@@ -45,3 +61,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return str(self.user_id) + "to" + str(self.post_id)
+
+class ReputationMap(models.Model):
+    reputation_id = models.AutoField(primary_key=True, verbose_name='reputationのID')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='反応したユーザー')
+    idea = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name='反応先のアイデア')
+    name = models.TextField(max_length=255, verbose_name='反応')
+
+    def __str__(self):
+        return str(self.user_id) + "to" + str(self.idea_id) + '_' + str(self.name)

@@ -1,7 +1,6 @@
 <template>
     <div class="input-tag">
         <label for="tag">
-            {{ tagLabel }}
             <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
         </label>
         <input type="text" id="tag" name="tag" placeholder="Type tag" @keydown.enter="addTag" @blur="clearValidity">
@@ -17,10 +16,6 @@
 <script>
 export default {
     props: {
-        tagLabel: {
-            type: String,
-            required: false,
-        },
         tags: {
             type: Array,
             required: true,
@@ -70,7 +65,6 @@ export default {
 </script>
 
 <style scoped>
-
 .input-tag label {
     font-weight: bold;
     display: block;
@@ -78,19 +72,24 @@ export default {
 }
 
 .input-tag input {
-    width: 100%;
-    padding-left: 0.5rem;
-    height: 2rem;
-    border: 1px solid #ccc;
-    outline-color: #999;
+    font-size: 25px;
+    width: 30rem;
+    height: 3rem;
+    line-height: 3rem;
+    outline: none;
+    border-bottom: 1px solid #000;
+}
+
+.input-tag input:focus {
+    border-bottom: 2px solid #ffbb3c;
 }
 
 .added-tags .tag {
-    min-width: 4rem;
+    min-width: 5rem;
     float: left;
     background-color: #eee;
-    padding: 0.1rem 0.2rem;
-    margin: 0.2rem;
+    padding: 0.2rem 0.4rem;
+    margin: 0.4rem;
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
@@ -99,7 +98,7 @@ export default {
 
 .added-tags .tag .name {
     font-weight: bold;
-    margin-right: .5rem;
+    margin-right: 1rem;
 }
 
 .added-tags .tag .delete {

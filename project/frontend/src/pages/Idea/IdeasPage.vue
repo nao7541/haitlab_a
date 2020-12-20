@@ -13,7 +13,11 @@
         <section class="content"> 
             <router-view />
         </section>
-        <FloatingButton />
+        <FloatingButton linkTo="/post" bgColor="orange">
+            <template #icon>
+                <FontAwesomeIcon :icon="['far', 'lightbulb']" size="4x" />
+            </template>
+        </FloatingButton>
     </div>
 </template>
 

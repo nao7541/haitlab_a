@@ -12,11 +12,8 @@ import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 // Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
-import PostStep1 from '@/pages/Idea/PostStep1.vue';
-import PostStep2 from '@/pages/Idea/PostStep2.vue';
-import PostStep3 from '@/pages/Idea/PostStep3.vue';
-import PostStep4 from '@/pages/Idea/PostStep4.vue';
-import PostStep5 from '@/pages/Idea/PostStep5.vue';
+import PostNewIdeaPage from '@/pages/Idea/PostNewIdeaPage.vue';
+import EditIdeaPage from '@/pages/Idea/EditIdeaPage.vue';
 // Auth pages
 import SignupPage from '@/pages/Auth/SignupPage.vue';
 import LoginPage from '@/pages/Auth/LoginPage.vue';
@@ -26,6 +23,11 @@ import SettingsPage from '@/pages/User/SettingsPage.vue';
 import UserSearchPage from '@/pages/User/UserSearchPage.vue';
 import MessageHomePage from '@/pages/User/MessageHomePage.vue';
 import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
+import PostIdeasPage from '@/pages/User/PostIdeasPage.vue';
+import DraftIdeasPage from '@/pages/User/DraftIdeasPage.vue';
+import StockEventsPage from '@/pages/User/StockEventsPage.vue';
+import FollowersPage from '@/pages/User/FollowersPage.vue';
+import FollowingPage from '@/pages/User/FollowingPage.vue';
 // Event pages
 import EventHomePage from '@/pages/Event/EventHomePage.vue';
 import NewEventsPage from '@/pages/Event/NewEventsPage';
@@ -84,6 +86,14 @@ const routes = [
                 component: UserProfilePage,
                 props: true,
                 meta: { requiresAuth: true }, 
+                redirect: { name: 'postIdeas' },
+                children: [
+                    { name: 'postIdeas',   path: 'post',         component: PostIdeasPage  },
+                    { name: 'draftIdeas',  path: 'draft',        component: DraftIdeasPage },
+                    { name: 'stockEvents', path: 'events/stock', component: StockEventsPage},
+                    { name: 'followers',   path: 'followers',    component: FollowersPage  },
+                    { name: 'following',   path: 'following',    component: FollowingPage  },
+                ]
             },
             {
                 // プロフィール設定画面
@@ -128,15 +138,12 @@ const routes = [
         // アイデア投稿画面
         name: 'post',
         path: '/post',
-        // redirect: { name: 'step1' },
         component: IdeaPostPage,
         meta: { requiresAuth: true },
+        redirect: { name: 'postNewIdea' },
         children: [
-            { name: 'step1', path: 'step1', component: PostStep1 },
-            { name: 'step2', path: 'step2', component: PostStep2 },
-            { name: 'step3', path: 'step3', component: PostStep3 },
-            { name: 'step4', path: 'step4', component: PostStep4 },
-            { name: 'step5', path: 'step5', component: PostStep5 },
+            { name: 'postNewIdea',  path: 'new',  component: PostNewIdeaPage },
+            { name: 'editIdea',     path: 'edit/:ideaId', component: EditIdeaPage },
         ]
     },
     {

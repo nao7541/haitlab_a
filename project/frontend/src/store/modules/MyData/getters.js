@@ -4,5 +4,8 @@ export default {
     },
     myTags(state) {
         return state.myTags;
+    },
+    myEventIDs(state) {
+        return state.myEventIDs;
     }
 };

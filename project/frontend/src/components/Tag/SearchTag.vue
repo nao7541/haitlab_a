@@ -1,10 +1,10 @@
 <template>
     <div class="input-tag">
-        <label for="tag">
-            {{ tagLabel }}
-            <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
-        </label>
-        <input type="text" id="tag" name="tag" placeholder="Type tag" @keydown.enter="addTag" @blur="clearValidity">
+        <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
+        <div class="search-box">
+            <FontAwesomeIcon class="search-box__icon" :icon="['fas', 'search']" size="lg" />
+            <input type="text" id="tag" name="tag" class="search-box__input" placeholder="タグで検索" @keydown.enter="addTag" @blur="clearValidity">
+        </div>
         <div class="added-tags">
             <div v-for="(tag, id) in tags" :key="id" class="tag">
                 <span class="name">{{tag}}</span>
@@ -77,27 +77,42 @@ export default {
     text-align: left;
 }
 
-.input-tag input {
+.search-box {
+    position: relative;
+}
+
+.search-box__icon {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+}
+
+.search-box__input {
+    font-size: 20px;
     width: 100%;
-    padding-left: 0.5rem;
-    height: 2rem;
-    border: 1px solid #ccc;
-    outline-color: #999;
+    padding-left: 40px;
+    height: 45px;
+    border: 1px solid #fff;
+    background-color: #fff;
+    border-radius: 64px;
+    outline: none;
 }
 
 .added-tags .tag {
-    min-width: 4rem;
     float: left;
-    background-color: #eee;
-    padding: 0.1rem 0.2rem;
-    margin: 0.2rem;
-    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-width: 6rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 4px;
+    color: #333;
+    background-color: #ffe0a7;
 }
 
 .added-tags .tag .name {
+    font-size: 18px;
     font-weight: bold;
     margin-right: .5rem;
 }
