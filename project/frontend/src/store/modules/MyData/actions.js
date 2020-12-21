@@ -26,19 +26,9 @@ export default {
         });
     },
     addEventStock(context, payload) {
-        apiHelper.stockEvent(payload.eventId, payload.userId)
-        .then(res => {
-            context.commit('addEventStock', res.event);
-        }).catch(err => {
-            console.log(err);
-        })
+        context.commit('addEventStock', payload.eventId);
     },
     removeEventStock(context, payload) {
-        apiHelper.stockEvent(payload.eventId, payload.userId)
-        .then(res => {
-            context.commit('addEventStock', res.event);
-        }).catch(err => {
-            console.log(err);
-        })
-    }
+        context.commit('removeEventStock', payload.eventId);
+    },
 };

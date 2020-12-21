@@ -1,26 +1,22 @@
 <template>
     <header>
-        <h1><router-link to="/">カムトル</router-link></h1>
-        <nav>
-            <div class="nav-links">
-                <ul class="nav-link-container">
-                    <li class="nav-link"><router-link to="/user/search">仲間を探す</router-link></li>
-                    <li class="nav-link"><router-link to="/">アイデアを探す</router-link></li>
-                    <li class="nav-link"><router-link to="/events">イベントを探す</router-link></li>
-                    <li class="nav-link" v-if="!isLoggedIn"><router-link to="/signup">新規登録</router-link></li>
-                    <li class="nav-link" v-if="!isLoggedIn"><router-link to="/login">ログイン</router-link></li>
-                    <li class="nav-link profile" v-if="isLoggedIn && loadComplete">
-                        <img :src="profileImage" alt="profile">
-                        <div class="dropdown">
-                            <ul>
-                                <li class="dropdown-link"><router-link :to="userLink">マイページ</router-link></li>
-                                <li class="dropdown-link"><a href="#" @click="logout">ログアウト</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <ul class="nav-links">
+            <li class="nav-link title"><router-link to="/ideas">カムトル</router-link></li>
+            <li class="nav-link"><router-link to="/user/search">仲間を探す</router-link></li>
+            <li class="nav-link"><router-link to="/ideas">アイデアを探す</router-link></li>
+            <li class="nav-link"><router-link to="/events">イベントを探す</router-link></li>
+            <li class="nav-link" v-if="!isLoggedIn"><router-link to="/signup">新規登録</router-link></li>
+            <li class="nav-link" v-if="!isLoggedIn"><router-link to="/login">ログイン</router-link></li>
+            <li class="nav-link profile" v-if="isLoggedIn && loadComplete">
+                <img :src="profileImage" alt="profile">
+                <div class="dropdown">
+                    <ul>
+                        <li class="dropdown-link"><router-link :to="userLink">マイページ</router-link></li>
+                        <li class="dropdown-link"><a href="#" @click="logout">ログアウト</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
     </header>
 </template>
 
@@ -68,6 +64,11 @@ export default {
             this.loadUserDetail();
         }
     },
+    watch: {
+        userId() {
+            this.loadUserDetail();
+        }
+    }
 }
 </script>
 
@@ -75,19 +76,14 @@ export default {
 header {
     top: 0;
     width: 100%;
-    height: 10vh;
     background-color: #fff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     color: #000;
     font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-header h1,
-header nav {
-    margin: 0 2rem;
+ul {
+    list-style: none;
 }
 
 li, a {
@@ -95,27 +91,42 @@ li, a {
     text-decoration: none;
 }
 
-.nav-links ul {
-    list-style: none;
-}
-
-.nav-link-container {
+.nav-links {
+    width: 80%;
+    margin: 0 auto;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    border: none;
 }
 
-.nav-links .nav-link:not(:nth-last-child(1)) {
-    margin-right: 1rem;
+.nav-links .router-link-active {
+    border-bottom: 3px solid #ffbb3c;
 }
 
-.nav-links .nav-link a {
-    transition: all 0.3s ease 0s;
+.nav-link {
+    text-align: center;
+    font-size: 16px;
+    width: 8rem;
 }
 
-.nav-links .nav-link a:hover,
-.nav-links .nav-link a:active {
-    color: #ffbb3c;
+.nav-link a {
+    display: block;
+    line-height: 5rem;
+    height: 100%;
+}
+
+.nav-link:not(:nth-child(1)):not(:nth-last-child(1)):hover {
+    background-color: #ffe0a7;
+}
+
+.title {
+    font-size: 28px;
+    margin-right: auto;
+}
+
+.title a {
+    border: none !important;
 }
 
 .nav-links .profile {
@@ -145,7 +156,8 @@ li, a {
     transform: translateY(10px);
     opacity: 0;
     pointer-events: none;
-    transition: 0.25s;
+    transition: all 0.3s ease-out;
+    z-index: 100;
 }
 
 .nav-link:hover > .dropdown {
@@ -154,12 +166,17 @@ li, a {
     pointer-events: auto;
 }
 
-.dropdown-link {
-    margin: 1rem 0;
+.dropdown-link {    
     text-align: center;
 }
 
 .dropdown-link a {
+    line-height: 3rem;
+    border: none !important;
     color: #000;
+}
+
+.dropdown-link:hover {
+    background-color: #ffe0a7;
 }
 </style>

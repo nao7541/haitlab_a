@@ -25,7 +25,6 @@
             <section class="wrapper image">
                 <div class="content">
                     <h1>画像</h1>
-                    <img class="preview-img" :src="previewImgSrc">
                     <input class="image-input" type="file" @change="uploadImage" accept="image/*">
                 </div>
             </section>
@@ -104,9 +103,6 @@ export default {
         userId() {
             return this.$store.getters['auth/userId'];
         },
-        previewImgSrc() {
-            return this.previewImage === null ? require('@/assets/images/image.png') : this.previewImage;
-        }
     },
     methods: {
         clearValidity(input) {
@@ -279,7 +275,7 @@ export default {
     transform: translateY(-15px);
 }
 
-.content input {
+.content input[type="text"] {
     font-size: 25px;
     width: 30rem;
     height: 3rem;
@@ -288,7 +284,7 @@ export default {
     border-bottom: 1px solid #000;
 }
 
-.content input:focus {
+.content input[type="text"]:focus {
     border-bottom: 2px solid #ffbb3c;
 }
 

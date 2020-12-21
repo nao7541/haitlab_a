@@ -3,23 +3,29 @@
         <div class="idea" v-if="loadComplete">
             <section class="left-sidebar">
                 <div class="reputation">
-                    <div class="icon-btn interesting">
+                    <div class="icon-btn interesting" :class="stateColor('interesting')" @click="reputationClicked('interesting')">
                         <div class="popup">
                             <span>面白さ</span>
                         </div>
-                        <FontAwesomeIcon class="icon" :icon="['fas', 'bolt']" size="lg"></FontAwesomeIcon>
+                        <span class="count">{{ reputationCount['interesting'] }}</span>
+                        <FontAwesomeIcon class="icon" v-if="reputationState['interesting']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
+                        <FontAwesomeIcon class="icon" v-if="!reputationState['interesting']" :icon="['fas', 'bolt']" size="lg"></FontAwesomeIcon>
                     </div>
-                    <div class="icon-btn novelty">
+                    <div class="icon-btn novelty" :class="stateColor('novelty')" @click="reputationClicked('novelty')">
                         <div class="popup">
                             <span>新規性</span>
                         </div>
-                        <FontAwesomeIcon class="icon" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
+                        <span class="count">{{ reputationCount['novelty'] }}</span>
+                        <FontAwesomeIcon class="icon" v-if="reputationState['novelty']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
+                        <FontAwesomeIcon class="icon" v-if="!reputationState['novelty']" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
                     </div>
-                    <div class="icon-btn possibility">
+                    <div class="icon-btn possibility" :class="stateColor('possibility')" @click="reputationClicked('possibility')">
                         <div class="popup">
                             <span>実現可能性</span>
                         </div>
-                        <FontAwesomeIcon class="icon" :icon="['fas', 'dollar-sign']" size="lg"></FontAwesomeIcon>
+                        <span class="count">{{ reputationCount['possibility'] }}</span>
+                        <FontAwesomeIcon class="icon" v-if="reputationState['possibility']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
+                        <FontAwesomeIcon class="icon" v-if="!reputationState['possibility']" :icon="['fas', 'dollar-sign']" size="lg"></FontAwesomeIcon>
                     </div>
                 </div>
             </section>
@@ -28,8 +34,16 @@
                     <div class="title">
                         <h1>{{ ideaDetail.title }}</h1>
                     </div>
-                    <div class="edit" v-if="this.isMyIdea">
-                        <router-link :to="editLink">編集する</router-link>
+                    <div class="operation" v-if="this.isMyIdea">
+                        <div class="publish" v-if="this.ideaDetail.state === 'draft'">
+                            <button @click="publishIdea">公開する</button>
+                        </div>
+                        <div class="edit">
+                            <button @click="editIdea">編集する</button>
+                        </div>
+                        <div class="delete">
+                            <button @click="deleteIdea">削除する</button>
+                        </div>
                     </div>
                     <div class="tags">
                         <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
@@ -130,6 +144,16 @@ export default {
             isFormValid: true,
             commentInput: '',
             isMyIdea: false,
+            reputationState: {
+                interesting: false,
+                novelty: false,
+                possibility: false,
+            },
+            reputationCount: {
+                interesting: 0,
+                novelty: 0,
+                possibility: 0,
+            }
         };
     },
     computed: {
@@ -141,6 +165,11 @@ export default {
         },
         myUserId() {
             return this.$store.getters['auth/userId'];
+        },
+        stateColor() {
+            return (name) => {
+                return this.reputationState[name] ? 'clicked' : 'not-yet-clicked';
+            }
         },
     },
     methods: {
@@ -180,6 +209,83 @@ export default {
             //TODO: コメント投稿後の画面遷移でトップに画面上部に戻れるようにする
             this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId }}); // reload
         },
+        addReputation(name) {
+            apiHelper.addReputation(this.ideaId, this.myUserId, name)
+            .then( () => {
+                this.reputationState[name] = true;
+
+                // reload
+                this.$router.go();
+            }).catch( err => {
+                console.log("error to add reputation at IdeaDetailPage: ", err);
+            })
+        },
+        removeReputation(name) {
+            // reputation_mapのidが必要
+            apiHelper.loadReputationId(this.ideaId, this.myUserId, name)
+            .then( res => {
+                const repId = res;
+
+                // 削除 
+                return apiHelper.removeReputation(repId)
+            }).then( () => {
+                this.reputationState[name] = false;
+                // リロード
+                this.$router.go();
+            }).catch( err => {
+                console.log("error to remove reputation at IdeaDetailPage: ", err);
+            })
+        },
+        reputationClicked(name) { // nameはinteresting, novelty, possibility
+            // 自分のアイデアには評価できない
+            if (this.isMyIdea) {
+                return;
+            }
+
+            if (this.reputationState[name]) {
+                // もし評価済みの場合は評価を外す
+                this.removeReputation(name);                
+            } else {
+                // もし未評価の場合は評価を追加する
+                this.addReputation(name);
+            }
+        },
+        publishIdea() {
+            apiHelper.publishIdea(this.ideaDetail, this.ideaId)
+            .then(() => {
+                this.$router.replace('/');  
+            }).catch( err => {
+                console.log("error to publish idea: ", err);
+            })
+        },
+        editIdea() {
+            // アイデア編集ページに遷移する
+            this.$router.replace(this.editLink);
+        },
+        deleteIdea() {
+            apiHelper.deleteIdea(this.ideaId)
+            .then(() => {
+                // 削除後はideasページに遷移
+                this.$router.replace({ name: 'ideas' });
+            }).catch( err => {
+                console.log("error to delete idea: ", err);
+            })
+        },
+        countReputations() {
+            // 評価数をかぞえる
+            const promises = [];
+            promises.push(apiHelper.countReputationByName(this.ideaDetail.idea_id, 'interesting'))
+            promises.push(apiHelper.countReputationByName(this.ideaDetail.idea_id, 'novelty'))
+            promises.push(apiHelper.countReputationByName(this.ideaDetail.idea_id, 'possibility'))
+            Promise.all(promises)
+            .then( results => {
+                this.reputationCount['interesting'] = results[0];
+                this.reputationCount['novelty']     = results[1];
+                this.reputationCount['possibility'] = results[2];
+            }).catch( err => {
+                console.log("error to count reputations: ", err);
+            })
+        }
     },
     created() {
         // router paramsより本アイデアのideaIdを取得
@@ -204,6 +310,15 @@ export default {
         }).then( res => {
             // user情報を取得
             this.userDetail = res;
+
+            // 評価済みか否かを初期化する
+            return apiHelper.loadReputation(this.ideaDetail.idea_id, this.myUserId)
+        }).then( results => {
+            for (const res of results) {
+                this.reputationState[res.name] = true;
+            }
+            // 評価数をかぞえる
+            this.countReputations();
 
             return apiHelper.loadComments(this.ideaId);
         }).then( res => {
@@ -231,17 +346,33 @@ export default {
 }
 
 .icon-btn {
-    margin: 2rem auto;
+    margin: 2.5rem auto;
     width: 64px;
     height: 64px;
     border-radius: 64px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.26);
-    background-color: #fff;
     cursor: pointer;
     position: relative;
 }
 
-.icon-btn:hover {
+.count {
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.clicked { 
+    background-color: #ffbb3c;
+}
+
+.not-yet-clicked {
+    background-color: #fff;
+}
+
+.not-yet-clicked:hover {
     background-color: #ffcf76;
 }
 
@@ -297,18 +428,44 @@ export default {
     margin: 1rem 0;
 }
 
-.idea-header .edit a {
+.idea-header .operation {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.idea-header button {
     text-decoration: none;
     font-size: 18px;
     font-weight: bold;
     color: #fff;
-    background-color: #12da00;
     border-radius: 4px;
-    padding: 0.4rem 1.25rem;
+    padding: 0.25rem 0.75rem;
+    margin-right: 1rem;
 }
 
-.idea-header .edit a:hover {
+.idea-header .publish button {
+    background-color: #ffbb3c;
+}
+
+.idea-header .publish button:hover {
+    background-color: #d89e32;
+}
+
+.idea-header .edit button {
+    background-color: #12da00;
+}
+
+.idea-header .edit button:hover {
     background-color: #0fb800;
+}
+
+.idea-header .delete button {
+    background-color: #da0000;
+}
+
+.idea-header .delete button:hover {
+    background-color: #b80000;
 }
 
 .idea-header .tags::after {
