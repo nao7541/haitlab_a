@@ -1,26 +1,28 @@
 <template>
     <div class="user-follow-element" v-if="loadComplete">
-        <div class="profile__img">
-            <img :src="userDetail.prof_img" alt="profile" @click="toProfilePage">
-        </div>
-        <div class="element-body">
-            <div class="user-follow__header">
-                <div class="name">
-                    <span>{{ userDetail.username }}</span>
-                </div>
-                <div class="follow__btn">
-                    <button @click="follow">{{ followLabel }}</button>
-                </div>
+        <div class="user-follow__card">
+            <div class="profile__img">
+                <img :src="userDetail.prof_img" alt="profile" @click="imagePressed">
             </div>
-            <div class="tags">
-                <BaseTag
-                    v-for="(tag, id) in tags"
-                    :key="id"
-                    :name="tag.tag_name"
-                ></BaseTag>
-            </div>
-            <div class="intro">
-                <p>{{ userDetail.intro }}</p>
+            <div class="element-body">
+                <div class="user-follow__header">
+                    <div class="name">
+                        <span>{{ userDetail.username }}</span>
+                    </div>
+                    <div class="follow__btn">
+                        <button @click="follow">{{ followLabel }}</button>
+                    </div>
+                </div>
+                <div class="tags">
+                    <BaseTag
+                        v-for="(tag, id) in tags"
+                        :key="id"
+                        :name="tag.tag_name"
+                    ></BaseTag>
+                </div>
+                <div class="intro">
+                    <p>{{ userDetail.intro }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -34,20 +36,20 @@ export default {
         userId: {
             required: true,
         },
-        type: { // following or follower
-            type: String,
-            required: true,
-        }
     },
     data() {
         return {
             userDetail: null,
+            paramUserId: null,
             tags: [],
             isFollowing: false,
             loadComplete: false,
         }
     },
     created() {
+        // プロフィールページ主のIdを取得する
+        this.paramUserId = this.$route.params['userId'];
+
         // ユーザーの詳細情報の読み込み
         apiHelper.loadUserDetail(this.userId)
         .then( res => {
@@ -63,18 +65,13 @@ export default {
             console.log("error to loadUserDetaili at UserFollowElement: ", err);
         })
 
-        if (this.type === "follower") {
-            // このフォロワーさんをフォローしているか否か
-            apiHelper.checkFollowing(this.myUserId, this.userId).
-            then(res => {
-                this.isFollowing = res;
-            }).catch( err => {
-                console.log("error to check following: ", err);
-            })
-        } else {
-            // followingの場合は確実にフォローしている
-            this.isFollowing = true;
-        }
+        // ページ訪問者がこのユーザーをフォローしているか否か
+        apiHelper.checkFollowing(this.myUserId, this.userId).
+        then(res => {
+            this.isFollowing = res;
+        }).catch( err => {
+            console.log("error to check following: ", err);
+        })
     },
     computed: {
         myUserId() {
@@ -88,11 +85,12 @@ export default {
         }
     },
     methods: {
-        toProfilePage() {
-            this.$router.go(this.userLink);
+        imagePressed() {
+            this.$router.replace(this.userLink);
         },
         reload() {
-            this.$router.go();
+            // プロフィール主のプロフィールページへと遷移する
+            this.$router.replace({ name: 'userprofile', params: { userId: this.paramUserId }});
         },
         follow() {
             if (this.isFollowing) {
@@ -119,8 +117,13 @@ export default {
 
 <style scoped>
 .user-follow-element {
-    padding: 1rem 0;
+    padding: 1rem 0;  
     border-bottom: 1px solid #aaa;
+}
+
+.user-follow__card {
+    width: 80%;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
 }
@@ -145,6 +148,7 @@ export default {
     width: 50px;
     height: 50px;
     border-radius: 64px;
+    cursor: pointer;
 }
 
 .name {
@@ -159,8 +163,9 @@ export default {
 }
 
 .follow__btn button {
-    font-size: 18px;
+    font-size: 16px;
     width: 7rem;
+    border-radius: 4px;
     line-height: 40px;
     background-color: #ffe0a7;
 }

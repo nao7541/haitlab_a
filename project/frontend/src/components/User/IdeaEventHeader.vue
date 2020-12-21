@@ -1,13 +1,19 @@
 <template>
     <ul>
         <li><router-link :to="postPageLink">投稿済み</router-link></li>
-        <li><router-link :to="draftPageLink">下書き</router-link></li>
-        <li><router-link :to="stockPageLink">ストック</router-link></li>
+        <li v-if="isMyProfile"><router-link :to="draftPageLink">下書き</router-link></li>
+        <li v-if="isMyProfile"><router-link :to="stockPageLink">ストック</router-link></li>
     </ul>
 </template>
 
 <script>
 export default {
+    props: {
+        isMyProfile: {
+            type: Boolean,
+            required: true,
+        }
+    },
     computed: {
         postPageLink() {
             return { name: 'postIdeas'};

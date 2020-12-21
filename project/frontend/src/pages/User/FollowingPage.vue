@@ -7,7 +7,6 @@
             <UserFollowElement
                 v-for="(userId, index) in followingUserIds"
                 :key="index"
-                type="following"
                 :userId="userId"
             ></UserFollowElement>
         </template>
@@ -31,13 +30,9 @@ export default {
             loadComplete: false,
         }
     },
-    computed: {
-        myUserId() {
-            return this.$store.getters['auth/userId'];
-        }
-    },
     created() {
-        apiHelper.loadFollowingUsers(this.myUserId)
+        const paramUserId = this.$route.params['userId'];
+        apiHelper.loadFollowingUsers(paramUserId)
         .then( res => {
             // returnされた情報からフォローしているユーザーのidだけ抽出する
             this.followingUserIds = res.map((data) => data.following_user_id);
