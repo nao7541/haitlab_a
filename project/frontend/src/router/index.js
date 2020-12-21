@@ -21,8 +21,8 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
 import SettingsPage from '@/pages/User/SettingsPage.vue';
 import UserSearchPage from '@/pages/User/UserSearchPage.vue';
-import MessageHomePage from '@/pages/User/MessageHomePage.vue';
-import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
+// import MessageHomePage from '@/pages/User/MessageHomePage.vue';
+// import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 import PostIdeasPage from '@/pages/User/PostIdeasPage.vue';
 import DraftIdeasPage from '@/pages/User/DraftIdeasPage.vue';
 import StockEventsPage from '@/pages/User/StockEventsPage.vue';
@@ -108,20 +108,6 @@ const routes = [
                 component: UserSearchPage,
             },
             {
-                // メッセージ一覧画面
-                name: 'messages',
-                path: 'messages',
-                component: MessageHomePage,
-                meta: { requiresAuth: true },
-                children: [
-                    {
-                        name: 'messageDisplay',
-                        path: 'message/:userId',
-                        component: MessageDisplayPage,
-                    }
-                ]
-            },
-            {
                 // イベント一覧画面
                 name: 'events',
                 path: 'events',
@@ -132,6 +118,20 @@ const routes = [
                     { name: 'comingEvents', path: 'coming', component: ComingEventsPage }
                 ]
             },
+            // {
+            //     // メッセージ一覧画面
+            //     name: 'messages',
+            //     path: 'messages',
+            //     component: MessageHomePage,
+            //     meta: { requiresAuth: true },
+            //     children: [
+            //         {
+            //             name: 'messageDisplay',
+            //             path: 'message/:userId',
+            //             component: MessageDisplayPage,
+            //         }
+            //     ]
+            // },
         ]
     },
     {

@@ -53,17 +53,6 @@ export default {
         .then( res => {
             this.userDetail = res;
 
-            if (this.type === "follower") {
-                // このフォロワーさんをフォローしているか否か
-                // フォロワーさんのフォロワーリストに自分のIDがあるか
-                if (this.userDetail.followers.includes(this.myUserId)) {
-                    this.isFollowing = true;
-                }
-            } else {
-                // followingの場合は確実にフォローしている
-                this.isFollowing = true;
-            }
-
             // tagの読み込み
             return apiHelper.loadUserTags(this.userId)
         }).then( res => {
@@ -73,6 +62,19 @@ export default {
         }).catch( err => {
             console.log("error to loadUserDetaili at UserFollowElement: ", err);
         })
+
+        if (this.type === "follower") {
+            // このフォロワーさんをフォローしているか否か
+            apiHelper.checkFollowing(this.myUserId, this.userId).
+            then(res => {
+                this.isFollowing = res;
+            }).catch( err => {
+                console.log("error to check following: ", err);
+            })
+        } else {
+            // followingの場合は確実にフォローしている
+            this.isFollowing = true;
+        }
     },
     computed: {
         myUserId() {
@@ -95,7 +97,7 @@ export default {
         follow() {
             if (this.isFollowing) {
                 // もしフォロー済みならフォロー解除
-                apiHelper.stopFollowing(this.myUserId, this.paramUserId)
+                apiHelper.stopFollowing(this.myUserId, this.userId)
                 .then( () => {
                     this.reload();
                 }).catch( err => {
@@ -103,7 +105,7 @@ export default {
                 })
             } else {
                 // フォローしていないなら、フォローする
-                apiHelper.follow(this.myUserId, this.paramUserId)
+                apiHelper.follow(this.myUserId, this.userId)
                 .then( () => {
                     this.reload();
                 }).catch( err => {
@@ -120,11 +122,11 @@ export default {
     padding: 1rem 0;
     border-bottom: 1px solid #aaa;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .element-body {
-    margin-left: 0.5rem;
+    margin-left: 2.5rem;
 }
 
 .user-follow__header {
