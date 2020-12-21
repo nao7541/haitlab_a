@@ -1,7 +1,7 @@
 from django_filters import rest_framework as filters
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Comment, ReputationMap
+from idea.models import PostIdea, Feedback, ReputationMap
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 
