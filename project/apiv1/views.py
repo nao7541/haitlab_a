@@ -18,7 +18,8 @@ from .serializers import (UserSerializer, EventSerializer, IdeaSerializer,
                         FollowersSerializer, ReputationSerializer)
 from .permissions import IsAuthorOrReadOnly
 from .filters import (UserFilter, IdeaFilter, TagFilter, UserTagFilter,
-                    IdeaTagFilter, EventStockFilter, ReputationFilter)
+                    IdeaTagFilter, EventStockFilter, ReputationFilter,
+                    UserFollowingFilter)
 
 class UserViewset(mixins.RetrieveModelMixin,
                 mixins.UpdateModelMixin,
@@ -94,3 +95,5 @@ class UserFollowingViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = FollowingSerializer
     queryset = UserFollowing.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = UserFollowingFilter
