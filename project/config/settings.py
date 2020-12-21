@@ -160,6 +160,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DATETIME_FORMAT': '%Y/%m/%d', # 日付の出力フォーマットの指定
 }
 
 # django-allauth用の設定
