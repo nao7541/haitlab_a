@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import utils from '@/services/utils.js';
 import apiHelper from '@/services/apiHelper.js';
 import InputTag from '@/components/Tag/InputTag.vue';
 
@@ -82,9 +83,9 @@ export default {
             return apiHelper.loadUserTags(this.userId);
         }).then( res => {
             // tag_nameのみを取り出す
-            this.tags = res;
             if (res != null) {
-                this.inputTags = res.map((tag) => tag.tag_name);
+                this.tags = res.map((tag) => tag.tag_name);
+                this.inputTags = this.tags.slice(); // 値渡し
             }
 
             this.initUserForm();
@@ -135,15 +136,6 @@ export default {
                 this.isFormValid = false;
             }
         },
-        arrayEqual(x, y) {
-            if (!Array.isArray(x)) return false;
-            if (!Array.isArray(y)) return false;
-            if (x.length != y.length) return false;
-            for (const item of x) {
-                if (!y.includes(item)) return false;
-            }
-            return true;
-        },
         updateProfile() {
             this.formValidation();
 
@@ -169,7 +161,6 @@ export default {
             })
 
             // タグの追加 / 更新
-
             if (this.inputTags == null) return;
 
             // もしタグ未登録なら追加して終了
@@ -185,7 +176,7 @@ export default {
                 }).catch( err => {
                     console.log("error to post userTag: ", err);
                 })
-            } else if (!this.arrayEqual(this.tags.map((tag) => tag.tag_name), this.inputTags)) {
+            } else if (!utils.arrayEqual(this.tags, this.inputTags) ) {
                 // もしタグに変更があるなら既存のタグを全削除してから、新しいタグを追加する
                 apiHelper.deleteAllUserTag(this.userId)
                 .then( () => {

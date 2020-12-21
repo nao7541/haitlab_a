@@ -353,10 +353,28 @@ export default {
         let tags = await response.data;
 
         // 全削除
+        const promises = [];
         for (const tag of tags) {
             url = '/user_tag/' + tag.usertag_id + '/';
-            response = await api.delete(url);
+            promises.push(api.delete(url));
         }
+
+        return Promise.all(promises);
+    },
+    async deleteAllIdeaTag(ideaId) {
+        // 既存のタグを取得
+        let url = '/idea_tag/?idea=' + ideaId;
+        let response = await api.get(url);
+        let tags = await response.data; 
+
+        // 全削除
+        const promises = [];
+        for (const tag of tags) {
+            url = '/idea_tag/' + tag.ideatag_id + '/';
+            promises.push(api.delete(url));
+        }
+
+        return Promise.all(promises);
     },
 
     // ------------------------------ Event ------------------------------ //
@@ -409,18 +427,21 @@ export default {
     },
 
     // ------------------------------ Reputation Map ------------------------------ //
-    async addReputation(ideaId, userId, name) {
+    // 評価を追加する
+    async addReputation(ideaId, userId, reputation) {
         const url = '/reputations/';
         const response = await api.post(url, {
             idea: ideaId,
             user: userId,
-            name: name,
+            interesting: reputation.interesting,
+            novelty: reputation.novelty,
+            possibility: reputation.possibility
         });
         const responseData = await response.data;
 
         return responseData;
     },
-    async removeReputation(repId) {
+    async deleteReputation(repId) {
         const url = '/reputations/' + repId + '/';
         const response = await api.delete(url);
         const responseData = await response.data;
@@ -434,16 +455,24 @@ export default {
 
         return responseData;
     },
+    // 指定されたアイデアの評価を全て読み込む
+    async loadIdeaReputations(ideaId) {
+        const url = '/reputations/?idea=' + ideaId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
     // 引数で渡された、idea, user, nameにあうreputationのidを返す
-    async loadReputationId(ideaId, userId, name) {
-        const url = '/reputations/?idea=' + ideaId + '&user=' + userId + '&name=' + name;
+    async getReputationId(ideaId, userId) {
+        const url = '/reputations/?idea=' + ideaId + '&user=' + userId;
         const response = await api.get(url);
         const responseData = await response.data;
 
         return responseData[0].reputation_id;
     },
-    async countReputationByName(ideaId, name) {
-        const url = '/reputations/?idea=' + ideaId + '&name=' + name;
+    async countIdeaReputation(ideaId) {
+        const url = '/reputations/?idea=' + ideaId;
         const response = await api.get(url);
         const reputations = await response.data;
 
