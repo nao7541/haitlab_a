@@ -1,7 +1,7 @@
 <template>
-    <BaseProfileContent>
+    <BaseProfileContent v-if="loadComplete">
         <template #contentHeaderLinks>
-            <IdeaEventHeader />
+            <IdeaEventHeader :isMyProfile="isMyProfile" />
         </template>
         <template #contentBody>
             <IdeaElement
@@ -33,6 +33,7 @@ export default {
     data() {
         return {
             postIdeas: [],
+            isMyProfile: false,
             loadComplete: false,
         }
     },
@@ -42,7 +43,13 @@ export default {
         }
     },
     created() {
-        apiHelper.loadFilteredPostIdeas(this.myUserId)
+        // 自分のプロフィールかを確認
+        const paramUserId = this.$route.params['userId'];
+        if (paramUserId == this.myUserId) {
+            this.isMyProfile = true;
+        }
+
+        apiHelper.loadFilteredPostIdeas(paramUserId)
         .then( res => {
             this.postIdeas = res;
             this.loadComplete = true;

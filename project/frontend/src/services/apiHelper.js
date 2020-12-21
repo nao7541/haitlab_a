@@ -87,10 +87,10 @@ export default {
     },
     async stopFollowing(userId, followUserId) {
         let url = '/user_following/?user_id=' + userId + '&following_user_id=' + followUserId;
-        let response = await api.data(url);
+        let response = await api.get(url);
         let responseData = await response.data;
         
-        url = '/user_following/' + responseData.relation_id + '/';
+        url = '/user_following/' + responseData[0].relation_id + '/';
         response = await api.delete(url);
         responseData = await response.data;
 

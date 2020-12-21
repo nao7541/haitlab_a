@@ -116,7 +116,7 @@ li, a {
     height: 100%;
 }
 
-.nav-link:not(:nth-child(1)):not(:nth-last-child(1)):hover {
+.nav-link:not(:nth-child(1)):not(.profile):hover {
     background-color: #ffe0a7;
 }
 

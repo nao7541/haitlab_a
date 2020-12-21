@@ -15,8 +15,8 @@
                     </div>
                     <div class="follow">
                         <div class="follow-display">
-                            <router-link :to="followersLink">フォロワー {{ followers.length }}人</router-link>
-                            <router-link :to="followingLink">フォロー中 {{ followingUsers.length }}人</router-link>
+                            <router-link :to="followersLink">フォロワー {{ followerCount }}人</router-link>
+                            <router-link :to="followingLink">フォロー中 {{ followingCount }}人</router-link>
                         </div>
                         <div class="follow__btn" v-if="!isMyProfile">
                             <button @click="follow">{{ followLabel }}</button>
@@ -47,14 +47,8 @@
         </section>
 
         <section class="content"> 
-            <div v-if="isMyProfile">
+            <div>
                 <router-view />
-            </div>
-            <div v-if="!isMyProfile">
-                <IdeaBoard
-                    title="投稿したアイデア"
-                    :ideas="postIdeas"
-                />
             </div>
         </section>
     </div>
@@ -62,12 +56,8 @@
 
 <script>
 import apiHelper from '@/services/apiHelper.js'
-import IdeaBoard from '@/components/Idea/IdeaBoard.vue';
 
 export default {
-    components: {
-        IdeaBoard
-    },
     data() {
         return {
             userDetail: null,
@@ -75,8 +65,8 @@ export default {
             isMyProfile: false,
             postIdeas: [],
             tags: [],
-            followers: [],
-            followingUsers: [],
+            followerCount: 0,
+            followingCount: 0,
             isFollowing: false,
         }
     },
@@ -126,12 +116,12 @@ export default {
             // フォロワーの読み込み
             return apiHelper.loadFollowers(this.paramUserId)
             .then( res => {
-                this.followers = res;
+                this.followerCount = res.length;
 
                 // フォロー中のユーザーを読み込み
                 return apiHelper.loadFollowingUsers(this.paramUserId);
             }).then( res => {
-                this.followingUsers = res;
+                this.followingCount = res.length;
             }).catch( err => {
                 console.log("error to load followers, followingUsers: ", err);
             })
