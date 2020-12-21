@@ -1,7 +1,7 @@
 <template>
     <div id="idea-detail">
         <div class="idea" v-if="loadComplete">
-            <section class="left-sidebar">
+            <!-- <section class="left-sidebar">
                 <div class="reputation">
                     <div class="icon-btn interesting" :class="stateColor('interesting')" @click="reputationClicked('interesting')">
                         <div class="popup">
@@ -28,8 +28,9 @@
                         <FontAwesomeIcon class="icon" v-if="!reputationState['possibility']" :icon="['fas', 'dollar-sign']" size="lg"></FontAwesomeIcon>
                     </div>
                 </div>
-            </section>
-            <main class="main-content">
+            </section> -->
+
+            <main>
                 <section class="container idea-header">
                     <div class="title">
                         <h1>{{ ideaDetail.title }}</h1>
@@ -48,6 +49,23 @@
                     <div class="tags">
                         <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
                     </div>
+                </section>
+
+                <section class="idea-body">
+                    <IdeaDetailTab />
+                    <router-view />
+                </section>
+
+                <!-- <section class="reputation-form">
+                    <form @submit.prevent="reputate">
+                        <input type="range" id="interesting" name="interesting" min="0" max="5" v-model="reputationInput.interesting">
+                        <label for="interesting">面白さ</label>
+                        <input type="range" id="novelty" name="novelty" min="0" max="5" v-model="reputationInput.novelty">
+                        <label for="novelty">新規性</label>
+                        <input type="range" id="possibility" name="possibility" min="0" max="5" v-model="reputationInput.possibility">
+                        <label for="possibility">実現可能性</label>
+                        <button>送信</button>
+                    </form>
                 </section>
                 <section class="container idea-body">
                     <div class="sub-container overview">
@@ -94,7 +112,7 @@
                             </template>
                         </CommentBox>
                     </div>
-                </section>
+                </section> -->
             </main>
             <section class="right-sidebar">
                 <section class="profile">
@@ -128,32 +146,50 @@
 <script>
 import apiHelper from '@/services/apiHelper.js';
 import CommentBox from '@/components/Idea/CommentBox.vue';
+import IdeaDetailTab from '@/components/Idea/IdeaDetailTab.vue';
 
 export default {
     components: {
         CommentBox,
+        IdeaDetailTab,
     },
     data() {
         return {
+            // general
+            loadComplete: false,
+            // user
             userDetail: null,
+            // idea
+            isMyIdea: false,
             ideaDetail: null,
             ideaId: null,
-            comments: [],
+            // tag
             tags: [],
-            loadComplete: false,
-            isFormValid: true,
+            // comment
+            comments: [],
             commentInput: '',
-            isMyIdea: false,
-            reputationState: {
-                interesting: false,
-                novelty: false,
-                possibility: false,
-            },
-            reputationCount: {
+            isFormValid: true,
+            // reputation
+            reputationCount: 0,
+            reputationState: false,
+            reputationData: { // ideaの評価値(5段階評価の平均を格納する)
                 interesting: 0,
                 novelty: 0,
                 possibility: 0,
-            }
+            },
+            myReputation: { // 自分のアイデアに対する評価情報
+                reputation_id: null,
+                user: null,
+                idea: null,
+                interesting: 0,
+                novelty: 0,
+                possibility: 0,
+            },
+            reputationInput: { // formのreputationの値
+                interesting: 0,
+                novelty: 0,
+                possibility: 0,
+            },
         };
     },
     computed: {
@@ -161,7 +197,7 @@ export default {
             return { name: 'userprofile', params: { userId: this.userDetail.user_id }};
         },
         editLink() {
-            return '/post/edit/' + this.ideaId;
+            return { name: 'editIdea', params: { ideaId: this.ideaId }};
         },
         myUserId() {
             return this.$store.getters['auth/userId'];
@@ -209,47 +245,71 @@ export default {
             //TODO: コメント投稿後の画面遷移でトップに画面上部に戻れるようにする
             this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId }}); // reload
         },
-        addReputation(name) {
-            apiHelper.addReputation(this.ideaId, this.myUserId, name)
-            .then( () => {
-                this.reputationState[name] = true;
+        getMean(arr) {
+            const sum = arr.reduce((s, e) => s + e);
+            const mean = sum / arr.length;
+            return mean;
+        },
+        updateReputationData() {
+            apiHelper.loadIdeaReputations(this.ideaId)
+            .then(res => {
+                // 評価の配列を取得
+                const reputationArray = {
+                    interesting: res.map(reputation => reputation.interesting),
+                    novelty:     res.map(reputation => reputation.novelty),
+                    possibility: res.map(reputation => reputation.possibility),
+                }
 
-                // reload
-                this.$router.go();
+                // 配列より平均値を求める
+                this.reputationData = {
+                    interesting: this.getMean(reputationArray.interesting),
+                    novelty:     this.getMean(reputationArray.novelty),
+                    possibility: this.getMean(reputationArray.possibility)
+                }
+            }).catch( err => {
+                console.log("error to udpate ReputationData: ", err);
+            })
+        },
+        reputate() {
+            apiHelper.addReputation(this.ideaId, this.myUserId, this.reputationInput)
+            .then( () => {
+                this.reputationState = true;
+
+                this.updateReputationData();
+            }).then( () => {
+                
+                // reputationを初期化する
+                this.initReputation();
             }).catch( err => {
                 console.log("error to add reputation at IdeaDetailPage: ", err);
             })
         },
-        removeReputation(name) {
-            // reputation_mapのidが必要
-            apiHelper.loadReputationId(this.ideaId, this.myUserId, name)
-            .then( res => {
-                const repId = res;
+        editReputation() {
 
-                // 削除 
-                return apiHelper.removeReputation(repId)
-            }).then( () => {
-                this.reputationState[name] = false;
-                // リロード
-                this.$router.go();
+        },
+        deleteReputation() {
+            apiHelper.deleteReputation(this.myReputation.reputation_id)
+            .then( () => {
+                // 削除後は初期化する
+                this.initReputation();
             }).catch( err => {
                 console.log("error to remove reputation at IdeaDetailPage: ", err);
             })
         },
-        reputationClicked(name) { // nameはinteresting, novelty, possibility
-            // 自分のアイデアには評価できない
-            if (this.isMyIdea) {
-                return;
-            }
+        // reputationClicked(name) { // nameはinteresting, novelty, possibility
+        //     // 自分のアイデアには評価できない
+        //     if (this.isMyIdea) {
+        //         return;
+        //     }
 
-            if (this.reputationState[name]) {
-                // もし評価済みの場合は評価を外す
-                this.removeReputation(name);                
-            } else {
-                // もし未評価の場合は評価を追加する
-                this.addReputation(name);
-            }
-        },
+        //     if (this.reputationState[name]) {
+        //         // もし評価済みの場合は評価を外す
+        //         this.removeReputation(name);                
+        //     } else {
+        //         // もし未評価の場合は評価を追加する
+        //         this.addReputation(name);
+        //     }
+        // },
         publishIdea() {
             apiHelper.publishIdea(this.ideaDetail, this.ideaId)
             .then(() => {
@@ -271,26 +331,58 @@ export default {
                 console.log("error to delete idea: ", err);
             })
         },
-        countReputations() {
-            // 評価数をかぞえる
-            const promises = [];
-            promises.push(apiHelper.countReputationByName(this.ideaDetail.idea_id, 'interesting'))
-            promises.push(apiHelper.countReputationByName(this.ideaDetail.idea_id, 'novelty'))
-            promises.push(apiHelper.countReputationByName(this.ideaDetail.idea_id, 'possibility'))
-            Promise.all(promises)
-            .then( results => {
-                this.reputationCount['interesting'] = results[0];
-                this.reputationCount['novelty']     = results[1];
-                this.reputationCount['possibility'] = results[2];
+        // reputationDataの初期化
+        initReputation() {
+            apiHelper.loadReputation(this.ideaId, this.myUserId) 
+            .then( res => {
+                if (res != null) {
+                    // 登録済みなら初期化する
+                    this.myReputation.reputation_id = res.reputation_id;
+                    this.myReputation.user = res.user;
+                    this.myReputation.idea = res.idea;
+                    this.myReputation.interesting = res.interesting;
+                    this.myReputation.novelty = res.novelty;
+                    this.myReputation.possibility = res.possibility;
+
+                    // formの値に反映する
+                    this.reputationInput.interesting = this.myReputation.interesting;
+                    this.reputationInput.novelty = this.myReputation.novelty;
+                    this.reputationInput.possibility = this.myReputation.possibility;
+
+                    // 評価済みにする
+                    this.reputationState = true;
+                } else {
+                    this.myReputation.reputation_id = null;
+                    this.myReputation.user = null;
+                    this.myReputation.idea = null;
+                    this.myReputation.interesting = 0;    
+                    this.myReputation.novelty = 0;
+                    this.myReputation.possibility = 0;
+
+                    // formの値に反映する
+                    this.reputationInput.interesting = this.myReputation.interesting;
+                    this.reputationInput.novelty = this.myReputation.novelty;
+                    this.reputationInput.possibility = this.myReputation.possibility;
+
+                    // 評価済みにする
+                    this.reputationState = false;
+                }
+
+                // reputaionCountの取得
+                apiHelper.countIdeaReputation(this.ideaId)
+            }).then( res => { 
+                this.reputationCount = res;
+
+                this.updateReputationData();
             }).catch( err => {
-                console.log("error to count reputations: ", err);
+                console.log("error to init myReputation: ", err);
             })
         }
     },
     created() {
         // router paramsより本アイデアのideaIdを取得
         this.ideaId = this.$route.params['ideaId'];
-        
+
         apiHelper.loadIdeaDetail(this.ideaId)
         .then( res => {
             // idea情報を取得
@@ -311,15 +403,6 @@ export default {
             // user情報を取得
             this.userDetail = res;
 
-            // 評価済みか否かを初期化する
-            return apiHelper.loadReputation(this.ideaDetail.idea_id, this.myUserId)
-        }).then( results => {
-            for (const res of results) {
-                this.reputationState[res.name] = true;
-            }
-            // 評価数をかぞえる
-            this.countReputations();
-
             return apiHelper.loadComments(this.ideaId);
         }).then( res => {
             // コメントを取得
@@ -330,22 +413,26 @@ export default {
         }).catch( err => {
             console.log("error to load idea detail: ", err);
         });
+
+        // 評価の初期化
+        this.initReputation();
     }}
 </script>
 
 <style scoped>
 .idea {
     width: 80%;
-    margin: 2rem auto 0;
+    margin: 0 auto;
+    padding: 2rem 0;
     display: flex;
     justify-content: space-between;
 }
 
-.left-sidebar {
+/* .left-sidebar {
     width: 10rem;
-}
+} */
 
-.icon-btn {
+/* .icon-btn {
     margin: 2.5rem auto;
     width: 64px;
     height: 64px;
@@ -403,9 +490,9 @@ export default {
 .icon-btn:hover > .popup {
     opacity: 1;
     transform: translate(-50%, -50%);
-}
+} */
 
-.main-content {
+main {
     width: 100%;
 }
 
@@ -478,7 +565,11 @@ export default {
     background-color: #fff;
 }
 
-.container .sub-container {
+.idea-body {
+    background-color: #fff;
+}
+
+/* .container .sub-container {
     margin-bottom: 3rem;
 }
 
@@ -492,14 +583,10 @@ export default {
     font-size: 18px;
 }
 
-.idea-body {
-    background-color: #fff;
-}
-
 .idea-footer {
     border-top: 1px solid #bbb;
     margin-top: 10rem;
-}
+} */
 
 .comment-form input {
     font-size: 18px;
@@ -541,7 +628,6 @@ export default {
     padding: 1rem;
     margin: 0 0 2rem 0.5rem;
     border-radius: 4px;
-    box-shadow: 0 2px 4px #0005;
     text-align: center;
 }
 

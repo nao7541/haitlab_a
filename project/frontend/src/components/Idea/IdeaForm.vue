@@ -43,7 +43,7 @@
             <section class="wrapper tag-input">
                 <div class="content">
                     <h1>タグ</h1>
-                    <IdeaFormInputTag :tags="tags" :maximum="5" />
+                    <IdeaFormInputTag :tags="inputTags" :maximum="5" />
                 </div>
             </section>
             <section class="wrapper passion">
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import utils from '@/services/utils.js';
 import apiHelper from '@/services/apiHelper.js'
 import IdeaFormInputTag from '@/components/Tag/IdeaFormInputTag.vue';
 import ResizableTextarea from '@/components/Idea/ResizableTextarea.vue';
@@ -96,7 +97,8 @@ export default {
             passion: '',
             offer: '',
             previewImage: null,
-            tags: [],
+            tags: [], // 現時点でDBに書くのされているtags
+            inputTags: [], // ユーザーの入力を反映したtags
         }
     },
     computed: {
@@ -115,20 +117,6 @@ export default {
                 this.isFormValid = false;
                 this.title.isValid = false;
             }
-        },
-        registerTag() {
-            const promises = [];
-            for (const tag of this.tags) {
-                promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
-            }
-
-            Promise.all(promises)
-            .then( () => {
-                // 全ての非同期処理が完了してからIdea詳細ページに画面遷移
-                this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
-            }).catch( err => {
-                console.log("error to register tag at IdeaForm: ", err);
-            });
         },
         registerIdea(state) {
             const ideaData = {
@@ -149,13 +137,14 @@ export default {
                 .then( res => {
                     this.retIdeaId = res.idea_id;
 
-                    // tagがある場合はtagをpostする
-                    if (this.tags.length > 0) {
-                        this.registerTag();
-                    } else {
-                        // Idea詳細ページに画面遷移
-                        this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
+                    // 新規アイデアの場合はそのままtagの追加
+                    const promises = [];
+                    for (const tag of this.inputTags) {
+                        promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
                     }
+                    return Promise.all(promises);
+                }).then( () => {
+                    this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
                 }).catch( err => {
                     console.log("error to post new idea: ", err);
                 });
@@ -165,11 +154,38 @@ export default {
                 .then( res => {
                     this.retIdeaId = res.idea_id;
 
-                    // tagがある場合はtagをpostする
-                    if (this.tags.length > 0) {
-                        this.registerTag();
+                    if (this.inputTags.length == 0) return
+
+                    // 元々タグがない場合はそのままpost
+                    if (this.tags == null) {
+                         const promises = [];
+                        for (const tag of this.inputTags) {
+                            promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
+                        }
+
+                        Promise.all(promises)
+                        .then( () => {
+                            this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
+                        }).catch( err => {
+                            console.log("error to post new idea: ", err);
+                        });
+                    } else if (!utils.arrayEqual(this.tags, this.inputTags) ) {
+                        // もし元々のタグから変更があるなら全部消してから全てを追加する
+                        apiHelper.deleteAllIdeaTag(this.retIdeaId)
+                        .then(() => {
+                            const promises = [];
+                            for (const tag of this.inputTags) {
+                                promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
+                            }
+
+                            return Promise.all(promises)
+                        }).then( () => {
+                            // reload
+                            this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
+                        }).catch(err => {
+                            console.log("error to update tag: ", err)
+                        })
                     } else {
-                        // Idea詳細ページに画面遷移
                         this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
                     }
                 }).catch( err => {
@@ -227,9 +243,8 @@ export default {
                 return apiHelper.loadIdeaTags(this.ideaId)
             }).then( res => {
                 // タグの読み込み
-                this.tags = res.map( (tag) => {
-                    return tag.tag_name;
-                });
+                this.tags = res.map( (tag) => tag.tag_name );
+                this.inputTags = this.tags.slice(); // 値渡し
 
                 this.loadComplete = true;
             }).catch( err => {

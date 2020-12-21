@@ -10,6 +10,10 @@ import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
 import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
 import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
+import IdeaOverviewPage from '@/pages/Idea/IdeaOverviewPage.vue';
+import IdeaDetailInfoPage from '@/pages/Idea/IdeaDetailInfoPage.vue';
+import IdeaRequirementsPage from '@/pages/Idea/IdeaRequirementsPage.vue';
+import IdeaFeedbackPage from '@/pages/Idea/IdeaFeedbackPage.vue';
 // Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
 import PostNewIdeaPage from '@/pages/Idea/PostNewIdeaPage.vue';
@@ -63,7 +67,14 @@ const routes = [
                 name: 'ideaDetail',
                 path: 'ideas/:ideaId',
                 component: IdeaDetailPage,
+                redirect: { name: 'overview' },
                 props: true,
+                children: [
+                    { name: 'overview',     path: 'overview',     component: IdeaOverviewPage },
+                    { name: 'detailInfo',   path: 'detailInfo',   component: IdeaDetailInfoPage },
+                    { name: 'requirements', path: 'requirements', component: IdeaRequirementsPage },
+                    { name: 'feedback',     path: 'feedback',     component: IdeaFeedbackPage },
+                ]
             },
             {
                 // サインアップ画面
@@ -142,8 +153,8 @@ const routes = [
         meta: { requiresAuth: true },
         redirect: { name: 'postNewIdea' },
         children: [
-            { name: 'postNewIdea',  path: 'new',  component: PostNewIdeaPage },
-            { name: 'editIdea',     path: 'edit/:ideaId', component: EditIdeaPage },
+            { name: 'postNewIdea',  path: 'new',          component: PostNewIdeaPage },
+            { name: 'editIdea',     path: 'edit/:ideaId', component: EditIdeaPage    },
         ]
     },
     {
