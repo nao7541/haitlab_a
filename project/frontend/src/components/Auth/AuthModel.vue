@@ -23,10 +23,12 @@ export default {
     props: ['mode'],
     computed: {
         facebookButtonTitle() {
-            return this.mode + ' with Facebook';
+            if (this.mode === 'signup') return "Facebookで登録";
+            else return 'Facebookでログイン';
         },
         twitterButtonTitle() {
-            return this.mode + ' with Twitter';
+            if (this.mode == 'signup') return 'Twitterで登録';
+            else return 'Twitterでログイン';
         }
     },
     methods: {
@@ -38,6 +40,10 @@ export default {
 </script>
 
 <style scoped>
+.auth {
+    padding: 2rem 0;
+}
+
 .card {
     max-width: 30rem;
     padding: 2rem;
