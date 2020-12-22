@@ -20,6 +20,7 @@
                         <FontAwesomeIcon class="icon" v-if="!reputationState['novelty']" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
                     </div>
                     <div class="icon-btn possibility" :class="stateColor('possibility')" @click="reputationClicked('possibility')">
+
                         <div class="popup">
                             <span>実現可能性</span>
                         </div>
