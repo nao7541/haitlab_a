@@ -3,11 +3,7 @@
         <div class="idea" v-if="loadComplete">
             <!-- <section class="left-sidebar">
                 <div class="reputation">
-<<<<<<< Updated upstream
                     <div class="icon-btn interesting" :class="stateColor('interesting')" @click="reputationClicked('interesting')">
-=======
-                    <div class="icon-btn interesting" @click="reputationClicked('interesting')">
->>>>>>> Stashed changes
                         <div class="popup">
                             <span>面白さ</span>
                         </div>
@@ -15,11 +11,7 @@
                         <FontAwesomeIcon class="icon" v-if="reputationState['interesting']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
                         <FontAwesomeIcon class="icon" v-if="!reputationState['interesting']" :icon="['fas', 'bolt']" size="lg"></FontAwesomeIcon>
                     </div>
-<<<<<<< Updated upstream
                     <div class="icon-btn novelty" :class="stateColor('novelty')" @click="reputationClicked('novelty')">
-=======
-                    <div class="icon-btn novelty" @click="reputationClicked('novelty')">
->>>>>>> Stashed changes
                         <div class="popup">
                             <span>新規性</span>
                         </div>
@@ -27,12 +19,7 @@
                         <FontAwesomeIcon class="icon" v-if="reputationState['novelty']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
                         <FontAwesomeIcon class="icon" v-if="!reputationState['novelty']" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
                     </div>
-<<<<<<< Updated upstream
                     <div class="icon-btn possibility" :class="stateColor('possibility')" @click="reputationClicked('possibility')">
-
-=======
-                    <div class="icon-btn possibility" @click="reputationClicked('possibility')">
->>>>>>> Stashed changes
                         <div class="popup">
                             <span>実現可能性</span>
                         </div>
@@ -162,7 +149,6 @@ export default {
             ideaId: null,
             // tag
             tags: [],
-<<<<<<< Updated upstream
             // comment
             // comments: [],
             // commentInput: '',
@@ -188,17 +174,6 @@ export default {
                 novelty: 0,
                 possibility: 0,
             },
-=======
-            loadComplete: false,
-            isFormValid: true,
-            commentInput: '',
-            isMyIdea: false,
-            reputationState: {
-                interesting: false,
-                novelty: false,
-                possibility: false,
-            }
->>>>>>> Stashed changes
         };
     },
     computed: {
@@ -255,51 +230,15 @@ export default {
         editReputation() {
 
         },
-<<<<<<< Updated upstream
         deleteReputation() {
             apiHelper.deleteReputation(this.myReputation.reputation_id)
             .then( () => {
                 // 削除後は初期化する
                 this.initReputation();
-=======
-        addReputation(name) {
-            apiHelper.addReputation(this.ideaId, this.myUserId, name)
-            .then( () => {
-                this.reputationState[name] = true;
-            }).catch( err => {
-                console.log("error to add reputation at IdeaDetailPage: ", err);
-            })
-        },
-        removeReputation(name) {
-            // reputation_mapのidが必要
-            apiHelper.loadReputation(this.ideaId, this.myUserId)
-            .then( res => {
-                const repMapId = res[0].reputationmap_id;
-
-                // 削除 
-                return apiHelper.removeReputation(repMapId)
-            }).then( () => {
-                this.reputationState[name] = false;
-
-                // リロード
-                this.$router.go();
->>>>>>> Stashed changes
             }).catch( err => {
                 console.log("error to remove reputation at IdeaDetailPage: ", err);
             })
         },
-<<<<<<< Updated upstream
-=======
-        reputationClicked(name) { // nameはinteresting, novelty, possibility
-            if (this.reputationState[name]) {
-                // もし未評価の場合は評価を追加する
-                this.addReputation(name);
-            } else {
-                // もし評価済みの場合は評価を外す
-                this.removeReputation(name);
-            }
-        },
->>>>>>> Stashed changes
         publishIdea() {
             apiHelper.publishIdea(this.ideaDetail, this.ideaId)
             .then(() => {
@@ -320,7 +259,6 @@ export default {
             }).catch( err => {
                 console.log("error to delete idea: ", err);
             })
-<<<<<<< Updated upstream
         },
         setReputation(id, user, idea, interesting, novelty, possibility, state) {
             this.myReputation.reputation_id = id;
@@ -373,8 +311,6 @@ export default {
             }).catch( err => {
                 console.log("error to init myReputation: ", err);
             })
-=======
->>>>>>> Stashed changes
         }
     },
     created() {
@@ -536,7 +472,6 @@ main {
     border-radius: 4px;
     padding: 0.25rem 0.75rem;
     margin-right: 1rem;
-<<<<<<< Updated upstream
 }
 
 .idea-header .publish button {
@@ -545,52 +480,6 @@ main {
 
 .idea-header .publish button:hover {
     background-color: #d89e32;
-=======
-}
-
-.idea-header .publish button {
-    background-color: #ffbb3c;
-}
-
-.idea-header .publish button:hover {
-    background-color: #d89e32;
-}
-
-.idea-header .edit button {
-    background-color: #12da00;
-}
-
-.idea-header .edit button:hover {
-    background-color: #0fb800;
-}
-
-.idea-header .delete button {
-    background-color: #da0000;
-}
-
-.idea-header .delete button:hover {
-    background-color: #b80000;
-}
-
-.idea-header .tags::after {
-    content: "";
-    display: block;
-    clear: both;
-}
-
-.idea-header .tags .base-tag {
-    background-color: #fff;
-}
-
-.container .sub-container {
-    margin-bottom: 3rem;
-}
-
-.container .sub-title {
-    font-size: 24px;
-    font-weight: bold;
-    border-bottom: 1px solid #ccc;
->>>>>>> Stashed changes
 }
 
 .idea-header .edit button {
