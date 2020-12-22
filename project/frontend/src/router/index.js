@@ -10,6 +10,10 @@ import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
 import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
 import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
+import IdeaOverviewPage from '@/pages/Idea/IdeaOverviewPage.vue';
+import IdeaDetailInfoPage from '@/pages/Idea/IdeaDetailInfoPage.vue';
+import IdeaRequirementsPage from '@/pages/Idea/IdeaRequirementsPage.vue';
+import IdeaFeedbackPage from '@/pages/Idea/IdeaFeedbackPage.vue';
 // Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
 import PostNewIdeaPage from '@/pages/Idea/PostNewIdeaPage.vue';
@@ -21,13 +25,14 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
 import SettingsPage from '@/pages/User/SettingsPage.vue';
 import UserSearchPage from '@/pages/User/UserSearchPage.vue';
-import MessageHomePage from '@/pages/User/MessageHomePage.vue';
-import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
+// import MessageHomePage from '@/pages/User/MessageHomePage.vue';
+// import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 import PostIdeasPage from '@/pages/User/PostIdeasPage.vue';
 import DraftIdeasPage from '@/pages/User/DraftIdeasPage.vue';
 import StockEventsPage from '@/pages/User/StockEventsPage.vue';
 import FollowersPage from '@/pages/User/FollowersPage.vue';
 import FollowingPage from '@/pages/User/FollowingPage.vue';
+import NotificationPage from '@/pages/User/NotificationPage.vue';
 // Event pages
 import EventHomePage from '@/pages/Event/EventHomePage.vue';
 import NewEventsPage from '@/pages/Event/NewEventsPage';
@@ -63,7 +68,14 @@ const routes = [
                 name: 'ideaDetail',
                 path: 'ideas/:ideaId',
                 component: IdeaDetailPage,
+                redirect: { name: 'overview' },
                 props: true,
+                children: [
+                    { name: 'overview',     path: 'overview',     component: IdeaOverviewPage },
+                    { name: 'detailInfo',   path: 'detailInfo',   component: IdeaDetailInfoPage },
+                    { name: 'requirements', path: 'requirements', component: IdeaRequirementsPage },
+                    { name: 'feedback',     path: 'feedback',     component: IdeaFeedbackPage },
+                ]
             },
             {
                 // サインアップ画面
@@ -88,11 +100,12 @@ const routes = [
                 meta: { requiresAuth: true }, 
                 redirect: { name: 'postIdeas' },
                 children: [
-                    { name: 'postIdeas',   path: 'post',         component: PostIdeasPage  },
-                    { name: 'draftIdeas',  path: 'draft',        component: DraftIdeasPage },
-                    { name: 'stockEvents', path: 'events/stock', component: StockEventsPage},
-                    { name: 'followers',   path: 'followers',    component: FollowersPage  },
-                    { name: 'following',   path: 'following',    component: FollowingPage  },
+                    { name: 'postIdeas',    path: 'post',         component: PostIdeasPage    },
+                    { name: 'draftIdeas',   path: 'draft',        component: DraftIdeasPage   },
+                    { name: 'stockEvents',  path: 'events/stock', component: StockEventsPage  },
+                    { name: 'followers',    path: 'followers',    component: FollowersPage    },
+                    { name: 'following',    path: 'following',    component: FollowingPage    },
+                    { name: 'notification', path: 'notification', component: NotificationPage },
                 ]
             },
             {
@@ -108,20 +121,6 @@ const routes = [
                 component: UserSearchPage,
             },
             {
-                // メッセージ一覧画面
-                name: 'messages',
-                path: 'messages',
-                component: MessageHomePage,
-                meta: { requiresAuth: true },
-                children: [
-                    {
-                        name: 'messageDisplay',
-                        path: 'message/:userId',
-                        component: MessageDisplayPage,
-                    }
-                ]
-            },
-            {
                 // イベント一覧画面
                 name: 'events',
                 path: 'events',
@@ -132,6 +131,20 @@ const routes = [
                     { name: 'comingEvents', path: 'coming', component: ComingEventsPage }
                 ]
             },
+            // {
+            //     // メッセージ一覧画面
+            //     name: 'messages',
+            //     path: 'messages',
+            //     component: MessageHomePage,
+            //     meta: { requiresAuth: true },
+            //     children: [
+            //         {
+            //             name: 'messageDisplay',
+            //             path: 'message/:userId',
+            //             component: MessageDisplayPage,
+            //         }
+            //     ]
+            // },
         ]
     },
     {
@@ -142,8 +155,8 @@ const routes = [
         meta: { requiresAuth: true },
         redirect: { name: 'postNewIdea' },
         children: [
-            { name: 'postNewIdea',  path: 'new',  component: PostNewIdeaPage },
-            { name: 'editIdea',     path: 'edit/:ideaId', component: EditIdeaPage },
+            { name: 'postNewIdea',  path: 'new',          component: PostNewIdeaPage },
+            { name: 'editIdea',     path: 'edit/:ideaId', component: EditIdeaPage    },
         ]
     },
     {

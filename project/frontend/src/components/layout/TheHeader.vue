@@ -2,17 +2,32 @@
     <header>
         <ul class="nav-links">
             <li class="nav-link title"><router-link to="/ideas">カムトル</router-link></li>
-            <li class="nav-link"><router-link to="/user/search">仲間を探す</router-link></li>
-            <li class="nav-link"><router-link to="/ideas">アイデアを探す</router-link></li>
-            <li class="nav-link"><router-link to="/events">イベントを探す</router-link></li>
-            <li class="nav-link" v-if="!isLoggedIn"><router-link to="/signup">新規登録</router-link></li>
-            <li class="nav-link" v-if="!isLoggedIn"><router-link to="/login">ログイン</router-link></li>
+            <li class="nav-link search">
+                <FontAwesomeIcon class="icon" :icon="['fas', 'search']" size="lg" />
+                <div class="dropdown">
+                    <ul>
+                        <li class="dropdown-link"><router-link to="/user/search">仲間</router-link></li>
+                        <li class="dropdown-link"><router-link to="/ideas">アイデア</router-link></li>
+                        <li class="dropdown-link"><router-link to="/events">イベント</router-link></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-link auth" v-if="!isLoggedIn">
+                <FontAwesomeIcon class="icon" :icon="['fas', 'sign-in-alt']" size="2x" />
+                <div class="dropdown">
+                    <ul>
+                        <li class="dropdown-link"><router-link to="/signup">新規登録</router-link></li>
+                        <li class="dropdown-link"><router-link to="/login">ログイン</router-link></li>
+                    </ul>
+                </div>
+            </li>
             <li class="nav-link profile" v-if="isLoggedIn && loadComplete">
                 <img :src="profileImage" alt="profile">
                 <div class="dropdown">
                     <ul>
-                        <li class="dropdown-link"><router-link :to="userLink">マイページ</router-link></li>
-                        <li class="dropdown-link"><a href="#" @click="logout">ログアウト</a></li>
+                        <li class="dropdown-link"><FontAwesomeIcon class="icon" :icon="['fas', 'user']" /><router-link :to="userLink">マイページ</router-link></li>
+                        <li class="dropdown-link"><FontAwesomeIcon class="icon" :icon="['fas', 'bell']" /><router-link :to="notificationLink">通知</router-link></li>
+                        <li class="dropdown-link"><FontAwesomeIcon class="icon" :icon="['fas', 'sign-out-alt']" /><a href="#" @click="logout">ログアウト</a></li>
                     </ul>
                 </div>
             </li>
@@ -38,6 +53,9 @@ export default {
         },
         userLink() {
             return { name: 'userprofile', params: { userId: this.userId } };
+        },
+        notificationLink() {
+            return { name: 'notification', params: { userId: this.userId }};
         },
         profileImage() {
             return this.user.prof_img;
@@ -100,14 +118,8 @@ li, a {
     border: none;
 }
 
-.nav-links .router-link-active {
-    border-bottom: 3px solid #ffbb3c;
-}
-
-.nav-link {
-    text-align: center;
-    font-size: 16px;
-    width: 8rem;
+.nav-link:not(:nth-child(1)):not(:nth-last-child(1)) {
+    margin-right: 0.5rem;
 }
 
 .nav-link a {
@@ -116,25 +128,21 @@ li, a {
     height: 100%;
 }
 
-.nav-link:not(:nth-child(1)):not(:nth-last-child(1)):hover {
-    background-color: #ffe0a7;
-}
-
 .title {
     font-size: 28px;
     margin-right: auto;
 }
 
-.title a {
-    border: none !important;
-}
-
+.nav-links .search,
+.nav-links .auth,
 .nav-links .profile {
     position: relative;
     width: 50px;
     height: 50px;
 }
 
+.nav-links .search .icon,
+.nav-links .auth .icon,
 .nav-links .profile img {
     position: absolute;
     left: 50%;
@@ -170,9 +178,18 @@ li, a {
     text-align: center;
 }
 
+.profile .dropdown-link {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.profile .dropdown-link .icon {
+    width: 3rem;
+}
+
 .dropdown-link a {
     line-height: 3rem;
-    border: none !important;
     color: #000;
 }
 

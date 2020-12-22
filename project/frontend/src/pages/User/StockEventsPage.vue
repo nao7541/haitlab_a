@@ -1,7 +1,7 @@
 <template>
-    <BaseProfileContent>
+    <BaseProfileContent v-if="loadComplete">
         <template #contentHeaderLinks>
-            <IdeaEventHeader />
+            <IdeaEventHeader :isMyProfile="isMyProfile" />
         </template>
         <template #contentBody>
             <EventElement
@@ -32,14 +32,25 @@ export default {
         return {
             eventIDs: [],
             events: [],
+            isMyProfile: false,
+            loadComplete: false,
         }
     },
     computed: {
         myEventIDs() {
             return this.$store.getters['myData/myEventIDs'];
+        },
+        myUserId() {
+            return this.$store.getters['auth/userId'];
         }
     },
     created() {
+        // 自分のプロフィールかを確認
+        const paramUserId = this.$route.params['userId'];
+        if (paramUserId == this.myUserId) {
+            this.isMyProfile = true;
+        }
+
         if (this.myEventIDs != null) {
             this.eventIDs = this.myEventIDs;
 
@@ -53,6 +64,8 @@ export default {
                 for (const res of results) {
                     this.events.push(res);
                 }
+
+                this.loadComplete = true;
             }).catch( err => {
                 console.log("error to load stock events at StockEventsPage: ", err);
             })
