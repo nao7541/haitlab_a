@@ -5,10 +5,9 @@
                 <h3>観点</h3>
             </div>
             <div class="content">
-                <p>{{ ideaData.feedbackPoint }}</p>
+                <p>{{ ideaData.feedback_point }}</p>
             </div>
         </div>
-        
     </div>
 </template>
 

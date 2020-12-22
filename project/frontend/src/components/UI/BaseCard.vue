@@ -8,7 +8,7 @@
 .card {
     text-align: center;
     background-color: #ffffff;
-    margin: 2rem auto 0;
+    margin: 0 auto;
 }
 
 .rounded {

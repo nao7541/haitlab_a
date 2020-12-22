@@ -4,25 +4,25 @@
             <template #form>
                 <form @submit.prevent="login">
                     <h1>ログイン</h1>
-                    <div class="form-control" :class="{invalid: !username.isValid}">
-                        <label for="username">Username</label>
-                        <p v-if="!username.isValid">username must be filled</p>
+                    <div class="form-control" :class="{invalid: !username.isBlank}">
+                        <label for="username">ユーザー名 <span class="necessary">[必須]</span></label>
+                        <p v-if="!username.isBlank">ユーザー名は必須項目です</p>
                         <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
                     </div>
-                    <div class="form-control" :class="{invalid: !email.isValid}">
-                        <label for="email">Email</label>
-                        <p v-if="!email.isValid">email must be filled</p>
+                    <div class="form-control" :class="{invalid: !email.isBlank}">
+                        <label for="email">メールアドレス <span class="necessary">[必須]</span></label>
+                        <p v-if="!email.isBlank">メールアドレスは必須項目です</p>
                         <input type="email" id="email" name="email" v-model.trim="email.val" @blur="clearValidity('email')">
                     </div>
-                    <div class="form-control" :class="{invalid: !password.isValid}">
-                        <label for="password">Password</label>
-                        <p v-if="!password.isValid">password must be filled</p>
+                    <div class="form-control" :class="{invalid: !password.isBlank}">
+                        <label for="password">パスワード <span class="necessary">[必須]</span></label>
+                        <p v-if="!password.isBlank">パスワードは必須項目です</p>
                         <input type="password" id="password" name="password" v-model="password.val" @blur="clearValidity('password')">
                     </div>
                     <div class="form-control forget">
-                        <a href="#">forget password?</a>
+                        <a href="#">パスワードを忘れましたか?</a>
                     </div>
-                    <BaseButton class="submit">Submit</BaseButton>
+                    <BaseButton class="submit">送信</BaseButton>
                 </form>
             </template>
         </AuthModel>
@@ -39,52 +39,52 @@ export default {
         return {
             username: {
                 val: '',
-                isValid: true,
+                isBlank: true,
             },
             email: {
                 val: '',
-                isValid: true,
+                isBlank: true,
             },
             password: {
                 val: '',
-                isValid: true,
+                isBlank: true,
             },
             isFormValid: true,
         };
     },
     methods: {
         clearValidity(input) {
-            this[input].isValid = true;
+            this[input].isBlank = true;
         },
         clearForm() {
             this.username = {
                 val: '',
-                isValid: true,
+                isBlank: true,
             };
             this.email = {
                 val: '',
-                isValid: true,
+                isBlank: true,
             };
             this.password = {
                 val: '',
-                isValid: true,
+                isBlank: true,
             };
         },
         formValidation() {
             this.isFormValid = true;
 
             if (this.username.val === '') {
-                this.username.isValid = false;
+                this.username.isBlank = false;
                 this.isFormValid = false;
             }
 
             if (this.email.val === '') {
-                this.email.isValid = false;
+                this.email.isBlank = false;
                 this.isFormValid = false;
             }
 
             if (this.password.val === '') {
-                this.password.isValid = false;
+                this.password.isBlank = false;
                 this.isFormValid = false;
             }
         },
@@ -93,6 +93,7 @@ export default {
 
             // not to login if the form is invalid
             if (!this.isFormValid) {
+                this.clearForm();
                 return;
             }
 
@@ -107,7 +108,7 @@ export default {
             this.clearForm();
 
             // redirect to /ideas
-            this.$router.replace('/');
+            this.$router.replace({ name: 'ideas' });
         }
     }
 }
@@ -116,10 +117,11 @@ export default {
 <style scoped>
 form h1 {
     font-size: 28px;
+    margin-bottom: 2rem;
 }
 
 .form-control {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .form-control p {
@@ -128,16 +130,18 @@ form h1 {
 }
 
 .form-control label {
+    font-size: 17px;
+    font-weight: bold;
     text-align: left;
     display: block;
-    margin: 0;
-    font-weight: bold;
+    margin-bottom: 0.25rem;
 }
 
 .form-control input {
     font-size: 16px;
     width: 100%;
-    padding: .5rem;
+    line-height: 1.5rem;
+    padding-left: 0.5rem;
     border: none;
     border-bottom: 1px solid #aaaaaa;
     outline: none;
@@ -148,6 +152,8 @@ form h1 {
 }
 
 .submit {
+    font-size: 18px;
+    font-weight: bold;
     background-color: #ffeece;
 }
 
@@ -157,11 +163,19 @@ form h1 {
 }
 
 .forget a {
-    text-decoration: none;
-    color: #ff8fab;
+    color: #ff3535;
 }
 
-.invalid label {
-    color: #ff4a4a;
+.necessary {
+    font-size: 14px;
+    color: #ff3535;
+}
+
+.invalid p {
+    color: #ff3535;
+}
+
+.invalid input {
+    border-color: #ff3535;
 }
 </style>
