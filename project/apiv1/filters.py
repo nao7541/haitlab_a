@@ -59,7 +59,7 @@ class ReputationFilter(filters.FilterSet):
 
     class Meta:
         model = ReputationMap
-        fields = ['user', 'idea', 'name']
+        fields = ['user', 'idea',]
 
 class UserFollowingFilter(filters.FilterSet):
     user_id = filters.CharFilter(lookup_expr='exact')
