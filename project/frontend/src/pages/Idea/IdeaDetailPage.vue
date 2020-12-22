@@ -124,20 +124,6 @@
                         <p>{{ userDetail.intro }}</p>
                     </div>
                 </section>
-                <section class="comment-list">
-                    <CommentBox 
-                        v-for="comment in comments"
-                        :key="comment.id"
-                        :userId="comment.user_id"
-                    >
-                        <template #date>
-                            <small class="comment-date">{{ comment.comment_date }}</small>
-                        </template>
-                        <template #message>
-                            <p>{{ comment.comment }}</p>
-                        </template>
-                    </CommentBox>
-                </section>
             </section>
         </div>
     </div>
@@ -145,12 +131,10 @@
 
 <script>
 import apiHelper from '@/services/apiHelper.js';
-import CommentBox from '@/components/Idea/CommentBox.vue';
 import IdeaDetailTab from '@/components/Idea/IdeaDetailTab.vue';
 
 export default {
     components: {
-        CommentBox,
         IdeaDetailTab,
     },
     data() {
@@ -166,9 +150,9 @@ export default {
             // tag
             tags: [],
             // comment
-            comments: [],
-            commentInput: '',
-            isFormValid: true,
+            // comments: [],
+            // commentInput: '',
+            // isFormValid: true,
             // reputation
             reputationCount: 0,
             reputationState: false,
@@ -202,49 +186,8 @@ export default {
         myUserId() {
             return this.$store.getters['auth/userId'];
         },
-        stateColor() {
-            return (name) => {
-                return this.reputationState[name] ? 'clicked' : 'not-yet-clicked';
-            }
-        },
     },
     methods: {
-        //TODO: comment postの入力許可改善
-        formValidation() {
-            this.isFormValid = true;
-
-            if (this.commentInput.length === 0) {
-                this.isFormValid = false;
-            }
-        },
-        postComment() {
-            // ログイン状態の確認
-            if (!this.$store.getters['auth/isLoggedIn']) {
-                // ログインしていない時はログイン画面に遷移
-                this.$router.replace({ name: 'login' });
-            }
-
-            // コメント入力が不適切な場合は受け付けない
-            this.formValidation();
-            if (!this.isFormValid) {
-                return;
-            }
-
-            // コメントを投稿
-            apiHelper.postComment({
-                idea_id: this.ideaId,
-                user_id: this.myUserId,
-                comment: this.commentInput
-            }).then( res => {
-                console.log(res);
-            }).catch( err => {
-                console.log("error to post comment: ", err);
-            });
-
-            this.commentInput = ''; // コメントの初期化
-            //TODO: コメント投稿後の画面遷移でトップに画面上部に戻れるようにする
-            this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.ideaId }}); // reload
-        },
         getMean(arr) {
             const sum = arr.reduce((s, e) => s + e);
             const mean = sum / arr.length;
@@ -296,20 +239,6 @@ export default {
                 console.log("error to remove reputation at IdeaDetailPage: ", err);
             })
         },
-        // reputationClicked(name) { // nameはinteresting, novelty, possibility
-        //     // 自分のアイデアには評価できない
-        //     if (this.isMyIdea) {
-        //         return;
-        //     }
-
-        //     if (this.reputationState[name]) {
-        //         // もし評価済みの場合は評価を外す
-        //         this.removeReputation(name);                
-        //     } else {
-        //         // もし未評価の場合は評価を追加する
-        //         this.addReputation(name);
-        //     }
-        // },
         publishIdea() {
             apiHelper.publishIdea(this.ideaDetail, this.ideaId)
             .then(() => {
@@ -331,41 +260,46 @@ export default {
                 console.log("error to delete idea: ", err);
             })
         },
+        setReputation(id, user, idea, interesting, novelty, possibility, state) {
+            this.myReputation.reputation_id = id;
+            this.myReputation.user = user;
+            this.myReputation.idea = idea;
+            this.myReputation.interesting = interesting;
+            this.myReputation.novelty = novelty;
+            this.myReputation.possibility = possibility;
+
+            // formの値に反映する
+            this.reputationInput.interesting = this.myReputation.interesting;
+            this.reputationInput.novelty = this.myReputation.novelty;
+            this.reputationInput.possibility = this.myReputation.possibility;
+
+            // 評価済みにする
+            this.reputationState = state;
+        },
         // reputationDataの初期化
         initReputation() {
             apiHelper.loadReputation(this.ideaId, this.myUserId) 
             .then( res => {
                 if (res != null) {
-                    // 登録済みなら初期化する
-                    this.myReputation.reputation_id = res.reputation_id;
-                    this.myReputation.user = res.user;
-                    this.myReputation.idea = res.idea;
-                    this.myReputation.interesting = res.interesting;
-                    this.myReputation.novelty = res.novelty;
-                    this.myReputation.possibility = res.possibility;
-
-                    // formの値に反映する
-                    this.reputationInput.interesting = this.myReputation.interesting;
-                    this.reputationInput.novelty = this.myReputation.novelty;
-                    this.reputationInput.possibility = this.myReputation.possibility;
-
-                    // 評価済みにする
-                    this.reputationState = true;
+                    this.setReputation(
+                        res.reputation_id, 
+                        res.user,
+                        res.idea,
+                        res.interesting,
+                        res.novelty,
+                        res.possibility,
+                        true
+                    )
                 } else {
-                    this.myReputation.reputation_id = null;
-                    this.myReputation.user = null;
-                    this.myReputation.idea = null;
-                    this.myReputation.interesting = 0;    
-                    this.myReputation.novelty = 0;
-                    this.myReputation.possibility = 0;
-
-                    // formの値に反映する
-                    this.reputationInput.interesting = this.myReputation.interesting;
-                    this.reputationInput.novelty = this.myReputation.novelty;
-                    this.reputationInput.possibility = this.myReputation.possibility;
-
-                    // 評価済みにする
-                    this.reputationState = false;
+                    this.setReputation(
+                        null, 
+                        null,
+                        null,
+                        0,
+                        0,
+                        0,
+                        false
+                    )
                 }
 
                 // reputaionCountの取得
@@ -403,19 +337,28 @@ export default {
             // user情報を取得
             this.userDetail = res;
 
-            return apiHelper.loadComments(this.ideaId);
-        }).then( res => {
-            // コメントを取得
-            this.comments = res;
-
             // 必要なロードが完了
             this.loadComplete = true;
         }).catch( err => {
             console.log("error to load idea detail: ", err);
         });
 
+
         // 評価の初期化
-        this.initReputation();
+        if (this.myUserId != null) {
+            this.initReputation();
+        } else {
+            // 未登録ユーザーの場合
+            this.setReputation(
+                null, 
+                null,
+                null,
+                0,
+                0,
+                0,
+                false
+            )
+        }
     }}
 </script>
 
@@ -569,55 +512,6 @@ main {
     background-color: #fff;
 }
 
-/* .container .sub-container {
-    margin-bottom: 3rem;
-}
-
-.container .sub-title {
-    font-size: 24px;
-    font-weight: bold;
-    border-bottom: 1px solid #ccc;
-}
-
-.container .content {
-    font-size: 18px;
-}
-
-.idea-footer {
-    border-top: 1px solid #bbb;
-    margin-top: 10rem;
-} */
-
-.comment-form input {
-    font-size: 18px;
-    width: 100%;
-    padding-left: 0.5rem;
-    outline: none;
-    border-bottom: 1.5px solid #333;
-}
-
-.comment-form input:focus {
-    border-bottom: 2px solid #ffb01e;
-}
-
-.comment-form .post-button {
-    text-align: right;
-}
-
-.comment-form button {
-    outline: none;
-    padding: 0.5rem 1rem;
-    margin: 2rem 1rem 0 0;
-    background: #ffe0a7;
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
-    transition: all 0.5s ease;
-}
-
-.comment-form button:hover {
-    background-color: #ffb01e;
-}
-
 .right-sidebar {
     width: 20rem;
 }
@@ -658,16 +552,5 @@ main {
 .right-sidebar .profile .intro {
     text-align: left;
     margin: 1rem 0;
-}
-
-.right-sidebar .comment-list {
-    background-color: #fff;
-    margin-left: 0.5rem;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px #0005;
-}
-
-.comment-list .comment-box {
-    border-bottom: 1px solid #ccc;
 }
 </style>
