@@ -183,7 +183,8 @@ export default {
 <style scoped>
 #profile-page {
     width: 80%;
-    margin: 2rem auto 0;
+    margin: 0 auto;
+    padding: 2rem 0;
     display: flex;
     justify-content: flex-start;
 }

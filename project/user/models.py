@@ -48,7 +48,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # 自己紹介文
     intro = models.TextField(verbose_name='自己紹介', max_length=300, null=True, blank=True)
     # 大学名
-    univ_name = models.CharField(verbose_name='大学名', max_length=30)
+    univ_name = models.CharField(verbose_name='大学名', max_length=30, null=True, blank=True)
     # 専攻
     major = models.CharField(verbose_name='学部・学科・専攻', max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

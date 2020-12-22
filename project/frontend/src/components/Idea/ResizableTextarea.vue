@@ -3,7 +3,6 @@
         @input="$emit('input', $event.target.value); resize($event)"
         :value=value
         maxlength="500"
-        rows="1"
     ></textarea>
 </template>
 
