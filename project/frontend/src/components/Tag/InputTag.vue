@@ -72,17 +72,27 @@ export default {
 <style scoped>
 
 .input-tag label {
+    font-size: 17px;
     font-weight: bold;
     display: block;
     text-align: left;
+    margin-bottom: 0.25rem;
 }
 
 .input-tag input {
     width: 100%;
     padding-left: 0.5rem;
-    height: 2rem;
-    border: 1px solid #ccc;
-    outline-color: #999;
+    line-height: 1.5rem;
+    outline: none;
+    border-bottom: 1px solid #aaa;
+}
+
+.input-tag input:focus {
+    border-bottom: 2px solid #ffb01e;
+}
+
+.added-tags {
+    margin-top: 0.5rem;
 }
 
 .added-tags .tag {

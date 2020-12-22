@@ -1,6 +1,7 @@
 <template>
     <div class="input-tag">
         <label for="tag">
+            {{ tagLabel }}
             <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
         </label>
         <input type="text" id="tag" name="tag" placeholder="Type tag" @keydown.enter="addTag" @blur="clearValidity">
@@ -16,6 +17,11 @@
 <script>
 export default {
     props: {
+        tagLabel: {
+            type: String,
+            required: false,
+            default: '',
+        },
         tags: {
             type: Array,
             required: true,
