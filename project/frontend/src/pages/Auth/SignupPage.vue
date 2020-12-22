@@ -110,7 +110,8 @@ export default {
                 this.isFormValid = false;
             }
 
-            if (this.password1 != this.password2) {
+            console.log(this.password1.val !== this.password2.val)
+            if (this.password1.val !== this.password2.val) {
                 this.matchPassword = false;
             }
         },
