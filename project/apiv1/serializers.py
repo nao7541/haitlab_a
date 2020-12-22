@@ -48,7 +48,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
 class ReputationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReputationMap
-        fields = ('reputation_id', 'user', 'idea', 'name')
+        fields = ('reputation_id', 'user', 'idea', 'interesting', 'novelty', 'possibility')
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
