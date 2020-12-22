@@ -9,7 +9,7 @@
                 </div>
                 <div class="form-control" :class="{invalid: !formData.username.isValid}">
                     <label for="username">ユーザー名</label>
-                    <p v-if="!formData.username.isValid">username should not be empty</p>
+                    <p v-if="!formData.username.isValid">ユーザー名は必須項目です</p>
                     <input type="text" id="username" name="username" v-model.trim="formData.username.val" @blur="clearValidity('username')">
                 </div>
                 <div class="form-control">
@@ -165,7 +165,7 @@ export default {
                 Promise.all(promises)
                 .then( () => {
                     // reload
-                    this.$router.go({ name: 'userprofile', params: { userId: this.userId }});   
+                    this.$router.replace({ name: 'userprofile', params: { userId: this.userId }});   
                 }).catch( err => {
                     console.log("error to post userTag: ", err);
                 })
@@ -181,13 +181,13 @@ export default {
                     return Promise.all(promises)
                 }).then( () => {
                     // reload
-                    this.$router.go({ name: 'userprofile', params: { userId: this.userId }});
+                    this.$router.replace({ name: 'userprofile', params: { userId: this.userId }});
                 }).catch(err => {
                     console.log("error to update tag: ", err)
                 })
             } else {
                 // reload
-                this.$router.go({ name: 'userprofile', params: { userId: this.userId }});
+                this.$router.replace({ name: 'userprofile', params: { userId: this.userId }});
             }
         }
     }
