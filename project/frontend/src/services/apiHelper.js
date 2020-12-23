@@ -417,9 +417,11 @@ export default {
 
         return responseData;
     },
-    async updateReputation(reputationId, reputation) {
+    async updateReputation(reputationId, ideaId, userId, reputation) {
         const url = '/reputations/' + reputationId + '/';
         const response = await api.put(url, {
+            idea: ideaId,
+            user: userId,
             interesting: reputation.interesting,
             novelty: reputation.novelty,
             possibility: reputation.possibility

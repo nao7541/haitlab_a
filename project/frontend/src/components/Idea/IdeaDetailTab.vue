@@ -3,6 +3,7 @@
         <li><router-link :to="overviewLink">概要</router-link></li>
         <li><router-link :to="detailInfoLink">詳細</router-link></li>
         <li><router-link :to="requirementsLink">募集</router-link></li>
+        <li><router-link :to="reputationLink">評価</router-link></li>
         <li><router-link :to="feedbackLink">フィードバック</router-link></li>
     </ul>
 </template>
@@ -18,6 +19,9 @@ export default {
         },
         requirementsLink() {
             return { name: 'requirements' };
+        },
+        reputationLink() {
+            return { name: 'reputation' };
         },
         feedbackLink() {
             return { name: 'feedback' };
