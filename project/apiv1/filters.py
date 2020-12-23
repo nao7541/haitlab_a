@@ -14,6 +14,7 @@ class UserFilter(filters.FilterSet):
         model = CustomUser
         fields = ['user_id', 'username']
 
+
 class IdeaFilter(filters.FilterSet):
     # ユーザーID, 状態でフィルタリング
     state = filters.CharFilter(lookup_expr='exact')
@@ -22,13 +23,16 @@ class IdeaFilter(filters.FilterSet):
         model = PostIdea
         fields = ['user_id', 'state']
 
+
 class TagFilter(filters.FilterSet):
     # タグ名でフィルタリング
-    tag_name = filters.CharFilter(field_name="tag_name", lookup_expr='contains')
+    tag_name = filters.CharFilter(field_name="tag_name",
+                                lookup_expr='contains')
 
     class Meta:
         model = Tag
         fields = ['tag_name',]
+
 
 class UserTagFilter(filters.FilterSet):
     # Userモデルのuser_idでフィルタリング
@@ -37,6 +41,7 @@ class UserTagFilter(filters.FilterSet):
         model = UserTagMap
         fields = ['user',]
 
+
 class IdeaTagFilter(filters.FilterSet):
     # idea_id、タグ名でフィルタリング
 
@@ -44,13 +49,15 @@ class IdeaTagFilter(filters.FilterSet):
         model = IdeaTagMap
         fields = ['idea', 'tag']
 
+
 class EventStockFilter(filters.FilterSet):
     # user_id, event_idでフィルタリング
 
     class Meta:
         model = EventStock
         fields = ['user', 'event']
-    
+
+
 class ReputationFilter(filters.FilterSet):
     # user_id, event_id, でフィルタリング
 
@@ -58,11 +65,13 @@ class ReputationFilter(filters.FilterSet):
         model = ReputationMap
         fields = ['user', 'idea',]
 
+
 class UserFollowingFilter(filters.FilterSet):
 
     class Meta:
         model = UserFollowing
         fields = ['user_id', 'following_user_id']
+
 
 class FeedbackQuestionFilter(filters.FilterSet):
 
@@ -70,11 +79,13 @@ class FeedbackQuestionFilter(filters.FilterSet):
         model = FeedbackQuestion
         fields = ['idea_id']
 
+
 class FeedbackFilter(filters.FilterSet):
 
     class Meta:
         model = Feedback
         fields = ['feedback_question_id']
+
 
 class MessageFilter(filters.FilterSet):
 

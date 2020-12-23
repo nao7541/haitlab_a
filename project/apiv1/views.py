@@ -14,15 +14,17 @@ from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 from message.models import Message
 from .serializers import (UserSerializer, EventSerializer, IdeaSerializer,
-                        FeedbackSerializer, TagSerializer, UserTagMapSerializer,
-                        IdeaTagMapSerializer, EventStockSerializer, FollowingSerializer,
-                        FollowersSerializer, ReputationSerializer, FeedbackQuestionSerializer,
-                        MessageSerializer)
+                        FeedbackSerializer, TagSerializer,
+                        UserTagMapSerializer, IdeaTagMapSerializer,
+                        EventStockSerializer, FollowingSerializer,
+                        FollowersSerializer, ReputationSerializer,
+                        FeedbackQuestionSerializer, MessageSerializer)
 from .permissions import IsAuthorOrReadOnly
 from .filters import (UserFilter, IdeaFilter, TagFilter, UserTagFilter,
                     IdeaTagFilter, EventStockFilter, ReputationFilter,
-                    UserFollowingFilter, FeedbackQuestionFilter, FeedbackFilter,
-                    MessageFilter)
+                    UserFollowingFilter, FeedbackQuestionFilter,
+                    FeedbackFilter, MessageFilter)
+
 
 class UserViewset(mixins.RetrieveModelMixin,
                 mixins.UpdateModelMixin,
@@ -35,6 +37,7 @@ class UserViewset(mixins.RetrieveModelMixin,
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = UserFilter
 
+
 class EventViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
     # 開催時期が近い順に並び替える
@@ -44,12 +47,15 @@ class EventViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         return Event.objects.all().filter(event_schedule__gt=datetime.now())
 
+
 class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
     adapter_class = TwitterOAuthAdapter
 
+
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
 
 class IdeaViewset(viewsets.ModelViewSet):
 
@@ -58,11 +64,13 @@ class IdeaViewset(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = IdeaFilter
 
+
 class FeedbackViewset(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = FeedbackFilter
+
 
 class ReputationViewSet(viewsets.ModelViewSet):
     queryset = ReputationMap.objects.all()
@@ -70,11 +78,13 @@ class ReputationViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ReputationFilter
 
+
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = TagFilter
+
 
 class UserTagMapViewSet(viewsets.ModelViewSet):
     queryset = UserTagMap.objects.all()
@@ -82,17 +92,20 @@ class UserTagMapViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = UserTagFilter
 
+
 class IdeaTagMapViewSet(viewsets.ModelViewSet):
     queryset = IdeaTagMap.objects.all()
     serializer_class = IdeaTagMapSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = IdeaTagFilter
 
+
 class EventStockViewSet(viewsets.ModelViewSet):
     queryset = EventStock.objects.all()
     serializer_class = EventStockSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = EventStockFilter
+
 
 class UserFollowingViewSet(viewsets.ModelViewSet):
 
@@ -102,11 +115,13 @@ class UserFollowingViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = UserFollowingFilter
 
+
 class FeedbackQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = FeedbackQuestionSerializer
     queryset = FeedbackQuestion.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = FeedbackQuestionFilter
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
