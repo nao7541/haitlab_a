@@ -43,22 +43,33 @@ class PostIdea(models.Model):
    def __str__(self):
        return "No. " + str(self.idea_id)
 
+class FeedbackQuestion(models.Model):
+    feedback_question_id = models.AutoField(primary_key=True, verbose_name='question_id')
+    idea = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name='feedback先のアイデア')
+    # 投稿者が抱えている悩み、質問
+    question = models.TextField(max_length=255, verbose_name="質問")
+
+    def __str__(self):
+        return "question_to_" + str(self.idea_id) + '_' + str(self.feedback_question_id)
+
 class Feedback(models.Model):
     class Meta:
         db_table = "Feedback"
 
     feedback_id = models.AutoField(primary_key=True, verbose_name="フィードバックID")
     # どの投稿に対してコメントを送ったか (自動生成されるkeyに対して外部キー設定)
-    idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name="アイデアID")
+    #idea_id = models.ForeignKey(PostIdea, on_delete=models.CASCADE, verbose_name="アイデアID")
     # フィードバックを送ったユーザ
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="フィードバックユーザ")
+    # feedbackquestion(外部キー)
+    feedback_question_id = models.ForeignKey(FeedbackQuestion, on_delete=models.CASCADE, verbose_name='投稿者の質問')
     # フィードバックを送った日時
     feedback_date = models.DateTimeField(default=timezone.now, verbose_name="コメント投稿日")
     # フィードバック
     feedback = models.TextField(max_length=255, verbose_name="フィードバック")
 
     def __str__(self):
-        return str(self.user_id) + "to" + str(self.post_id)
+        return str(self.user_id) + "_" + str(self.feedback_question_id)
 
 class ReputationMap(models.Model):
     reputation_id = models.AutoField(primary_key=True, verbose_name='reputationのID')

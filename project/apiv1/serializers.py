@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Feedback, ReputationMap
+from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
+from message.models import Message
 
 class FollowingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,7 +44,7 @@ class IdeaSerializer(serializers.ModelSerializer):
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ('feedback_id','idea_id', 'user_id', 'feedback_date', 'feedback')
+        fields = ('feedback_id', 'user_id', 'feedback_question_id', 'feedback_date', 'feedback')
 
 class ReputationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,3 +70,13 @@ class EventStockSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventStock
         fields = ('stock_id', 'user', 'event')
+
+class FeedbackQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedbackQuestion
+        fields = ('feedback_question_id', 'idea', 'question')
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('message_id', 'user_from', 'user_to', 'message')
