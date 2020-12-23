@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apiv1',
     'event',
     'tag',
+    'message',
     # サードパーティーのライブラリ
     'corsheaders',
     'allauth',

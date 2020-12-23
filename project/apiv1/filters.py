@@ -1,9 +1,10 @@
 from django_filters import rest_framework as filters
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Feedback, ReputationMap
+from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
+from message.models import Message
 
 class UserFilter(filters.FilterSet):
     # ユーザーID, usernameでフィルタリング
@@ -14,8 +15,8 @@ class UserFilter(filters.FilterSet):
         fields = ['user_id', 'username']
 
 class IdeaFilter(filters.FilterSet):
-    # ユーザーIDでフィルタリング
-    user_id = filters.CharFilter(lookup_expr='exact')
+    # ユーザーID, 状態でフィルタリング
+    state = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = PostIdea
@@ -31,7 +32,6 @@ class TagFilter(filters.FilterSet):
 
 class UserTagFilter(filters.FilterSet):
     # Userモデルのuser_idでフィルタリング
-    user = filters.CharFilter(field_name="user_id", lookup_expr='exact')
 
     class Meta:
         model = UserTagMap
@@ -39,7 +39,6 @@ class UserTagFilter(filters.FilterSet):
 
 class IdeaTagFilter(filters.FilterSet):
     # idea_id、タグ名でフィルタリング
-    idea = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = IdeaTagMap
@@ -47,23 +46,38 @@ class IdeaTagFilter(filters.FilterSet):
 
 class EventStockFilter(filters.FilterSet):
     # user_id, event_idでフィルタリング
-    user = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = EventStock
         fields = ['user', 'event']
     
 class ReputationFilter(filters.FilterSet):
-    # user_id, event_id, nameでフィルタリング
-    user = filters.CharFilter(lookup_expr='exact')
+    # user_id, event_id, でフィルタリング
 
     class Meta:
         model = ReputationMap
         fields = ['user', 'idea',]
 
 class UserFollowingFilter(filters.FilterSet):
-    user_id = filters.CharFilter(lookup_expr='exact')
 
     class Meta:
         model = UserFollowing
         fields = ['user_id', 'following_user_id']
+
+class FeedbackQuestionFilter(filters.FilterSet):
+
+    class Meta:
+        model = FeedbackQuestion
+        fields = ['idea_id']
+
+class FeedbackFilter(filters.FilterSet):
+
+    class Meta:
+        model = Feedback
+        fields = ['feedback_question_id']
+
+class MessageFilter(filters.FilterSet):
+
+    class Meta:
+        model = Message
+        fields = ['user_from', 'user_to']
