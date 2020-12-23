@@ -1,5 +1,5 @@
 <template>
-    <div id="idea-overview" v-if="loadComplete">
+    <div id="idea-feedback" v-if="loadComplete">
         <div class="container">
             <div class="container-title">
                 <h3>観点</h3>
@@ -31,7 +31,7 @@ export default {
             
             this.loadComplete = true;
         }).catch( err => {
-            console.log("error to get idea data at IdeaOverviewPage: ", err);
+            console.log("error to get idea data at IdeaFeedbackPage: ", err);
         })
     }
 }

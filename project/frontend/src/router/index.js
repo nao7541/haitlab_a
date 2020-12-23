@@ -13,6 +13,7 @@ import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 import IdeaOverviewPage from '@/pages/Idea/IdeaOverviewPage.vue';
 import IdeaDetailInfoPage from '@/pages/Idea/IdeaDetailInfoPage.vue';
 import IdeaRequirementsPage from '@/pages/Idea/IdeaRequirementsPage.vue';
+import IdeaReputationPage from '@/pages/Idea/IdeaReputationPage.vue';
 import IdeaFeedbackPage from '@/pages/Idea/IdeaFeedbackPage.vue';
 // Idea Post
 import IdeaPostPage from '@/pages/Idea/IdeaPostPage.vue';
@@ -74,6 +75,7 @@ const routes = [
                     { name: 'overview',     path: 'overview',     component: IdeaOverviewPage },
                     { name: 'detailInfo',   path: 'detailInfo',   component: IdeaDetailInfoPage },
                     { name: 'requirements', path: 'requirements', component: IdeaRequirementsPage },
+                    { name: 'reputation',   path: 'reputation',   component: IdeaReputationPage },
                     { name: 'feedback',     path: 'feedback',     component: IdeaFeedbackPage },
                 ]
             },

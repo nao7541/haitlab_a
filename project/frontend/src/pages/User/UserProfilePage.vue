@@ -36,6 +36,10 @@
                         <span><FontAwesomeIcon :icon="['fas', 'book-open']" size="lg"/></span>
                         <span>{{ userDetail.major }}</span>
                     </div>
+                    <div class="info-row">
+                        <span><FontAwesomeIcon :icon="['fas', 'address-card']" size="lg" /></span>
+                        <span><a :href="userDetail.portfolio">{{ userDetail.portfolio }}</a></span>
+                    </div>
                     <div class="edit-profile" v-if="isMyProfile">
                         <router-link to="/settings">
                             <span>Edit Profile</span>
