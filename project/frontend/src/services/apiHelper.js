@@ -25,6 +25,7 @@ export default {
         formData.append('intro', userData.intro);
         formData.append('univ_name', userData.univ_name);
         formData.append('major', userData.major);
+        formData.append('portfolio', userData.portfolio);
 
         // 画像はnullでない場合のみ更新する
         if (userData.prof_img !== null) {
@@ -205,31 +206,6 @@ export default {
         const responseData = await response.data;
 
         return responseData;
-    },
-
-    // ------------------------------ Comments ------------------------------ //
-    async loadComments(ideaId) {
-        // TODO: django-filterによるフィルタリング
-        // ideaIdをキーとしてアイデアに関係のあるコメントのみ取得
-        const url = '/comment/';
-        const response = await api.get(url);
-        const allCom = await response.data;
-        const filteredCom = [];
-
-        // コメントのフィルタリング
-        for (const com of allCom) {
-            if (com.idea_id == ideaId) {
-                filteredCom.push(com);
-            }
-        }
-        
-        return filteredCom;
-    }, 
-    async postComment(commentData) {
-        const url = '/comment/';
-        const response = await api.post(url, commentData);
-        
-        return response;
     },
 
     // ------------------------------ Tags ------------------------------ //
@@ -441,6 +417,17 @@ export default {
 
         return responseData;
     },
+    async updateReputation(reputationId, reputation) {
+        const url = '/reputations/' + reputationId + '/';
+        const response = await api.put(url, {
+            interesting: reputation.interesting,
+            novelty: reputation.novelty,
+            possibility: reputation.possibility
+        });
+        const responseData = await response.data;
+
+        return responseData;
+    },
     async deleteReputation(repId) {
         const url = '/reputations/' + repId + '/';
         const response = await api.delete(url);
@@ -453,7 +440,7 @@ export default {
         const response = await api.get(url);
         const responseData = await response.data;
 
-        return responseData;
+        return responseData[0];
     },
     // 指定されたアイデアの評価を全て読み込む
     async loadIdeaReputations(ideaId) {
@@ -463,19 +450,19 @@ export default {
 
         return responseData;
     },
-    // 引数で渡された、idea, user, nameにあうreputationのidを返す
-    async getReputationId(ideaId, userId) {
-        const url = '/reputations/?idea=' + ideaId + '&user=' + userId;
-        const response = await api.get(url);
-        const responseData = await response.data;
-
-        return responseData[0].reputation_id;
-    },
     async countIdeaReputation(ideaId) {
         const url = '/reputations/?idea=' + ideaId;
         const response = await api.get(url);
         const reputations = await response.data;
 
         return reputations.length;
+    },
+    // 評価済みか否かを確認
+    async getReputationState(ideaId, userId) {
+        const url = '/reputations/?idea=' + ideaId + '&user=' + userId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData.length > 0;
     }
 }

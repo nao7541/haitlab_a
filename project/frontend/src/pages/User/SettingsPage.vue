@@ -29,6 +29,10 @@
                     <ResizableTextarea idea="intro" v-model="formData.intro"/>
                 </div>
                 <div class="form-control">
+                    <label for="portfolio">ポートフォリオ</label>
+                    <input type="url" id="portfolio" name="portfolio" placeholder="https://example.com" pattern="https://.*" size="30" v-model="formData.portfolio">
+                </div>
+                <div class="form-control">
                     <InputTag tagLabel="タグ" :tags="inputTags" :maximum="5"/>
                 </div>
                 <BaseButton class="submit-btn">更新</BaseButton>
@@ -63,6 +67,7 @@ export default {
                 major: '',
                 email: null,
                 intro: '',
+                portfolio: '',
             },
             tags: [],    // 現時点でDBに格納されているtags
             inputTags: [], // ユーザーの入力を反映したtags
@@ -96,10 +101,11 @@ export default {
         initUserForm() {
             // すでに登録されている情報をフォームに反映する
             this.formData.username.val = this.userDetail.username;
-            this.formData.univ = this.userDetail.univ_name;
-            this.formData.major = this.userDetail.major;
-            this.formData.email = this.userDetail.email;
-            this.formData.intro = this.userDetail.intro;
+            this.formData.univ = this.userDetail.univ_name == null ? '' : this.userDetail.univ_name;
+            this.formData.major = this.userDetail.major == null ? '' : this.userDetail.major;
+            this.formData.email = this.userDetail.email == null ? '' : this.userDetail.email;
+            this.formData.intro = this.userDetail.intro == null ? '' : this.userDetail.intro;
+            this.formData.portfolio = this.userDetail.portfolio == null ? '' : this.userDetail.portfolio;
 
             if (this.userDetail.prof_img != null) {
                 this.previewImage = this.userDetail.prof_img;
@@ -142,9 +148,10 @@ export default {
                 username: this.formData.username.val,
                 email: this.formData.email,
                 prof_img: this.selectedImage,
-                intro: this.formData.intro,
-                univ_name: this.formData.univ,
-                major: this.formData.major,
+                intro: this.formData.intro == null ? '' : this.formData.intro,
+                univ_name: this.formData.univ == null ? '' : this.formData.univ,
+                major: this.formData.major == null ? '' : this.formData.major,
+                portfolio: this.formData.portfolio == null ? '' : this.formData.portfolio,
             };
             
             // userDetailの更新
