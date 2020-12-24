@@ -7,6 +7,7 @@ from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django_filters import rest_framework as filters
+from django.db.models import Count
 
 from user.models import CustomUser, EventStock, UserFollowing
 from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
@@ -80,10 +81,16 @@ class ReputationViewSet(viewsets.ModelViewSet):
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all()
+    #queryset = Tag.objects.all()
+
     serializer_class = TagSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = TagFilter
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        # カテゴリを、紐づいた記事数と一緒に取得し、その記事数順に並び替え
+        return queryset.annotate(post_count=Count('ideatagmap')).order_by('-post_count')
 
 
 class UserTagMapViewSet(viewsets.ModelViewSet):
