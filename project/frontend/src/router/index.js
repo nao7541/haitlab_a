@@ -7,7 +7,6 @@ import HomePage from '@/pages/HomePage.vue';
 import IdeasPage from '@/pages/Idea/IdeasPage.vue';
 import NewIdeasPage from '@/pages/Idea/NewIdeasPage.vue';
 import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
-import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
 import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 import IdeaOverviewPage from '@/pages/Idea/IdeaOverviewPage.vue';
@@ -26,14 +25,13 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 import UserProfilePage from '@/pages/User/UserProfilePage.vue';
 import SettingsPage from '@/pages/User/SettingsPage.vue';
 import UserSearchPage from '@/pages/User/UserSearchPage.vue';
-// import MessageHomePage from '@/pages/User/MessageHomePage.vue';
-// import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 import PostIdeasPage from '@/pages/User/PostIdeasPage.vue';
 import DraftIdeasPage from '@/pages/User/DraftIdeasPage.vue';
 import StockEventsPage from '@/pages/User/StockEventsPage.vue';
 import FollowersPage from '@/pages/User/FollowersPage.vue';
 import FollowingPage from '@/pages/User/FollowingPage.vue';
 import NotificationPage from '@/pages/User/NotificationPage.vue';
+import MessageDisplayPage from '@/pages/User/MessageDisplayPage.vue';
 // Event pages
 import EventHomePage from '@/pages/Event/EventHomePage.vue';
 import NewEventsPage from '@/pages/Event/NewEventsPage';
@@ -59,7 +57,6 @@ const routes = [
                 redirect: { name: 'newIdeas' },
                 children: [
                     { name: 'newIdeas',   path: 'new',   component: NewIdeasPage   },
-                    { name: 'trendIdeas', path: 'trend', component: TrendIdeasPage },
                     { name: 'tagIdeas',   path: 'tag',   component: TagIdeasPage   },
                     { name: 'RecommendIdeasPage', path: 'recommend', component: RecommendIdeasPage },
                 ]
@@ -107,7 +104,16 @@ const routes = [
                     { name: 'stockEvents',  path: 'events/stock', component: StockEventsPage  },
                     { name: 'followers',    path: 'followers',    component: FollowersPage    },
                     { name: 'following',    path: 'following',    component: FollowingPage    },
-                    { name: 'notification', path: 'notification', component: NotificationPage },
+                    {
+                        name: 'notification',
+                        path: 'notification',
+                        props: true,
+                        component: NotificationPage, 
+                        children: [
+                            { name: 'messageDisplay', path: 'message/:messageId', component: MessageDisplayPage },
+                        ]
+                    },
+                    
                 ]
             },
             {
@@ -133,20 +139,6 @@ const routes = [
                     { name: 'comingEvents', path: 'coming', component: ComingEventsPage }
                 ]
             },
-            // {
-            //     // メッセージ一覧画面
-            //     name: 'messages',
-            //     path: 'messages',
-            //     component: MessageHomePage,
-            //     meta: { requiresAuth: true },
-            //     children: [
-            //         {
-            //             name: 'messageDisplay',
-            //             path: 'message/:userId',
-            //             component: MessageDisplayPage,
-            //         }
-            //     ]
-            // },
         ]
     },
     {

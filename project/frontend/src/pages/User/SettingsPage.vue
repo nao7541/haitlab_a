@@ -172,7 +172,7 @@ export default {
                 Promise.all(promises)
                 .then( () => {
                     // reload
-                    this.$router.replace({ name: 'userprofile', params: { userId: this.userId }});   
+                    this.$router.go({ name: 'userprofile', params: { userId: this.userId }});   
                 }).catch( err => {
                     console.log("error to post userTag: ", err);
                 })
@@ -188,13 +188,13 @@ export default {
                     return Promise.all(promises)
                 }).then( () => {
                     // reload
-                    this.$router.replace({ name: 'userprofile', params: { userId: this.userId }});
+                    this.$router.go({ name: 'userprofile', params: { userId: this.userId }});
                 }).catch(err => {
                     console.log("error to update tag: ", err)
                 })
             } else {
                 // reload
-                this.$router.replace({ name: 'userprofile', params: { userId: this.userId }});
+                this.$router.go({ name: 'userprofile', params: { userId: this.userId }});
             }
         }
     }

@@ -10,8 +10,11 @@
             <p>{{ content }}</p>
         </div>
         <div class="idea-footer">
-            <div class="profile">
-                <img :src="profileImage" alt="profile" @click="imagePressed">
+            <div class="profile-image">
+                <img :src="profileImage" alt="profile">
+            </div>
+            <div class="username">
+                <span><router-link :to="userLink">{{ userDetail.username }}</router-link></span>
             </div>
             <div class="date">
                 <small>{{ idea_date }}</small>
@@ -50,11 +53,6 @@ export default {
             loadTag: false,
             loadUser: false,
         }
-    },
-    methods: {
-        imagePressed() {
-            this.$router.replace(this.userLink);
-        },
     },
     created() {
         // user_idよりユーザー情報を取得
@@ -97,12 +95,10 @@ export default {
     font-size: 22px;
     font-weight: bold;
     border-bottom: 1px solid #cccccc;
-    transition: all 0.25s ease-out;
 }
 
 .idea-header a:hover {
     color: #ffa600;
-    border-bottom: 1.2px solid #ffbb3c;
 }
 
 .tags::after {
@@ -118,25 +114,37 @@ export default {
 
 .idea-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
 
-.idea-footer .profile {
-    cursor: pointer;
+.username {
+    margin-right: auto;
 }
 
-.idea-footer .profile img {
-    z-index: 10;
+.username a {
+    color: #000;
+    text-decoration: none;
+}
+
+.username a:hover {
+    border-bottom: 1px solid #000;
+}
+
+.profile-image {
+    position: relative;
+    height: 50px;
+    width: 50px;
+}
+
+.profile-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color: #fff;
     width: 36px;
     height: 36px;
-    border-radius: 36px;
-    transition: all 0.25s ease-out;
-    padding: .15rem;
-}
-
-.idea-footer .profile img:hover {
-    box-shadow: 0 1px 2px #0005;
+    border-radius: 50%;
 }
 </style>

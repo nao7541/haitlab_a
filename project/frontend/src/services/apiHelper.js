@@ -209,6 +209,13 @@ export default {
     },
 
     // ------------------------------ Tags ------------------------------ //
+    async loadAllTags() {
+        const url = '/tag/';
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
     // tagの名前でタグを検索する
     async loadTagsByName(tagName) {
         const url = '/tag/?tag_name=' + tagName;
@@ -466,5 +473,34 @@ export default {
         const responseData = await response.data;
 
         return responseData.length > 0;
+    },
+
+    // ------------------------------ Reputation Map ------------------------------ //
+    // パラメーターとして渡したユーザーに届いたメッセージ一覧を取得
+    async loadReceivedMessages(userId) {
+        const url = '/messages/?user_to=' + userId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async loadMessage(messageId) {
+        const url = '/messages/' + messageId + '/';
+        const response = await api.get(url);
+        const responseData = await response.data;
+        
+        return responseData;
+    },
+    async sendMessage(messageData) {
+        const url = '/messages/';
+        const response = await api.post(url, {
+            user_from: messageData.user_from,
+            user_to: messageData.user_to,
+            title: messageData.title,
+            message: messageData.message,
+        });
+        const responseData = await response.data;
+
+        return responseData;
     }
 }
