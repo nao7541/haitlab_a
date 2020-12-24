@@ -20,8 +20,6 @@ export default {
     font-size: 16px;
     width: 100%;
     line-height: 2.5rem;
-    display: block;
-    text-decoration: none;
     color: #000;
     background-color: #6cdb51;
     cursor: pointer;
