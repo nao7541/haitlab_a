@@ -1,14 +1,25 @@
 <template>
-    <div class="input-tag">
-        <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
-        <div class="search-box">
-            <FontAwesomeIcon class="search-box__icon" :icon="['fas', 'search']" size="lg" />
-            <input type="text" id="tag" name="tag" class="search-box__input" placeholder="タグで検索" @keydown.enter="addTag" @blur="clearValidity">
+    <div class="search-tag">
+        <div class="hit-tags">
+            <span>人気のあるタグ</span>
+            <BaseTag v-for="(tag, index) in hitTags"
+                :key="index"
+                :name="tag.tag_name"
+                :clickable="true"
+                @clickTag="clickTag"
+            ></BaseTag>
         </div>
-        <div class="added-tags">
-            <div v-for="(tag, id) in tags" :key="id" class="tag">
-                <span class="name">{{tag}}</span>
-                <span class="delete" @click="deleteTag(id)"><FontAwesomeIcon :icon="['fas', 'times']" /></span>
+        <div class="search">
+            <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
+            <div class="search-box">
+                <FontAwesomeIcon class="search-box__icon" :icon="['fas', 'search']" size="lg" />
+                <input type="text" id="tag" name="tag" class="search-box__input" placeholder="タグで検索" @keydown.enter="addTag" @blur="clearValidity">
+            </div>
+            <div class="added-tags">
+                <div v-for="(tag, id) in searchTags" :key="id" class="tag">
+                    <span class="name">{{tag}}</span>
+                    <span class="delete" @click="deleteTag(id)"><FontAwesomeIcon :icon="['fas', 'times']" /></span>
+                </div>
             </div>
         </div>
     </div>
@@ -21,7 +32,11 @@ export default {
             type: String,
             required: false,
         },
-        tags: {
+        searchTags: {
+            type: Array,
+            required: true,
+        },
+        hitTags: {
             type: Array,
             required: true,
         },
@@ -42,7 +57,7 @@ export default {
         },
         tagValidation() {
             // tagの数が上限を超えていたら追加できないようにする
-            if (this.tags.length >= this.maximum) {
+            if (this.searchTags.length >= this.maximum) {
                 this.isTagValid = false;
             }
         },
@@ -58,23 +73,48 @@ export default {
             // 追加
             const val = event.target.value.trim();
             if (val.length > 0) {
-                this.tags.push(val);
+                this.searchTags.push(val);
                 event.target.value = '';
             }
         },
         deleteTag(index) {
-            this.tags.splice(index, 1);
+            this.searchTags.splice(index, 1);
+        },
+        clickTag(name) {
+             // 追加の認証
+            this.tagValidation();
+            if (!this.isTagValid) {
+                return;
+            }
+
+            this.searchTags.push(name);
         }
     }
 }
 </script>
 
 <style scoped>
+.hit-tags { 
+    padding: 1rem;
+    background-color: #fff;
+    margin-bottom: 1rem;
+}
 
-.input-tag label {
+.hit-tags span {
+    font-size: 20px;
     font-weight: bold;
     display: block;
-    text-align: left;
+}
+
+.hit-tags::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.search {
+    padding: 1rem;
+    margin-bottom: 2rem;
 }
 
 .search-box {

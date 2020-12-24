@@ -1,21 +1,12 @@
 <template>
     <div id="tag-idea__page">
-        <div class="hit-tags" v-if="loadHitTagComplete">
-            <span>人気のあるタグ</span>
-            <BaseTag v-for="(tag, index) in hitTags"
-                :key="index"
-                :name="tag.tag_name"
-                :clickable="true"
-                @clickTag="clickTag"
-            ></BaseTag>
-        </div>
-        <div class="search">
-            <SearchTag 
-                tagLabel="検索タグ"
-                :tags="searchTags"
-                :maximum="5"
-            />
-        </div>
+        <SearchTag 
+            v-if="loadHitTagComplete"
+            tagLabel="検索タグ"
+            :searchTags="searchTags"
+            :hitTags="hitTags"
+            :maximum="5"
+        />
         <IdeaBoard
             v-if="boardVisible"
             title="検索結果"
@@ -68,12 +59,6 @@ export default {
                 console.log("error to load hit tags: ", err);
             })
         },
-        clickTag(name) {
-            // TODO: 上限越えた時にメッセージ出るように
-            if (this.searchTags.length < 5) {
-                this.searchTags.push(name);
-            }
-        }
     },
     created() {
         this.loadHitTags();
@@ -154,27 +139,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.search {
-    padding: 1rem;
-    margin-bottom: 2rem;
-}
-
-.hit-tags { 
-    padding: 1rem;
-    background-color: #fff;
-}
-
-.hit-tags span {
-    font-size: 20px;
-    font-weight: bold;
-    display: block;
-}
-
-.hit-tags::after {
-    content: "";
-    display: block;
-    clear: both;
-}
-</style>
