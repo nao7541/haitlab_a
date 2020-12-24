@@ -4,19 +4,19 @@
             <template #form>
                 <form @submit.prevent="login">
                     <h1>ログイン</h1>
-                    <div class="form-control" :class="{invalid: !username.isBlank}">
+                    <div class="form-control" :class="{invalid: !username.isValid}">
                         <label for="username">ユーザー名 <span class="necessary">[必須]</span></label>
-                        <p v-if="!username.isBlank">ユーザー名は必須項目です</p>
+                        <p v-if="!username.isValid">ユーザー名は必須項目です</p>
                         <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
                     </div>
-                    <div class="form-control" :class="{invalid: !email.isBlank}">
+                    <div class="form-control" :class="{invalid: !email.isValid}">
                         <label for="email">メールアドレス <span class="necessary">[必須]</span></label>
-                        <p v-if="!email.isBlank">メールアドレスは必須項目です</p>
+                        <p v-if="!email.isValid">メールアドレスは必須項目です</p>
                         <input type="email" id="email" name="email" v-model.trim="email.val" @blur="clearValidity('email')">
                     </div>
-                    <div class="form-control" :class="{invalid: !password.isBlank}">
+                    <div class="form-control" :class="{invalid: !password.isValid}">
                         <label for="password">パスワード <span class="necessary">[必須]</span></label>
-                        <p v-if="!password.isBlank">パスワードは必須項目です</p>
+                        <p v-if="!password.isValid">パスワードは必須項目です</p>
                         <input type="password" id="password" name="password" v-model="password.val" @blur="clearValidity('password')">
                     </div>
                     <div class="form-control forget">
@@ -39,52 +39,52 @@ export default {
         return {
             username: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             email: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             password: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             isFormValid: true,
         };
     },
     methods: {
         clearValidity(input) {
-            this[input].isBlank = true;
+            this[input].isValid = true;
         },
         clearForm() {
             this.username = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
             this.email = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
             this.password = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
         },
         formValidation() {
             this.isFormValid = true;
 
             if (this.username.val === '') {
-                this.username.isBlank = false;
+                this.username.isValid = false;
                 this.isFormValid = false;
             }
 
             if (this.email.val === '') {
-                this.email.isBlank = false;
+                this.email.isValid = false;
                 this.isFormValid = false;
             }
 
             if (this.password.val === '') {
-                this.password.isBlank = false;
+                this.password.isValid = false;
                 this.isFormValid = false;
             }
         },
@@ -93,7 +93,6 @@ export default {
 
             // not to login if the form is invalid
             if (!this.isFormValid) {
-                this.clearForm();
                 return;
             }
 
@@ -142,7 +141,6 @@ form h1 {
     width: 100%;
     line-height: 1.5rem;
     padding-left: 0.5rem;
-    border: none;
     border-bottom: 1px solid #aaaaaa;
     outline: none;
 }
@@ -158,7 +156,6 @@ form h1 {
 }
 
 .submit:hover {
-    transition: all .25s ease-in;
     background-color: #ffe0a7;
 }
 

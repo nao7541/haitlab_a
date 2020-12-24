@@ -108,7 +108,7 @@ export default {
     margin: 0.5rem;
     border-radius: 4px;
     color: #333;
-    background-color: #ffe0a7;
+    background-color: #ddd;
 }
 
 .added-tags .tag .name {

@@ -3,7 +3,7 @@
         <div class="content-header">
             <slot name="contentHeaderLinks"></slot>
         </div>
-        <div class="content-e">
+        <div class="content-body">
             <slot name="contentBody"></slot>
         </div>
     </div>
@@ -11,6 +11,12 @@
 
 <style scoped>
 .content-header {
+    background-color: #fff;
     border-bottom: 1px solid #ddd;
+}
+
+.content-body {
+    background-color: #fff;
+    height: 50rem;
 }
 </style>

@@ -189,8 +189,10 @@ li, a {
 }
 
 .dropdown-link a {
+    display: block;
     line-height: 3rem;
     color: #000;
+    cursor: pointer;
 }
 
 .dropdown-link:hover {

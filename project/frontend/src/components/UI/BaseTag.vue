@@ -1,5 +1,5 @@
 <template>
-    <div class="base-tag">
+    <div class="base-tag" :class="{clickable: clickable}" @click="$emit('clickTag', name)">
         <span class="tag-icon"><FontAwesomeIcon :icon="['fas', 'tag']" /></span>
         <span class="tag-name">{{ name }}</span>
     </div>
@@ -11,6 +11,11 @@ export default {
         name: {
             type: String,
             required: true,
+        },
+        clickable: {
+            type: Boolean,
+            required: false,
+            default: false,
         }
     }
 }
@@ -31,4 +36,14 @@ export default {
 .base-tag .tag-icon {
     margin-right: 0.5rem;
 }
+
+.clickable:hover {
+    background-color: #ffe0a7;
+    cursor: pointer;
+}
+
+.clickable:active {
+    background-color: #ffbb3c;
+}
+
 </style>

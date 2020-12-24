@@ -1,33 +1,55 @@
 <template>
-    <div id="message-display">
-        <div class="message"
-            v-for="(message, index) in receiveMessages"
-            :key="index"
-        >
+    <div id="message-display" v-if="loadComplete">
+        <div class="title">
+            <h3>{{ message.title }}</h3>
+        </div>
+        <div class="content">
             <p>{{ message.message }}</p>
         </div>
     </div>
 </template>
 
 <script>
-import {db} from '@/plugins/firebase.js';
-
+import apiHelper from '@/services/apiHelper.js';
 export default {
     data() {
         return {
-            chatUserId: null,
-            sendMessages: [],
-            receiveMessages: [],
+            messageId: null,
+            loadComplete: false,
+            message: null,
+        }
+    },
+    methods: {
+        loadMessage() {
+            this.loadComplete = false;
+            this.messageId = this.$route.params['messageId'];
+
+            apiHelper.loadMessage(this.messageId)
+            .then( res => {
+                this.message = res;
+
+                this.loadComplete = true;
+            }).catch( err => {
+                console.log("error to load message: ", err);
+            })
         }
     },
     created() {
-        // チャット相手のuserId
-        this.chatUserId = this.$route.params['userId'];
+        this.loadMessage();
     },
-    firestore() {
-        return {
-            receiveMessages: db.collection('chat').orderBy('createdAt')
+    watch: {
+        $route() {
+            this.loadMessage();
         }
     }
 }
 </script>
+
+<style scoped>
+#message-display {
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    background-color: #fff;
+}
+</style>

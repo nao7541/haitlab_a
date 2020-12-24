@@ -4,25 +4,25 @@
             <template #form>
                 <form @submit.prevent="signUp">
                     <h1>新規登録</h1>
-                    <div class="form-control" :class="{invalid: !username.isBlank }">
+                    <div class="form-control" :class="{invalid: !username.isValid }">
                         <label for="username">ユーザー名 <span class="necessary">[必須]</span></label>
-                        <p v-if="!username.isBlank">ユーザー名は必須項目です</p>
+                        <p v-if="!username.isValid">ユーザー名は必須項目です</p>
                         <input type="text" id="username" name="username" v-model.trim="username.val" @blur="clearValidity('username')">
                     </div>
-                    <div class="form-control" :class="{invalid: !email.isBlank }">
+                    <div class="form-control" :class="{invalid: !email.isValid }">
                         <label for="email">メールアドレス <span class="necessary">[必須]</span></label>
-                        <p v-if="!email.isBlank">メールアドレスは必須項目です</p>
+                        <p v-if="!email.isValid">メールアドレスは必須項目です</p>
                         <input type="email" id="email" name="email" v-model.trim="email.val" @blur="clearValidity('email')">
                     </div>
-                    <div class="form-control" :class="{invalid: !password1.isBlank}">
+                    <div class="form-control" :class="{invalid: !password1.isValid}">
                         <label for="password1">パスワード <span class="necessary">[必須]</span></label>
-                        <p v-if="!password1.isBlank">パスワードは必須項目です</p>
+                        <p v-if="!password1.isValid">パスワードは必須項目です</p>
                         <input type="password" id="password1" name="password1" v-model="password1.val" @blur="clearValidity('password1'); clearMatchPassword();">
                     </div>
-                    <div class="form-control" :class="{invalid: !password2.isBlank || !matchPassword }">
+                    <div class="form-control" :class="{invalid: !password2.isValid || !matchPassword }">
                         <label for="password2">パスワード（確認用） <span class="necessary">[必須]</span></label>
-                        <p v-if="!password2.isBlank">パスワード（確認用）は必須項目です</p>
-                        <p v-if="password1.isBlank && password2.isBlank && !matchPassword">パスワードが一致していません</p>
+                        <p v-if="!password2.isValid">パスワード（確認用）は必須項目です</p>
+                        <p v-if="password1.isValid && password2.isValid && !matchPassword">パスワードが一致していません</p>
                         <input type="password" id="password2" name="password2" v-model="password2.val" @blur="clearValidity('password2')">
                     </div>
                     <BaseButton class="submit">送信</BaseButton>
@@ -43,19 +43,19 @@ export default {
         return {
             username: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             email: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             password1: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             password2: {
                 val: '',
-                isBlank: true,
+                isValid: true,
             },
             isFormValid: true,
             matchPassword: true,
@@ -63,7 +63,7 @@ export default {
     },
     methods: {
         clearValidity(input) {
-            this[input].isBlank = true;
+            this[input].isValid = true;
         },
         clearMatchPassword() {
             this.matchPassword = true;
@@ -71,19 +71,19 @@ export default {
         clearForm() {
             this.username = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
             this.email = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
             this.password1 = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
             this.password2 = {
                 val: '',
-                isBlank: true,
+                isValid: true,
             };
             this.matchPassword = true;
         },
@@ -91,26 +91,27 @@ export default {
             this.isFormValid = true;
 
             if (this.username.val === '') {
-                this.username.isBlank = false;
+                this.username.isValid = false;
                 this.isFormValid = false;
             }
 
             if (this.email.val === '') {
-                this.email.isBlank = false;
+                this.email.isValid = false;
                 this.isFormValid = false;
             }
 
             if (this.password1.val === '') {
-                this.password1.isBlank = false;
+                this.password1.isValid = false;
                 this.isFormValid = false;
             }
 
             if (this.password2.val === '') {
-                this.password2.isBlank = false;
+                this.password2.isValid = false;
                 this.isFormValid = false;
             }
 
-            if (this.password1 != this.password2) {
+            console.log(this.password1.val !== this.password2.val)
+            if (this.password1.val !== this.password2.val) {
                 this.matchPassword = false;
             }
         },
@@ -119,7 +120,6 @@ export default {
 
             // formが入力不足、パスワード違いの場合は認めない
             if (!this.isFormValid || !this.matchPassword) {
-                this.clearForm();
                 return;
             }
 

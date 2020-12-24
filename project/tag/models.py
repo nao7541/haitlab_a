@@ -3,6 +3,7 @@ from user.models import CustomUser
 from idea.models import PostIdea
 # Create your models here.
 
+
 class Tag(models.Model):
     # タグに振られるID
     tag_id = models.AutoField(primary_key=True, verbose_name='タグID')
@@ -11,6 +12,7 @@ class Tag(models.Model):
 
     def __str__(self):
         return str(self.tag_name)
+
 
 # ユーザーとそれぞれが持つタグの紐づけを行うモデル
 class UserTagMap(models.Model):
@@ -22,6 +24,7 @@ class UserTagMap(models.Model):
 
     def __str__(self):
         return str(self.user) + '_' + str(self.tag)
+
 
 
 class IdeaTagMap(models.Model):
