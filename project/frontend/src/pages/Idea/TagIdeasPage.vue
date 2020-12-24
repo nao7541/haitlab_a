@@ -1,5 +1,14 @@
 <template>
     <div id="tag-idea__page">
+        <div class="hit-tags" v-if="loadHitTagComplete">
+            <span>人気のあるタグ</span>
+            <BaseTag v-for="(tag, index) in hitTags"
+                :key="index"
+                :name="tag.tag_name"
+                :clickable="true"
+                @clickTag="clickTag"
+            ></BaseTag>
+        </div>
         <div class="search">
             <SearchTag 
                 tagLabel="検索タグ"
@@ -41,10 +50,33 @@ export default {
     },
     data() {
         return {
+            hitTags: [],
             searchTags: [],
             searchIdeas: [],
             loadComplete: false,
+            loadHitTagComplete: false,
         }
+    },
+    methods: {
+        loadHitTags() {
+            apiHelper.loadAllTags()
+            .then( res => {
+                this.hitTags = res;
+
+                this.loadHitTagComplete = true;
+            }).catch( err => {
+                console.log("error to load hit tags: ", err);
+            })
+        },
+        clickTag(name) {
+            // TODO: 上限越えた時にメッセージ出るように
+            if (this.searchTags.length < 5) {
+                this.searchTags.push(name);
+            }
+        }
+    },
+    created() {
+        this.loadHitTags();
     },
     watch: {
         // searchTagsに変更があればアイデアフィルタリングを実行
@@ -127,5 +159,22 @@ export default {
 .search {
     padding: 1rem;
     margin-bottom: 2rem;
+}
+
+.hit-tags { 
+    padding: 1rem;
+    background-color: #fff;
+}
+
+.hit-tags span {
+    font-size: 20px;
+    font-weight: bold;
+    display: block;
+}
+
+.hit-tags::after {
+    content: "";
+    display: block;
+    clear: both;
 }
 </style>

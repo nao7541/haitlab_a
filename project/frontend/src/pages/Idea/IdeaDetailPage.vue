@@ -39,7 +39,7 @@
                             <p>{{ userDetail.intro }}</p>
                         </div>
                     </div>
-                    <div class="message">
+                    <div class="message" v-if="!isMyIdea">
                         <MessageButton />
                     </div>
                 </div>

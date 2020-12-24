@@ -209,6 +209,13 @@ export default {
     },
 
     // ------------------------------ Tags ------------------------------ //
+    async loadAllTags() {
+        const url = '/tag/';
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
     // tagの名前でタグを検索する
     async loadTagsByName(tagName) {
         const url = '/tag/?tag_name=' + tagName;
