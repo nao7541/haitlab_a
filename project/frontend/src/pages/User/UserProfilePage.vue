@@ -1,5 +1,6 @@
 <template>
     <div id="profile-page" v-if="loadComplete">
+        <MessageModal v-if="messageModalState" :userTo="userDetail.user_id"></MessageModal>
         <section class="side">
             <div class="profile">
                 <div class="main-info">
@@ -22,6 +23,9 @@
                             <button @click="follow">{{ followLabel }}</button>
                         </div>
                     </div>
+                    <div class="message" v-if="!isMyProfile">
+                        <MessageButton />
+                    </div>
                 </div>
                 <div class="sub-info">
                     <div class="info-row">
@@ -40,7 +44,7 @@
                         <span><FontAwesomeIcon :icon="['fas', 'address-card']" size="lg" /></span>
                         <span><a :href="userDetail.portfolio">{{ userDetail.portfolio }}</a></span>
                     </div>
-                    <div class="edit-profile" v-if="isMyProfile">
+                    <div class="edit-profile" v-if="isMyProfile">   
                         <router-link to="/settings">
                             <span>Edit Profile</span>
                             <FontAwesomeIcon :icon="['far', 'edit']" size="lg" />
@@ -60,8 +64,14 @@
 
 <script>
 import apiHelper from '@/services/apiHelper.js'
+import MessageModal from '@/components/Message/MessageModal.vue';
+import MessageButton from '@/components/Message/MessageButton.vue';
 
 export default {
+    components: {
+        MessageModal,
+        MessageButton,
+    },
     data() {
         return {
             userDetail: null,
@@ -92,6 +102,9 @@ export default {
         },
         followLabel() {
             return this.isFollowing ? 'フォロー解除' : 'フォロー';
+        },
+        messageModalState() {
+            return this.$store.getters['modal/modalState'];
         }
     },
     methods: {
@@ -289,6 +302,10 @@ export default {
 
 .follow__btn button:focus {
     background-color: #c7912d;
+}
+
+.message {
+    margin-top: 0.5rem
 }
 
 .edit-profile a {

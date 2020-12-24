@@ -1,35 +1,7 @@
 <template>
     <div id="idea-detail">
+        <MessageModal v-if="messageModalState" :userTo="userDetail.user_id"></MessageModal>
         <div class="idea" v-if="loadComplete">
-            <!-- <section class="left-sidebar">
-                <div class="reputation">
-                    <div class="icon-btn interesting" :class="stateColor('interesting')" @click="reputationClicked('interesting')">
-                        <div class="popup">
-                            <span>面白さ</span>
-                        </div>
-                        <span class="count">{{ reputationCount['interesting'] }}</span>
-                        <FontAwesomeIcon class="icon" v-if="reputationState['interesting']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
-                        <FontAwesomeIcon class="icon" v-if="!reputationState['interesting']" :icon="['fas', 'bolt']" size="lg"></FontAwesomeIcon>
-                    </div>
-                    <div class="icon-btn novelty" :class="stateColor('novelty')" @click="reputationClicked('novelty')">
-                        <div class="popup">
-                            <span>新規性</span>
-                        </div>
-                        <span class="count">{{ reputationCount['novelty'] }}</span>
-                        <FontAwesomeIcon class="icon" v-if="reputationState['novelty']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
-                        <FontAwesomeIcon class="icon" v-if="!reputationState['novelty']" :icon="['fas', 'brain']" size="lg"></FontAwesomeIcon>
-                    </div>
-                    <div class="icon-btn possibility" :class="stateColor('possibility')" @click="reputationClicked('possibility')">
-                        <div class="popup">
-                            <span>実現可能性</span>
-                        </div>
-                        <span class="count">{{ reputationCount['possibility'] }}</span>
-                        <FontAwesomeIcon class="icon" v-if="reputationState['possibility']"  :icon="['fas', 'check']" size="lg"></FontAwesomeIcon>
-                        <FontAwesomeIcon class="icon" v-if="!reputationState['possibility']" :icon="['fas', 'dollar-sign']" size="lg"></FontAwesomeIcon>
-                    </div>
-                </div>
-            </section> -->
-
             <main>
                 <section class="container idea-header">
                     <div class="title">
@@ -57,15 +29,20 @@
                 </section>
             </main>
             <section class="right-sidebar">
-                <section class="profile">
-                    <div class="profile-image">
-                        <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
+                <div class="content">
+                    <div class="profile">
+                        <div class="profile-image">
+                            <router-link :to="userLink"><img :src="userDetail.prof_img"></router-link>
+                        </div>
+                        <h1>{{ userDetail.username }}</h1>
+                        <div class="intro">
+                            <p>{{ userDetail.intro }}</p>
+                        </div>
                     </div>
-                    <h1>{{ userDetail.username }}</h1>
-                    <div class="intro">
-                        <p>{{ userDetail.intro }}</p>
+                    <div class="message">
+                        <MessageButton />
                     </div>
-                </section>
+                </div>
             </section>
         </div>
     </div>
@@ -74,10 +51,14 @@
 <script>
 import apiHelper from '@/services/apiHelper.js';
 import IdeaDetailTab from '@/components/Idea/IdeaDetailTab.vue';
+import MessageModal from '@/components/Message/MessageModal.vue';
+import MessageButton from '@/components/Message/MessageButton.vue';
 
 export default {
     components: {
         IdeaDetailTab,
+        MessageModal,
+        MessageButton,
     },
     data() {
         return {
@@ -91,27 +72,6 @@ export default {
             ideaId: null,
             // tag
             tags: [],
-            // reputation
-            reputationCount: 0,
-            reputationState: false,
-            reputationData: { // ideaの評価値(5段階評価の平均を格納する)
-                interesting: 0,
-                novelty: 0,
-                possibility: 0,
-            },
-            myReputation: { // 自分のアイデアに対する評価情報
-                reputation_id: null,
-                user: null,
-                idea: null,
-                interesting: 0,
-                novelty: 0,
-                possibility: 0,
-            },
-            reputationInput: { // formのreputationの値
-                interesting: 0,
-                novelty: 0,
-                possibility: 0,
-            },
         };
     },
     computed: {
@@ -124,45 +84,11 @@ export default {
         myUserId() {
             return this.$store.getters['auth/userId'];
         },
+        messageModalState() {
+            return this.$store.getters['modal/modalState'];
+        }
     },
     methods: {
-        // updateReputationData() {
-        //     apiHelper.loadIdeaReputations(this.ideaId)
-        //     .then(res => {
-        //         // 評価の配列を取得
-        //         const reputationArray = {
-        //             interesting: res.map(reputation => reputation.interesting),
-        //             novelty:     res.map(reputation => reputation.novelty),
-        //             possibility: res.map(reputation => reputation.possibility),
-        //         }
-
-        //         // 配列より平均値を求める
-        //         this.reputationData = {
-        //             interesting: this.getMean(reputationArray.interesting),
-        //             novelty:     this.getMean(reputationArray.novelty),
-        //             possibility: this.getMean(reputationArray.possibility)
-        //         }
-        //     }).catch( err => {
-        //         console.log("error to udpate ReputationData: ", err);
-        //     })
-        // },
-        // reputate() {
-        //     apiHelper.addReputation(this.ideaId, this.myUserId, this.reputationInput)
-        //     .then( () => {
-        //         this.reputationState = true;
-
-        //         this.updateReputationData();
-        //     }).then( () => {
-                
-        //         // reputationを初期化する
-        //         this.initReputation();
-        //     }).catch( err => {
-        //         console.log("error to add reputation at IdeaDetailPage: ", err);
-        //     })
-        // },
-        // editReputation() {
-
-        // },
         publishIdea() {
             apiHelper.publishIdea(this.ideaDetail, this.ideaId)
             .then(() => {
@@ -184,58 +110,6 @@ export default {
                 console.log("error to delete idea: ", err);
             })
         },
-        // setReputation(id, user, idea, interesting, novelty, possibility, state) {
-        //     this.myReputation.reputation_id = id;
-        //     this.myReputation.user = user;
-        //     this.myReputation.idea = idea;
-        //     this.myReputation.interesting = interesting;
-        //     this.myReputation.novelty = novelty;
-        //     this.myReputation.possibility = possibility;
-
-        //     // formの値に反映する
-        //     this.reputationInput.interesting = this.myReputation.interesting;
-        //     this.reputationInput.novelty = this.myReputation.novelty;
-        //     this.reputationInput.possibility = this.myReputation.possibility;
-
-        //     // 評価済みにする
-        //     this.reputationState = state;
-        // },
-        // reputationDataの初期化
-        // initReputation() {
-        //     apiHelper.loadReputation(this.ideaId, this.myUserId) 
-        //     .then( res => {
-        //         if (res != null) {
-        //             this.setReputation(
-        //                 res.reputation_id, 
-        //                 res.user,
-        //                 res.idea,
-        //                 res.interesting,
-        //                 res.novelty,
-        //                 res.possibility,
-        //                 true
-        //             )
-        //         } else {
-        //             this.setReputation(
-        //                 null, 
-        //                 null,
-        //                 null,
-        //                 0,
-        //                 0,
-        //                 0,
-        //                 false
-        //             )
-        //         }
-
-        //         // reputaionCountの取得
-        //         apiHelper.countIdeaReputation(this.ideaId)
-        //     }).then( res => { 
-        //         this.reputationCount = res;
-
-        //         this.updateReputationData();
-        //     }).catch( err => {
-        //         console.log("error to init myReputation: ", err);
-        //     })
-        // }
     },
     created() {
         // router paramsより本アイデアのideaIdを取得
@@ -266,23 +140,6 @@ export default {
         }).catch( err => {
             console.log("error to load idea detail: ", err);
         });
-
-
-        // // 評価の初期化
-        // if (this.myUserId != null) {
-        //     this.initReputation();
-        // } else {
-        //     // 未登録ユーザーの場合
-        //     this.setReputation(
-        //         null, 
-        //         null,
-        //         null,
-        //         0,
-        //         0,
-        //         0,
-        //         false
-        //     )
-        // }
     }}
 </script>
 
@@ -294,70 +151,6 @@ export default {
     display: flex;
     justify-content: space-between;
 }
-
-/* .left-sidebar {
-    width: 10rem;
-} */
-
-/* .icon-btn {
-    margin: 2.5rem auto;
-    width: 64px;
-    height: 64px;
-    border-radius: 64px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.26);
-    cursor: pointer;
-    position: relative;
-}
-
-.count {
-    font-size: 18px;
-    font-weight: bold;
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.clicked { 
-    background-color: #ffbb3c;
-}
-
-.not-yet-clicked {
-    background-color: #fff;
-}
-
-.not-yet-clicked:hover {
-    background-color: #ffcf76;
-}
-
-.icon-btn .icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.popup {
-    font-size: 14px;
-    font-weight: bold;
-    background-color: #1e1e1eaa;
-    border-radius: 4px;
-    color: #fff;
-    text-align: center;
-    width: 6rem;
-    padding: 0.1rem 0.5rem;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.5s;
-}
-
-.icon-btn:hover > .popup {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-} */
 
 main {
     width: 100%;
@@ -438,23 +231,19 @@ main {
 
 .right-sidebar {
     width: 20rem;
-}
-
-.right-sidebar .profile {
-    min-height: 10rem;
-    background-color: #fff;
     padding: 1rem;
-    margin: 0 0 2rem 0.5rem;
-    border-radius: 4px;
+    margin-left: 2rem;
     text-align: center;
 }
 
+.right-sidebar .content {
+    background-color: #fff;
+    padding: 1rem;
+}
+
 .right-sidebar .profile-image {
-    margin: 0 auto;
-    width: 84px;
-    height: 84px;
-    border-radius: 84px;
-    background-color: #eee;
+    width: 100%;
+    height: 7rem;
     position: relative;
 }
 
@@ -465,7 +254,7 @@ main {
     transform: translate(-50%, -50%);
     width: 80px;
     height: 80px;
-    border-radius: 80px;
+    border-radius: 50%;
 }
 
 .right-sidebar .profile h1 {
@@ -475,6 +264,10 @@ main {
 
 .right-sidebar .profile .intro {
     text-align: left;
-    margin: 1rem 0;
+    margin-top: 1rem;
+}
+
+.right-sidebar .message {
+    margin-top: 1.5rem;
 }
 </style>

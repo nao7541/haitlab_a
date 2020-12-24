@@ -52,5 +52,4 @@ export default {
     padding: 1rem;
     background-color: #fff;
 }
-
 </style>

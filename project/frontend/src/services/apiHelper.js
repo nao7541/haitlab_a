@@ -483,5 +483,17 @@ export default {
         const responseData = await response.data;
         
         return responseData;
+    },
+    async sendMessage(messageData) {
+        const url = '/messages/';
+        const response = await api.post(url, {
+            user_from: messageData.user_from,
+            user_to: messageData.user_to,
+            title: messageData.title,
+            message: messageData.message,
+        });
+        const responseData = await response.data;
+
+        return responseData;
     }
 }
