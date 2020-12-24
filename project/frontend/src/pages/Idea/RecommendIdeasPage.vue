@@ -16,7 +16,8 @@ export default {
     },
     data() {
         return {
-            ideas: [],
+            ideaIds: [], // レコメンドするアイデアのIDを格納する
+            ideas: [], // 要素はideaデータそのもの
             myTags: [],
             loadComplete: false,
         }
@@ -27,6 +28,8 @@ export default {
         }
     },
     created() {
+        // 自分の登録しているタグにマッチするアイデアと
+        // 自分のフォローしている
         apiHelper.loadUserTags(this.myUserId)
         .then( res => {
             // 1. 自分のタグを取得
@@ -44,27 +47,53 @@ export default {
             });
             Promise.all(promises)
             .then( results => {
+                // 自分のタグにヒットするアイデアがなければ終了
                 if (results == null) {
                     this.loadComplete = true;
                     return;
                 }
                 
                 // 2. 自分の持つ各タグがつけられているアイデアのidを全取得
-                const ideaIds = [];
-
                 results.forEach( result => {
                     // tagは配列で返されるため2重ループ
                     result.forEach( tag => {
                         // 重複を避けるために、配列に含まれていないものだけを追加する
-                        if (!ideaIds.includes(tag.idea)) {
-                            ideaIds.push(tag.idea);
+                        if (!this.ideaIds.includes(tag.idea)) {
+                            this.ideaIds.push(tag.idea);
                         }
                     });
                 });
 
-                // 3. アイデアのidよりアイデアそのものを読み込む
+                // 3. 自分がフォローしているユーザーを取得
+                return apiHelper.loadFollowingUsers(this.myUserId)
+            }).then( res => {
+                const followingUsers = res.map( user => user.following_user_id );
+                if (followingUsers.length === 0) {
+                    return;
+                }
+
+                // 4. 自分がフォローしているユーザが投稿しているアイデアのIDを取得する
                 promises = [];
-                ideaIds.forEach( ideaId => {
+                followingUsers.forEach( userId => {
+                    promises.push(apiHelper.loadFilteredPostIdeas(userId));
+                });
+                return Promise.all(promises);
+            }).then( results => {
+                if (results != null) {
+                    results.forEach( ideas => {
+                        if (ideas.length > 0) {
+                            ideas.forEach( idea => {
+                                if (!this.ideaIds.includes(idea.idea_id)) {
+                                    this.ideaIds.push(idea.idea_id);
+                                }
+                            })
+                        }
+                    })
+                }
+            
+                // 5. アイデアのidよりアイデアそのものを読み込む
+                promises = [];
+                this.ideaIds.forEach( ideaId => {
                     promises.push(apiHelper.loadIdeaDetail(ideaId));
                 });
                 return Promise.all(promises)

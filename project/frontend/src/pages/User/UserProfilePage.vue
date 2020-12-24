@@ -148,6 +148,7 @@ export default {
                 // フォロー済みなら、フォロー解除
                 apiHelper.stopFollowing(this.myUserId, this.paramUserId)
                 .then( () => {
+                    this.loadFollowData();
                     this.isFollowing = false;
                 }).catch( err => {
                     console.log("error to stop following: ", err);

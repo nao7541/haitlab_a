@@ -7,7 +7,6 @@ import HomePage from '@/pages/HomePage.vue';
 import IdeasPage from '@/pages/Idea/IdeasPage.vue';
 import NewIdeasPage from '@/pages/Idea/NewIdeasPage.vue';
 import TagIdeasPage from '@/pages/Idea/TagIdeasPage.vue';
-import TrendIdeasPage from '@/pages/Idea/TrendIdeasPage';
 import RecommendIdeasPage from '@/pages/Idea/RecommendIdeasPage';
 import IdeaDetailPage from '@/pages/Idea/IdeaDetailPage.vue';
 import IdeaOverviewPage from '@/pages/Idea/IdeaOverviewPage.vue';
@@ -58,7 +57,6 @@ const routes = [
                 redirect: { name: 'newIdeas' },
                 children: [
                     { name: 'newIdeas',   path: 'new',   component: NewIdeasPage   },
-                    { name: 'trendIdeas', path: 'trend', component: TrendIdeasPage },
                     { name: 'tagIdeas',   path: 'tag',   component: TagIdeasPage   },
                     { name: 'RecommendIdeasPage', path: 'recommend', component: RecommendIdeasPage },
                 ]
