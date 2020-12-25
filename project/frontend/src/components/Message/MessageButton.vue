@@ -1,19 +1,9 @@
 <template>
-    <div class="message__btn" @click="showMessageModal">
+    <div class="message__btn" @click="$emit('showMessageModal')">
         <span>メッセージを送る</span>
         <FontAwesomeIcon class="icon" :icon="['fas', 'paper-plane']" size="lg" />
     </div>
 </template>
-
-<script>
-export default {
-    methods: {
-        showMessageModal() {
-            this.$store.commit('modal/modalOn');
-        },
-    }
-}
-</script>
 
 <style scoped>
 .message__btn {

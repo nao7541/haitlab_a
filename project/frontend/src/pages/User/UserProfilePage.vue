@@ -1,6 +1,5 @@
 <template>
     <div id="profile-page" v-if="loadComplete">
-        <MessageModal v-if="messageModalState" :userTo="userDetail.user_id"></MessageModal>
         <section class="side">
             <div class="profile">
                 <div class="main-info">
@@ -26,7 +25,10 @@
                         </div>
                     </div>
                     <div class="message" v-if="!isMyProfile">
-                        <MessageButton />
+                        <MessageButton @showMessageModal="showMessageModal" />
+                        <div class="message-modal" v-if="modalState.message">
+                            <MessageModal v-model="modalState.message" :userTo="userDetail.user_id" />
+                        </div>
                     </div>
                 </div>
                 <div class="sub-info">
@@ -43,7 +45,7 @@
                         <span>{{ userDetail.major }}</span>
                     </div>
                     <div class="info-row">
-                        <span><FontAwesomeIcon :icon="['fas', 'address-card']" size="lg" /></span>
+                        <span><FontAwesomeIcon :icon="['fas', 'link']" size="lg" /></span>
                         <span><a :href="userDetail.portfolio">{{ userDetail.portfolio }}</a></span>
                     </div>
                     <div class="edit-profile" v-if="isMyProfile">   
@@ -84,6 +86,9 @@ export default {
             followerCount: 0,
             followingCount: 0,
             isFollowing: false,
+            modalState : {
+                message: false,
+            }
         }
     },
     computed: {
@@ -105,11 +110,11 @@ export default {
         followLabel() {
             return this.isFollowing ? 'フォロー解除' : 'フォロー';
         },
-        messageModalState() {
-            return this.$store.getters['modal/modalState'];
-        }
     },
     methods: {
+        showMessageModal() {
+            this.modalState.message = true;
+        },
         loadUserData() {
             apiHelper.loadUserDetail(this.paramUserId) 
             .then( res => {
@@ -191,6 +196,10 @@ export default {
     created() {
         this.pageLoad();
     },
+    beforeRouteLeave(to, from, next) {
+        this.modalState.message = false;
+        next();
+    }, 
     watch: {
         // urlのパラメータが変わる度にリロード
         paramUserId() {
