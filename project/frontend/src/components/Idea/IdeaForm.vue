@@ -6,7 +6,7 @@
                 <div class="form-wrapper">
                     <div class="sentence">
                         <h1>タイトル</h1>
-                        <h2>惹きつけられるか？</h2>
+                        <h2>魅力的なタイトルをつけよう</h2>
                     </div>
                     <p v-if="!isFormValid" class="invalid">タイトルは必須です</p>
                     <input type="text" placeholder="" v-model="title" @blur="clearValidity">
@@ -16,7 +16,7 @@
                 <div class="form-wrapper">
                     <div class="sentence">
                         <h1>概要</h1>
-                        <h2>分かりやすいか？</h2>
+                        <h2>分かりやすく説明しよう</h2>
                     </div>
                     <ResizableTextarea v-model="overview"/>
                 </div>
@@ -27,49 +27,43 @@
                 <div class="form-wrapper">
                     <div class="sentence">
                         <h1>ターゲット</h1>
-                        <h2>誰が必要としているか？</h2>
+                        <h2>誰に届けたいのかを意識しよう</h2>
                     </div>
                     <input type="text" placeholder="" v-model="target">
                 </div>
             </section>
             <section class="wrapper background">
-                <div class="image-wrapper" />
                 <div class="form-wrapper">
                     <div class="sentence">
                         <h1>背景</h1>
-                        <h2>どんなストーリーがある？</h2>
+                        <h2>ストーリーを語ろう</h2>
                     </div>
                     <ResizableTextarea v-model="background"/>
                 </div>
+                <div class="image-wrapper" />
             </section>
-            <section class="wrapper image">
+            <section class="wrapper value">
+                <div class="image-wrapper" />
                 <div class="form-wrapper">
                     <div class="sentence">
                         <h1>価値創造</h1>
-                        <h2>どんな価値が生み出されるか？</h2>
+                        <h2>生み出す価値を言葉にしよう</h2>
                     </div>
                     <ResizableTextarea v-model="createdValue"/>
                 </div>
-                <div class="image-wrapper" />
             </section>
             <section class="wrapper passion">
-                <div class="image-wrapper" />
                 <div class="form-wrapper">
                     <div class="sentence">
                         <h1>熱意</h1>
-                        <h2>オモイは十分伝わったか？</h2>
+                        <h2>気持ちを表現しよう</h2>
                     </div>
                     <ResizableTextarea v-model="passion"/>
                 </div>
-            </section>
-            <!-- <section class="wrapper offer">
-                <div class="form-wrapper">
-                    <h1>期日 / 募集要件</h1>
-                    <ResizableTextarea v-model="offer"/>
-                </div>
                 <div class="image-wrapper" />
-            </section> -->
+            </section>
             <section class="wrapper end">
+                <div class="image-wrapper" />
                 <div class="closing">
                     <div class="sentence">
                         <h1>お疲れ様でした!</h1>
@@ -108,7 +102,6 @@ export default {
             background: '',
             createdValue: '',
             passion: '',
-            // offer: '',
         }
     },
     computed: {
@@ -137,8 +130,6 @@ export default {
                 value: this.createdValue,
                 passion: this.passion,
                 state: state,
-                // target: this.target,
-                // offer: this.offer,
             }
 
             if (this.formType === 'new') {
@@ -197,7 +188,6 @@ export default {
                 this.background = idea.background;
                 this.createdValue = idea.value;
                 this.passion = idea.passion;
-                // this.offer = idea.offer;
             }).catch( err => {
                 console.log("error to load IdeaDetail at EditIdeaPage: ", err);
             })
@@ -244,12 +234,45 @@ export default {
     position: relative;
 }
 
-.image-wrapper:nth-of-type(1) {
+.title,
+.target,
+.value,
+.end {
+    background: linear-gradient(to left, #fff, #ffeece);
+}
+
+.overview,
+.background,
+.passion {
+    background: linear-gradient(to right, #fff, #ffeece);
+}
+
+.title > .image-wrapper {
     background-image: url("~@/assets/images/title_bg.svg");
 }
 
-.image-wrapper:nth-of-type(2) {
-    background-image: url("~@/assets/images/title_bg.svg");
+.overview > .image-wrapper {
+    background-image: url("~@/assets/images/overview.svg");
+}
+
+.target > .image-wrapper {
+    background-image: url("~@/assets/images/target.svg");
+}
+
+.background > .image-wrapper {
+    background-image: url("~@/assets/images/background.svg");
+}
+
+.value > .image-wrapper {
+    background-image: url("~@/assets/images/value.svg");
+}
+
+.passion > .image-wrapper {
+    background-image: url("~@/assets/images/passion.svg");
+}
+
+.end > .image-wrapper {
+    background-image: url("~@/assets/images/end.svg");
 }
 
 .sentence {
@@ -312,26 +335,31 @@ export default {
 }
 
 .post__btn {
-    background-color: green;
+    background-color: #ffb01e;
     margin-right: 0.5rem;
 }
 
 .post__btn:hover,
 .post__btn:active { 
-    background-color: green;
+    background-color: #ffa600;
 }
 
 .savedraft__btn {
-    background-color: blue;
+    background-color: #ddd;
     margin-right: auto;
 }
 
 .savedraft__btn:hover,
 .savedraft__btn:active { 
-    background-color: blue;
+    background-color: #ccc;
 }
 
 .notsave__btn {
+    color: red;
+}
+
+.notsave__btn:hover {
+    color: #fff;
     background-color: red;
 }
 
