@@ -45,6 +45,6 @@ textarea::-webkit-scrollbar {
 }
 
 textarea:focus {
-    border-color: #ffbb3c;
+    border-bottom: 2px solid #ffa600;
 }
 </style>

@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         loadHitTags() {
-            apiHelper.loadAllTags()
+            apiHelper.loadHitTags()
             .then( res => {
                 this.hitTags = res;
 

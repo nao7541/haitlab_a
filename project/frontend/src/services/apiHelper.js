@@ -226,12 +226,14 @@ export default {
     },
 
     // ------------------------------ Tags ------------------------------ //
-    async loadAllTags() {
+    // DBにて使用されている順にタグが既にソートされているため、先頭10個のアイデアを取得すればよい
+    async loadHitTags() {
         const url = '/tag/';
         const response = await api.get(url);
         const responseData = await response.data;
+        const top10tags = responseData.slice(0, 10);
 
-        return responseData;
+        return top10tags;
     },
     // tagの名前でタグを検索する
     async loadTagsByName(tagName) {

@@ -29,7 +29,7 @@
                         <h1>ターゲット</h1>
                         <h2>誰に届けたいのかを意識しよう</h2>
                     </div>
-                    <input type="text" placeholder="" v-model="target">
+                    <ResizableTextarea v-model="target"/>
                 </div>
             </section>
             <section class="wrapper background">
@@ -305,7 +305,7 @@ export default {
 }
 
 .form-wrapper input[type="text"]:focus {
-    border-bottom: 2px solid #ffbb3c;
+    border-bottom: 2px solid #ffa600;
 }
 
 .closing {
