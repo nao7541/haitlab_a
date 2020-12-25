@@ -5,6 +5,7 @@ from idea.models import PostIdea
 
 
 class TagManager(models.Manager):
+    # IdeaTagMapでそれぞれのタグが何回使われているかを表示し、多い順にソートする。
     def get_queryset(self):
         return super().get_queryset().annotate(
             ideatagmap_count= models.Count('ideatagmap')
