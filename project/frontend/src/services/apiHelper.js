@@ -502,5 +502,41 @@ export default {
         const responseData = await response.data;
 
         return responseData;
+    },
+
+    // ------------------------------ Feedback ------------------------------ //
+    //  パラメータとして渡されたアイデアに関連する投稿者から質問を読み込む
+    async loadFeedbackQuestions(ideaId) {
+        const url = '/feedback_questions/?idea_id=' + ideaId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    // パラメータとして渡されたquestionIdに対してのフィードバックを一括で読み込む
+    async loadFeedbacks(questionId) {
+        const url = '/feedbacks/?feedback_question_id=' + questionId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async addFeedback(data) {
+        const url = '/feedbacks/';
+        const response = await api.post(url, {
+            user_id: data.user_id,
+            feedback_question_id: data.feedback_question_id,
+            feedback: data.feedback
+        });
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async deleteFeedback(feedbackId) {
+        const url = '/feedbacks/' + feedbackId + '/';
+        const response = await api.delete(url);
+        const responseData = await response.data;
+
+        return responseData;
     }
 }

@@ -14,6 +14,7 @@
     margin-bottom: 2rem;
     background-color: #fff;
 }
+
 .board-header {
     color: #000;
     padding: 1rem;
