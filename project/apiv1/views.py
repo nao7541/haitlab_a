@@ -7,6 +7,7 @@ from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django_filters import rest_framework as filters
+from django.db.models import Count
 
 from user.models import CustomUser, EventStock, UserFollowing
 from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
