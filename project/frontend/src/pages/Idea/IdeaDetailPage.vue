@@ -122,7 +122,9 @@ export default {
         },
         updateTag() {
             // 入力タグがなければ終了
-            if (this.inputTags.length == 0) return
+            if (this.inputTags.length == 0) {
+                this.$router.go({ name: 'ideaDetail', params: { ideaId: this.ideaId } });
+            }
 
             // もしタグが未登録の場合はそのまま登録
             if(this.tags.length === 0) {
