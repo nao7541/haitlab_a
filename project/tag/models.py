@@ -20,7 +20,7 @@ class Tag(models.Model):
     objects = TagManager()
 
     def __str__(self):
-        return str(self.tag_name) + '(' + str(self.ideatagmap_count) + ')'
+        return str(self.tag_name) #+ '(' + str(self.ideatagmap_count) + ')'
 
 
 # ユーザーとそれぞれが持つタグの紐づけを行うモデル
