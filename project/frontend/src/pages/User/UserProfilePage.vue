@@ -1,6 +1,5 @@
 <template>
     <div id="profile-page" v-if="loadComplete">
-        <MessageModal v-if="messageModalState" :userTo="userDetail.user_id"></MessageModal>
         <section class="side">
             <div class="profile">
                 <div class="main-info">
@@ -19,12 +18,17 @@
                             <router-link :to="followersLink">フォロワー {{ followerCount }}人</router-link>
                             <router-link :to="followingLink">フォロー中 {{ followingCount }}人</router-link>
                         </div>
-                        <div class="follow__btn" v-if="!isMyProfile">
-                            <button @click="follow">{{ followLabel }}</button>
+                        <div class="follow__btn" v-if="!isMyProfile" @click="follow">
+                            <span>{{ followLabel }}</span>
+                            <FontAwesomeIcon class="icon" v-if="!isFollowing" :icon="['fas', 'user-plus']" size="lg" />
+                            <FontAwesomeIcon class="icon" v-if="isFollowing" :icon="['fas', 'user-minus']" size="lg" />
                         </div>
                     </div>
                     <div class="message" v-if="!isMyProfile">
-                        <MessageButton />
+                        <MessageButton @showMessageModal="showMessageModal" />
+                        <div class="message-modal" v-if="modalState.message">
+                            <MessageModal v-model="modalState.message" :userTo="userDetail.user_id" />
+                        </div>
                     </div>
                 </div>
                 <div class="sub-info">
@@ -41,7 +45,7 @@
                         <span>{{ userDetail.major }}</span>
                     </div>
                     <div class="info-row">
-                        <span><FontAwesomeIcon :icon="['fas', 'address-card']" size="lg" /></span>
+                        <span><FontAwesomeIcon :icon="['fas', 'link']" size="lg" /></span>
                         <span><a :href="userDetail.portfolio">{{ userDetail.portfolio }}</a></span>
                     </div>
                     <div class="edit-profile" v-if="isMyProfile">   
@@ -82,6 +86,9 @@ export default {
             followerCount: 0,
             followingCount: 0,
             isFollowing: false,
+            modalState : {
+                message: false,
+            }
         }
     },
     computed: {
@@ -103,11 +110,11 @@ export default {
         followLabel() {
             return this.isFollowing ? 'フォロー解除' : 'フォロー';
         },
-        messageModalState() {
-            return this.$store.getters['modal/modalState'];
-        }
     },
     methods: {
+        showMessageModal() {
+            this.modalState.message = true;
+        },
         loadUserData() {
             apiHelper.loadUserDetail(this.paramUserId) 
             .then( res => {
@@ -189,6 +196,10 @@ export default {
     created() {
         this.pageLoad();
     },
+    beforeRouteLeave(to, from, next) {
+        this.modalState.message = false;
+        next();
+    }, 
     watch: {
         // urlのパラメータが変わる度にリロード
         paramUserId() {
@@ -287,21 +298,27 @@ export default {
 }
 
 .edit-profile a,
-.follow__btn button {
+.follow__btn {
     font-size: 16px;
     width: 100%;
     line-height: 2.5rem;
 }
 
-.follow__btn button {
+.edit-profile span,
+.follow__btn span {
+    margin-right: 1rem;
+}
+
+.follow__btn {
+    cursor: pointer;
     background-color: #ffe0a7;
 }
 
-.follow__btn button:hover {
+.follow__btn:hover {
     background-color: #ffbb3c;
 }
 
-.follow__btn button:focus {
+.follow__btn:focus {
     background-color: #c7912d;
 }
 
@@ -314,10 +331,6 @@ export default {
     text-decoration: none;
     color: #000;
     background-color: #6cdb51;
-}
-
-.edit-profile span {
-    margin-right: 1rem;
 }
 
 .edit-profile a:hover {

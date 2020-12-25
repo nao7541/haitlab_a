@@ -1,9 +1,9 @@
 <template>
     <div class="message-modal">
-        <div class="modal-overlay" @click="closeMessageModal"></div>
+        <div class="modal-overlay" @click="$emit('input', false)"></div>
         <div class="card">
             <h2>メッセージ</h2>
-            <FontAwesomeIcon @click="closeMessageModal" class="close__btn" :icon="['fas', 'times']" size="sm" />
+            <FontAwesomeIcon @click="$emit('input', false)" class="close__btn" :icon="['fas', 'times']" size="sm" />
             <form>
                 <div class="form-control" :class="{invalid: !isFormValid}">
                     <label for="message-title">タイトル <span class="necessary">[必須]</span></label>
@@ -24,7 +24,7 @@
 import apiHelper from '@/services/apiHelper.js';
 
 export default {
-    props: ['userTo'],
+    props: ['userTo', 'value'],
     data() {
         return {
             message: {
@@ -58,13 +58,11 @@ export default {
                 message: this.message.content,
             }).then( () => {
                 // メッセージ送信後はモーダルを閉じる
-                this.closeMessageModal();
+                this.$emit('input', false);
+                this.$router.go({ name: 'userprofile', params: { userId: this.userTo }});
             }).catch( err => {
                 console.log("error to send a message: ", err);
             })
-        },
-        closeMessageModal() {
-            this.$store.commit('modal/modalOff');
         },
     }
 }
@@ -136,7 +134,7 @@ export default {
 .form-control textarea {
     font-size: 16px;
     width: 100%;
-    background: #e5e5e5;
+    background-color: #e5e5e5;
     outline: none;
 }
 
@@ -159,6 +157,8 @@ form button {
     font-weight: bold;
     width: 100%;
     line-height: 2.5rem;
+    border: none;
+    outline: none;
     background-color: #ffefd1;
 }
 

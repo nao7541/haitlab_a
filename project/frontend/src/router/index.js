@@ -73,7 +73,7 @@ const routes = [
                     { name: 'detailInfo',   path: 'detailInfo',   component: IdeaDetailInfoPage },
                     { name: 'requirements', path: 'requirements', component: IdeaRequirementsPage },
                     { name: 'reputation',   path: 'reputation',   component: IdeaReputationPage },
-                    { name: 'feedback',     path: 'feedback',     component: IdeaFeedbackPage },
+                    { name: 'feedback', path: 'feedback', component: IdeaFeedbackPage },
                 ]
             },
             {

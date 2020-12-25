@@ -44,7 +44,7 @@ class PostIdea(models.Model):
     offer = models.CharField(max_length=100, blank=True, null=True,
                             verbose_name='人材募集')
     # 期日
-    deadline = models.CharField(max_length=30, blank=True, null=True,
+    deadline = models.DateTimeField(blank=True, null=True,
                                 verbose_name='期日')
     # feedbackの観点
     feedback_point = models.TextField(max_length=100, blank=True, null=True,

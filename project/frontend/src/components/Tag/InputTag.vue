@@ -4,7 +4,7 @@
             {{ tagLabel }}
             <span v-if="!isTagValid" class="invalid">タグはこれ以上追加できません</span>
         </label>
-        <input type="text" id="tag" name="tag" placeholder="Type tag" @keydown.enter="addTag" @blur="clearValidity">
+        <input type="text" id="tag" name="tag" placeholder="タグを入力" @keydown.enter="addTag" @blur="clearValidity">
         <div class="added-tags">
             <div v-for="(tag, id) in tags" :key="id" class="tag">
                 <span class="name">{{tag}}</span>
@@ -80,15 +80,17 @@ export default {
 }
 
 .input-tag input {
-    width: 100%;
+    font-size: 18px;
+    line-height: 2rem;
     padding-left: 0.5rem;
-    line-height: 1.5rem;
+    width: 100%;
     outline: none;
-    border-bottom: 1px solid #aaa;
+    background-color: #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 
 .input-tag input:focus {
-    border-bottom: 2px solid #ffb01e;
+    border: 1px solid #444;
 }
 
 .added-tags {

@@ -134,20 +134,13 @@ export default {
         formData.append('user_id', ideaData.user_id);
         formData.append('title', ideaData.title);
         formData.append('overview', ideaData.overview);
+        formData.append('target', ideaData.target);
         formData.append('background', ideaData.background);
+        formData.append('value', ideaData.value);
         formData.append('passion', ideaData.passion);
         formData.append('state', ideaData.state);
-        formData.append('offer', ideaData.offer );
-        
-        if(ideaData.idea_image !== null) {
-            formData.append('idea_image', ideaData.idea_image);
-        }
 
-        const response = await api.post(url, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+        const response = await api.post(url, formData);
         const data = await response.data;
 
         return data;
@@ -162,9 +155,21 @@ export default {
         formData.append('passion', ideaData.passion);
         formData.append('state', ideaData.state);
         formData.append('offer', ideaData.offer );
+
+        const response = await api.put(url, formData);
+        const data = await response.data;
+
+        return data;
+    },
+    async putImage(data, ideaId) {
+        const url = '/ideas/' + ideaId + '/';
+        const formData = new FormData();
+        formData.append('user_id', data.user_id);
+        formData.append('title', data.title);
+        formData.append('state', data.state);
         
-        if(ideaData.idea_image !== null) {
-            formData.append('idea_image', ideaData.idea_image);
+        if(data.idea_image !== null) {
+            formData.append('idea_image', data.idea_image);
         }
 
         const response = await api.put(url, formData, {
@@ -172,9 +177,21 @@ export default {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        const data = await response.data;
+        const responseData = await response.data;
 
-        return data;
+        return responseData;
+    },
+    async putDate(data, ideaId) {
+        const url = '/ideas/' + ideaId + '/';
+        const response = await api.put(url, {
+            user_id: data.user_id,
+            title: data.title,
+            state: data.state,
+            deadline: data.deadline,
+        });
+        const responseData = await response.data;
+
+        return responseData;            
     },
     async publishIdea(ideaData, ideaId) {
         const url = '/ideas/' + ideaId + '/';
@@ -501,6 +518,52 @@ export default {
         });
         const responseData = await response.data;
 
+        return responseData;
+    },
+
+    // ------------------------------ Feedback ------------------------------ //
+    //  パラメータとして渡されたアイデアに関連する投稿者から質問を読み込む
+    async loadFeedbackQuestions(ideaId) {
+        const url = '/feedback_questions/?idea_id=' + ideaId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    // パラメータとして渡されたquestionIdに対してのフィードバックを一括で読み込む
+    async loadFeedbacks(questionId) {
+        const url = '/feedbacks/?feedback_question_id=' + questionId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async addFeedback(data) {
+        const url = '/feedbacks/';
+        const response = await api.post(url, {
+            user_id: data.user_id,
+            feedback_question_id: data.feedback_question_id,
+            feedback: data.feedback
+        });
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async deleteFeedback(feedbackId) {
+        const url = '/feedbacks/' + feedbackId + '/';
+        const response = await api.delete(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async addQuestion(ideaId, question) {
+        const url = '/feedback_questions/';
+        const response = await api.post(url, {
+            idea: ideaId,
+            question: question,
+        });
+        const responseData = await response.data;
+        
         return responseData;
     }
 }
