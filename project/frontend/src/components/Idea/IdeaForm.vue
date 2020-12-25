@@ -1,66 +1,78 @@
 <template>
     <div class="idea-form">
-        <form class="form-container" @submit.prevent="postIdea">
+        <form class="form-container">
             <section class="wrapper title">
-                <div class="content">
-                    <h1>タイトル</h1>
-                    <p v-if="!title.isValid" class="invalid">タイトルは必須です</p>
-                    <div class="input-box">
-                        <input type="text" placeholder="魅力的なタイトルをつけよう" v-model="title.val" @blur="clearValidity('title')">
+                <div class="image-wrapper" />
+                <div class="form-wrapper">
+                    <div class="sentence">
+                        <h1>タイトル</h1>
+                        <h2>魅力的なタイトルをつけよう</h2>
                     </div>
+                    <p v-if="!isFormValid" class="invalid">タイトルは必須です</p>
+                    <input type="text" placeholder="" v-model="title" @blur="clearValidity">
                 </div>
             </section>
             <section class="wrapper overview">
-                <div class="content">
-                    <h1>概要</h1>
+                <div class="form-wrapper">
+                    <div class="sentence">
+                        <h1>概要</h1>
+                        <h2>分かりやすく説明しよう</h2>
+                    </div>
                     <ResizableTextarea v-model="overview"/>
                 </div>
+                <div class="image-wrapper" />
             </section>
-            <!-- <section class="wrapper target">
-                <div class="content">
-                    <h1>ターゲット</h1>
-                    <input type="text" placeholder="ターゲットは?" v-model="target">
-                </div>
-            </section> -->
-            <section class="wrapper image">
-                <div class="content">
-                    <h1>画像</h1>
-                    <input class="image-input" type="file" @change="uploadImage" accept="image/*">
+            <section class="wrapper target">
+                <div class="image-wrapper" />
+                <div class="form-wrapper">
+                    <div class="sentence">
+                        <h1>ターゲット</h1>
+                        <h2>誰に届けたいのかを意識しよう</h2>
+                    </div>
+                    <input type="text" placeholder="" v-model="target">
                 </div>
             </section>
             <section class="wrapper background">
-                <div class="content">
-                    <h1>背景</h1>
+                <div class="form-wrapper">
+                    <div class="sentence">
+                        <h1>背景</h1>
+                        <h2>ストーリーを語ろう</h2>
+                    </div>
                     <ResizableTextarea v-model="background"/>
                 </div>
+                <div class="image-wrapper" />
             </section>
-            <section class="wrapper offer">
-                <div class="content">
-                    <h1>募集要件</h1>
-                    <ResizableTextarea v-model="offer"/>
-                </div>
-            </section>
-            <section class="wrapper tag-input">
-                <div class="content">
-                    <h1>タグ</h1>
-                    <IdeaFormInputTag :tags="inputTags" :maximum="5" />
+            <section class="wrapper value">
+                <div class="image-wrapper" />
+                <div class="form-wrapper">
+                    <div class="sentence">
+                        <h1>価値創造</h1>
+                        <h2>生み出す価値を言葉にしよう</h2>
+                    </div>
+                    <ResizableTextarea v-model="createdValue"/>
                 </div>
             </section>
             <section class="wrapper passion">
-                <div class="content">
-                    <h1>熱意</h1>
+                <div class="form-wrapper">
+                    <div class="sentence">
+                        <h1>熱意</h1>
+                        <h2>気持ちを表現しよう</h2>
+                    </div>
                     <ResizableTextarea v-model="passion"/>
                 </div>
+                <div class="image-wrapper" />
             </section>
             <section class="wrapper end">
-                <div class="content">
-                    <h1>お疲れ様でした!</h1>
-                    <div class="home">
-                        <router-link to="/">保存せずに終了</router-link>
+                <div class="image-wrapper" />
+                <div class="closing">
+                    <div class="sentence">
+                        <h1>お疲れ様でした!</h1>
+                        <h3>詳細ページでタグ、募集要件、質問などを追加しよう</h3>
                     </div>
-                    <div class="form-buttons">
-                        <button class="post-btn">投稿する</button>
-                        <button class="save-draft-btn" type="button" @click="saveDraft">下書きを保存する</button>
+                    <div class="form__btns">
+                        <button class="post__btn" type="button" @click="postIdea">投稿</button>
+                        <button class="savedraft__btn" type="button" @click="saveDraft">下書き保存</button>
+                        <button class="notsave__btn" type="button" @click="notSave">保存せずに終了</button>
                     </div>
                 </div>
             </section>
@@ -69,14 +81,11 @@
 </template>
 
 <script>
-import utils from '@/services/utils.js';
 import apiHelper from '@/services/apiHelper.js'
-import IdeaFormInputTag from '@/components/Tag/IdeaFormInputTag.vue';
 import ResizableTextarea from '@/components/Idea/ResizableTextarea.vue';
 
 export default {
     components: {
-        IdeaFormInputTag,
         ResizableTextarea,
     },
     props: {
@@ -86,49 +95,41 @@ export default {
     data() {
         return {
             retIdeaId: null, // ideaをpostもしくはputしてreturnされてきた結果より取得したID
-            uploadedImage: null,
             isFormValid: true,
-            title: {
-                val: '',
-                isValid: true,
-            },
+            title: '',
             overview: '',
+            target: '',
             background: '',
+            createdValue: '',
             passion: '',
-            offer: '',
-            previewImage: null,
-            tags: [], // 現時点でDBに書くのされているtags
-            inputTags: [], // ユーザーの入力を反映したtags
         }
     },
     computed: {
-        userId() {
+        myUserId() {
             return this.$store.getters['auth/userId'];
         },
     },
     methods: {
-        clearValidity(input) {
-            this[input].isValid = true;
+        clearValidity() {
+            this.isFormValid = true;
         },
         formValidation() {
             this.isFormValid = true;
 
             if (this.title.val === '') {
                 this.isFormValid = false;
-                this.title.isValid = false;
             }
         },
         registerIdea(state) {
             const ideaData = {
-                user_id: this.userId,
-                title: this.title.val,
+                user_id: this.myUserId,
+                title: this.title,
                 overview: this.overview,
-                background: this.background,
-                passion: this.passion,
-                idea_image: this.uploadedImage,
-                state: state,
                 target: this.target,
-                offer: this.offer,
+                background: this.background,
+                value: this.createdValue,
+                passion: this.passion,
+                state: state,
             }
 
             if (this.formType === 'new') {
@@ -136,14 +137,6 @@ export default {
                 apiHelper.postIdea(ideaData)
                 .then( res => {
                     this.retIdeaId = res.idea_id;
-
-                    // 新規アイデアの場合はそのままtagの追加
-                    const promises = [];
-                    for (const tag of this.inputTags) {
-                        promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
-                    }
-                    return Promise.all(promises);
-                }).then( () => {
                     this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
                 }).catch( err => {
                     console.log("error to post new idea: ", err);
@@ -153,41 +146,6 @@ export default {
                 apiHelper.putIdea(ideaData, this.ideaId)
                 .then( res => {
                     this.retIdeaId = res.idea_id;
-
-                    if (this.inputTags.length == 0) return
-
-                    // 元々タグがない場合はそのままpost
-                    if (this.tags == null) {
-                         const promises = [];
-                        for (const tag of this.inputTags) {
-                            promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
-                        }
-
-                        Promise.all(promises)
-                        .then( () => {
-                            this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
-                        }).catch( err => {
-                            console.log("error to post new idea: ", err);
-                        });
-                    } else if (!utils.arrayEqual(this.tags, this.inputTags) ) {
-                        // もし元々のタグから変更があるなら全部消してから全てを追加する
-                        apiHelper.deleteAllIdeaTag(this.retIdeaId)
-                        .then(() => {
-                            const promises = [];
-                            for (const tag of this.inputTags) {
-                                promises.push(apiHelper.postIdeaTag(this.retIdeaId, tag));
-                            }
-
-                            return Promise.all(promises)
-                        }).then( () => {
-                            // reload
-                            this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
-                        }).catch(err => {
-                            console.log("error to update tag: ", err)
-                        })
-                    } else {
-                        this.$router.replace({ name: 'ideaDetail', params: { ideaId: this.retIdeaId } });
-                    }
                 }).catch( err => {
                     console.log("error to post new idea: ", err);
                 });
@@ -213,18 +171,9 @@ export default {
             // パラメータとしてdraftを設定
             this.registerIdea("draft");
         },
-        uploadImage(event) {
-            this.uploadedImage = event.target.files[0];
-            if (this.uploadedImage != null) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.previewImage = e.target.result;
-                }
-                reader.readAsDataURL(this.uploadedImage);
-            } else {
-                this.previewImage = null;
-            }
-        }
+        notSave() {
+            this.$router.replace('/');
+        },
     },
     created() {
         // 編集の場合は、既存のデータをまず読み込む
@@ -233,20 +182,12 @@ export default {
             .then( res => {
                 // ideaの詳細を読み込み
                 const idea = res;
-                this.title.val = idea.title;
+                this.title = idea.title;
                 this.overview = idea.overview;
+                this.target = idea.target;
                 this.background = idea.background;
+                this.createdValue = idea.value;
                 this.passion = idea.passion;
-                this.offer = idea.offer;
-                this.previewImage = idea.idea_image;
-
-                return apiHelper.loadIdeaTags(this.ideaId)
-            }).then( res => {
-                // タグの読み込み
-                this.tags = res.map( (tag) => tag.tag_name );
-                this.inputTags = this.tags.slice(); // 値渡し
-
-                this.loadComplete = true;
             }).catch( err => {
                 console.log("error to load IdeaDetail at EditIdeaPage: ", err);
             })
@@ -261,7 +202,6 @@ export default {
 }
 
 .form-container {
-    position: relative;
     width: 100%;
     height: 100vh;
     scroll-snap-type: y mandatory;
@@ -270,113 +210,157 @@ export default {
 }
 
 .wrapper {
-    position: relative;
     width: 100%;
     height: 100%;
     scroll-snap-align: start;
+    display: flex;
+    justify-content: space-between;
 }
 
-.content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.image-wrapper,
+.form-wrapper {
+    width: 50%;
+    height: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.content h1 {
+.image-wrapper {
+    background-size: 30rem;
+    background-position: center;
+    position: relative;
+}
+
+.title,
+.target,
+.value,
+.end {
+    background: linear-gradient(to left, #fff, #ffeece);
+}
+
+.overview,
+.background,
+.passion {
+    background: linear-gradient(to right, #fff, #ffeece);
+}
+
+.title > .image-wrapper {
+    background-image: url("~@/assets/images/title_bg.svg");
+}
+
+.overview > .image-wrapper {
+    background-image: url("~@/assets/images/overview.svg");
+}
+
+.target > .image-wrapper {
+    background-image: url("~@/assets/images/target.svg");
+}
+
+.background > .image-wrapper {
+    background-image: url("~@/assets/images/background.svg");
+}
+
+.value > .image-wrapper {
+    background-image: url("~@/assets/images/value.svg");
+}
+
+.passion > .image-wrapper {
+    background-image: url("~@/assets/images/passion.svg");
+}
+
+.end > .image-wrapper {
+    background-image: url("~@/assets/images/end.svg");
+}
+
+.sentence {
+    width: 30rem;
+    text-align: left;
+    transform: translateY(-5rem);
+}
+
+.sentence h1 {
+    color: #333;
     font-weight: bold;
-    font-size: 28px;
-    transform: translateY(-15px);
+    font-size: 38px;
 }
 
-.content input[type="text"] {
+.sentence h2 {
+    color: #888;
+    font-size: 26px;
+}
+
+.sentence h3 {
+    color: #888;
+}
+
+.form-wrapper input[type="text"] {
     font-size: 25px;
     width: 30rem;
-    height: 3rem;
-    line-height: 3rem;
+    line-height: 25px;
     outline: none;
     border-bottom: 1px solid #000;
 }
 
-.content input[type="text"]:focus {
+.form-wrapper input[type="text"]:focus {
     border-bottom: 2px solid #ffbb3c;
 }
 
-.title {
-    background: linear-gradient(to bottom, #f7f2e9, #ffebc6);
-}
-
-.overview {
-    background: linear-gradient(to bottom, #ffebc6, #ffe1a8);
-}
-
-.image {
-    background: linear-gradient(to bottom, #ffe1a8, #ffd483) ;
-}
-
-.background {
-    background: linear-gradient(to bottom, #ffd483, #ffcb6b);
-}
-
-.offer {
-    background: linear-gradient(to bottom, #ffcb6b, #ffc559);
-}
-
-.tag-input {
-    background: linear-gradient(to bottom, #ffc559, #ffc14e);
-}
-
-.passion {
-    background: linear-gradient(to bottom, #ffc14e, #ffb429);
-}
-
-.end {
-    background: linear-gradient(to bottom, #ffb429, #ffaf1a);
-}
-
-.form-buttons {
+.closing {
+    width: 30rem;
+    height: 100%;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.form-buttons button {
-    width: 15rem;
+.form__btns {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.form__btns button {
     height: 3.5rem;
-    border-radius: 2px;
-    font: inherit;
-    font-size: 20px;
+    min-width: 7rem;
+    font-size: 18px;
     font-weight: bold;
-    margin: 0 2rem;
     outline: none;
+    border: none;
 }
 
-.post-btn {
-    background-color: #fff;
+.post__btn {
+    background-color: #ffb01e;
+    margin-right: 0.5rem;
 }
 
-.post-btn:hover,
-.post-btn:active { 
-    background-color: #eee;
+.post__btn:hover,
+.post__btn:active { 
+    background-color: #ffa600;
 }
 
-.save-draft-btn {
+.savedraft__btn {
     background-color: #ddd;
+    margin-right: auto;
 }
 
-.save-draft-btn:hover,
-.save-draft-btn:active { 
+.savedraft__btn:hover,
+.savedraft__btn:active { 
     background-color: #ccc;
 }
 
-.home {
-    margin-bottom: 1rem;
+.notsave__btn {
+    color: red;
 }
 
-.home a {
-    text-decoration: none;
-    color: #f00;
+.notsave__btn:hover {
+    color: #fff;
+    background-color: red;
 }
 
 .invalid { 

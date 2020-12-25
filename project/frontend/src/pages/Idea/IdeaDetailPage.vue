@@ -1,6 +1,5 @@
 <template>
     <div id="idea-detail">
-        <MessageModal v-if="messageModalState" :userTo="userDetail.user_id"></MessageModal>
         <div class="idea" v-if="loadComplete">
             <main>
                 <section class="container idea-header">
@@ -18,8 +17,25 @@
                             <button @click="deleteIdea">削除する</button>
                         </div>
                     </div>
+
                     <div class="tags">
-                        <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag.tag_name" />
+                        <div class="tag__header">
+                            <h3>関連タグ</h3>
+                            <BaseEditButton v-if="isMyIdea" @edit="editTag" />
+                        </div>
+                        <div class="tag-modal" v-if="modalState.tag">
+                            <BaseModal v-model="modalState.tag">
+                                <template #card>
+                                    <BaseForm title="タグの更新">
+                                        <InputTag :tags="inputTags" :maximum="5" />
+                                        <BaseModalButton @clickModalBtn="updateTag" />
+                                    </BaseForm>
+                                </template>
+                            </BaseModal>
+                        </div>
+                        <div class="display-tag">
+                            <BaseTag v-for="(tag, key) in tags" :key="key" :name="tag" />
+                        </div>
                     </div>
                 </section>
 
@@ -40,7 +56,10 @@
                         </div>
                     </div>
                     <div class="message" v-if="!isMyIdea">
-                        <MessageButton />
+                        <MessageButton @showMessageModal="showMessageModal" />
+                        <div class="message-modal" v-if="modalState.message">
+                            <MessageModal v-model="modalState.message" :userTo="userDetail.user_id" />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -49,14 +68,17 @@
 </template>
 
 <script>
+import utils from '@/services/utils.js';
 import apiHelper from '@/services/apiHelper.js';
 import IdeaDetailTab from '@/components/Idea/IdeaDetailTab.vue';
+import InputTag from '@/components/Tag/InputTag.vue';
 import MessageModal from '@/components/Message/MessageModal.vue';
 import MessageButton from '@/components/Message/MessageButton.vue';
 
 export default {
     components: {
         IdeaDetailTab,
+        InputTag,
         MessageModal,
         MessageButton,
     },
@@ -71,7 +93,13 @@ export default {
             ideaDetail: null,
             ideaId: null,
             // tag
-            tags: [],
+            tags: [], // 現時点でDBに書くのされているtags
+            inputTags: [], // ユーザーの入力を反映したtags
+            // modal
+            modalState: {
+                tag: false,
+                message: false,
+            },
         };
     },
     computed: {
@@ -84,11 +112,50 @@ export default {
         myUserId() {
             return this.$store.getters['auth/userId'];
         },
-        messageModalState() {
-            return this.$store.getters['modal/modalState'];
-        }
     },
     methods: {
+        editTag() {
+            this.modalState.tag = true;
+        },
+        showMessageModal() {
+            this.modalState.message = true;
+        },
+        updateTag() {
+            // 入力タグがなければ終了
+            if (this.inputTags.length == 0) return
+
+            // もしタグが未登録の場合はそのまま登録
+            if(this.tags.length === 0) {
+                const promises = [];
+                for (const tag of this.inputTags) {
+                    promises.push(apiHelper.postIdeaTag(this.ideaId, tag));
+                }
+
+                Promise.all(promises)
+                .then( () => {
+                    this.$router.go({ name: 'ideaDetail', params: { ideaId: this.ideaId } });
+                }).catch( err => {
+                    console.log("error to post new idea: ", err);
+                });
+            } else if (!utils.arrayEqual(this.tags, this.inputTags) ) {
+                // もし元々のタグから変更があるなら全部消してから全てを追加する
+                apiHelper.deleteAllIdeaTag(this.ideaId)
+                .then(() => {
+                    const promises = [];
+                    for (const tag of this.inputTags) {
+                        promises.push(apiHelper.postIdeaTag(this.ideaId, tag));
+                    }
+
+                    return Promise.all(promises)
+                }).then( () => {
+                    this.$router.go({ name: 'ideaDetail', params: { ideaId: this.ideaId } });
+                }).catch(err => {
+                    console.log("error to update tag: ", err)
+                })
+            } else {
+                this.$router.go({ name: 'ideaDetail', params: { ideaId: this.ideaId } });
+            }
+        },
         publishIdea() {
             apiHelper.publishIdea(this.ideaDetail, this.ideaId)
             .then(() => {
@@ -110,6 +177,10 @@ export default {
                 console.log("error to delete idea: ", err);
             })
         },
+        clearModalState() {
+            this.modalState.tag = false;
+            this.modalState.message = false;
+        }
     },
     created() {
         // router paramsより本アイデアのideaIdを取得
@@ -128,7 +199,9 @@ export default {
             // tag情報を取得
             return apiHelper.loadIdeaTags(this.ideaDetail.idea_id);
         }).then( res => {
-            this.tags = res;
+            // tag名をtags配列に格納する
+            this.tags = res.map( (tag) => tag.tag_name );
+            this.inputTags = this.tags.slice(); // 値渡し
 
             return apiHelper.loadUserDetail(this.ideaDetail.user_id);
         }).then( res => {
@@ -140,7 +213,13 @@ export default {
         }).catch( err => {
             console.log("error to load idea detail: ", err);
         });
-    }}
+    },
+    beforeRouteLeave(to, from, next) {
+        // 他のページに遷移する前にmodalを全てfalseにする
+        this.clearModalState();
+        next();
+    }
+}
 </script>
 
 <style scoped>
@@ -182,7 +261,6 @@ main {
 }
 
 .idea-header button {
-    text-decoration: none;
     font-size: 18px;
     font-weight: bold;
     color: #fff;
@@ -215,13 +293,24 @@ main {
     background-color: #b80000;
 }
 
-.idea-header .tags::after {
+.tag__header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.tag__header h3 {
+    margin-right: 0.5rem;
+}
+
+.tags .display-tag::after {
     content: "";
     display: block;
     clear: both;
 }
-
-.idea-header .tags .base-tag {
+ 
+.tags .base-tag {
     background-color: #fff;
 }
 
