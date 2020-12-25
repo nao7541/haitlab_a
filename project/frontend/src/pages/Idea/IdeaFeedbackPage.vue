@@ -1,34 +1,31 @@
 <template>
-    <div id="idea-feedback" v-if="loadComplete">
-        <div class="container">
-            <div class="container-title">
-                <h3>観点</h3>
-            </div>
-            <div class="content">
-                <p>{{ ideaData.feedback_point }}</p>
-            </div>
-        </div>
+    <div id="idea-feedback">
+        <FeedbackBoard :questions="questions" />
     </div>
 </template>
 
 <script>
 import apiHelper from '@/services/apiHelper.js';
+import FeedbackBoard from '@/components/Idea/FeedbackBoard.vue';
 
 export default {
+    components: {
+        FeedbackBoard,
+    },
     data() {
         return {
             ideaId: null,
-            ideaData: null,
+            questions: [],
             loadComplete: false,
         }
     },
     created() {
         this.ideaId = this.$route.params['ideaId'];
 
-        apiHelper.loadIdeaDetail(this.ideaId)
+        apiHelper.loadFeedbackQuestions(this.ideaId)
         .then( res => {
-            this.ideaData = res;
-            
+            this.questions = res;
+
             this.loadComplete = true;
         }).catch( err => {
             console.log("error to get idea data at IdeaFeedbackPage: ", err);
@@ -36,27 +33,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.container {
-    width: 100%;
-    padding: 1rem;
-}
-
-.container-title {
-    display: inline-block;
-    background-color: #ffe0a7;
-    padding: 0.1rem 0.5rem;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px #00000040;
-}
-
-.content {
-    padding: 1rem;
-}
-
-.content p {
-    font-size: 18px;
-    text-align: left;
-}
-</style>

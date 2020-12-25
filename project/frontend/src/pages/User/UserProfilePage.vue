@@ -19,8 +19,10 @@
                             <router-link :to="followersLink">フォロワー {{ followerCount }}人</router-link>
                             <router-link :to="followingLink">フォロー中 {{ followingCount }}人</router-link>
                         </div>
-                        <div class="follow__btn" v-if="!isMyProfile">
-                            <button @click="follow">{{ followLabel }}</button>
+                        <div class="follow__btn" v-if="!isMyProfile" @click="follow">
+                            <span>{{ followLabel }}</span>
+                            <FontAwesomeIcon class="icon" v-if="!isFollowing" :icon="['fas', 'user-plus']" size="lg" />
+                            <FontAwesomeIcon class="icon" v-if="isFollowing" :icon="['fas', 'user-minus']" size="lg" />
                         </div>
                     </div>
                     <div class="message" v-if="!isMyProfile">
@@ -287,21 +289,27 @@ export default {
 }
 
 .edit-profile a,
-.follow__btn button {
+.follow__btn {
     font-size: 16px;
     width: 100%;
     line-height: 2.5rem;
 }
 
-.follow__btn button {
+.edit-profile span,
+.follow__btn span {
+    margin-right: 1rem;
+}
+
+.follow__btn {
+    cursor: pointer;
     background-color: #ffe0a7;
 }
 
-.follow__btn button:hover {
+.follow__btn:hover {
     background-color: #ffbb3c;
 }
 
-.follow__btn button:focus {
+.follow__btn:focus {
     background-color: #c7912d;
 }
 
@@ -314,10 +322,6 @@ export default {
     text-decoration: none;
     color: #000;
     background-color: #6cdb51;
-}
-
-.edit-profile span {
-    margin-right: 1rem;
 }
 
 .edit-profile a:hover {

@@ -81,10 +81,6 @@ export default {
     display: none;
 }
 
-.message-list .message.router-link-active {
-    /* background-color: red; */
-}
-
 .message-display {
     width: 100%;
 }

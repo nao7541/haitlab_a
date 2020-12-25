@@ -56,7 +56,6 @@ export default {
     background-color: #ffe0a7;
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
-    box-shadow: 0 2px 4px #00000040;
 }
 
 .content {
