@@ -567,5 +567,43 @@ export default {
         const responseData = await response.data;
         
         return responseData;
+    },
+
+    // ------------------------------ recruitment ------------------------------ //
+    async postRecruitment(ideaId, kind, number) {
+        const url = '/recruitments/';
+        const response = await api.post(url, {
+            idea: ideaId,
+            kind: kind,
+            number: number,
+        });
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async loadRecruitments(ideaId) {
+        const url = '/recruitments/?idea=' + ideaId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+
+        return responseData;
+    },
+    async deleteAllRecruitments(ideaId) {
+        let url = '/recruitments/?idea=' + ideaId;
+        const response = await api.get(url);
+        const responseData = await response.data;
+        
+        if (responseData.length > 0) {
+            const recIds = responseData.map( rec => rec.recruitment_id);
+            const promises = [];
+            for (const recId of recIds) {
+                url = '/recruitments/' + recId + '/';
+                promises.push(api.delete(url));
+            }
+            Promise.all(promises)
+            .catch(err => {
+                console.log("error to delete recruitments: ", err);
+            })
+        }
     }
 }
