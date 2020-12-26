@@ -26,7 +26,7 @@ from .permissions import IsAuthorOrReadOnly
 from .filters import (UserFilter, IdeaFilter, TagFilter, UserTagFilter,
                     IdeaTagFilter, EventStockFilter, ReputationFilter,
                     UserFollowingFilter, FeedbackQuestionFilter,
-                    FeedbackFilter, MessageFilter)
+                    FeedbackFilter, MessageFilter, RecruitmentFilter)
 
 
 class UserViewset(mixins.RetrieveModelMixin,
@@ -135,3 +135,5 @@ class MessageViewSet(viewsets.ModelViewSet):
 class RecruitmentViewSet(viewsets.ModelViewSet):
     serializer_class = RecruitmentSerializer
     queryset = Recruitment.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = RecruitmentFilter
