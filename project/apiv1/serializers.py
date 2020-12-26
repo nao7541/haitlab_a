@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
+from idea.models import (PostIdea, Feedback, ReputationMap, FeedbackQuestion,
+                        Recruitment)
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 from message.models import Message
@@ -99,3 +100,8 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ('message_id', 'user_from', 'user_to', 'title', 'message',
                     'message_date')
+
+class RecruitmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recruitment
+        fields = ('recruitment_id', 'idea', 'kind', 'number')
