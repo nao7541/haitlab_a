@@ -112,3 +112,16 @@ class ReputationMap(models.Model):
 
     def __str__(self):
         return 'reputation_' + str(self.user_id) + "to" + str(self.idea_id)
+
+class Recruitment(models.Model):
+    recruitment_id = models.AutoField(primary_key=True)
+    # 募集中のアイデア
+    idea = models.ForeignKey(PostIdea, on_delete=models.CASCADE,
+                            verbose_name='募集中のアイデア')
+    # どんな人を募集しているか
+    kind = models.CharField(max_length=50, verbose_name='募集中の人材')
+    # 何人募集しているか
+    number = models.IntegerField(verbose_name='募集人数')
+
+    def __str__(self):
+        return str(self.idea.title) + '_' + str(self.recruitment_id)

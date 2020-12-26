@@ -10,7 +10,8 @@ from django_filters import rest_framework as filters
 from django.db.models import Count
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
+from idea.models import (PostIdea, Feedback, ReputationMap, FeedbackQuestion,
+                        Recruitment)
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 from message.models import Message
@@ -19,12 +20,13 @@ from .serializers import (UserSerializer, EventSerializer, IdeaSerializer,
                         UserTagMapSerializer, IdeaTagMapSerializer,
                         EventStockSerializer, FollowingSerializer,
                         FollowersSerializer, ReputationSerializer,
-                        FeedbackQuestionSerializer, MessageSerializer)
+                        FeedbackQuestionSerializer, MessageSerializer,
+                        RecruitmentSerializer)
 from .permissions import IsAuthorOrReadOnly
 from .filters import (UserFilter, IdeaFilter, TagFilter, UserTagFilter,
                     IdeaTagFilter, EventStockFilter, ReputationFilter,
                     UserFollowingFilter, FeedbackQuestionFilter,
-                    FeedbackFilter, MessageFilter)
+                    FeedbackFilter, MessageFilter, RecruitmentFilter)
 
 
 class UserViewset(mixins.RetrieveModelMixin,
@@ -129,3 +131,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = MessageFilter
+
+class RecruitmentViewSet(viewsets.ModelViewSet):
+    serializer_class = RecruitmentSerializer
+    queryset = Recruitment.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = RecruitmentFilter

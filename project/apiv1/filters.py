@@ -1,7 +1,8 @@
 from django_filters import rest_framework as filters
 
 from user.models import CustomUser, EventStock, UserFollowing
-from idea.models import PostIdea, Feedback, ReputationMap, FeedbackQuestion
+from idea.models import (PostIdea, Feedback, ReputationMap, FeedbackQuestion,
+                        Recruitment)
 from event.models import Event
 from tag.models import Tag, UserTagMap, IdeaTagMap
 from message.models import Message
@@ -92,3 +93,9 @@ class MessageFilter(filters.FilterSet):
     class Meta:
         model = Message
         fields = ['user_from', 'user_to']
+
+class RecruitmentFilter(filters.FilterSet):
+
+    class Meta:
+        model = Recruitment
+        fields = ['idea']
