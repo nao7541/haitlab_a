@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter, DefaultRouter
 from .views import (UserViewset, EventViewset, IdeaViewset, FeedbackViewset,
                 TagViewSet, UserTagMapViewSet, ReputationViewSet,
                 IdeaTagMapViewSet, EventStockViewSet, UserFollowingViewSet,
-                FeedbackQuestionViewSet, MessageViewSet)
+                FeedbackQuestionViewSet, MessageViewSet, RecruitmentViewSet)
 
 router = DefaultRouter()
 router.register('users', UserViewset, basename='user')
@@ -19,5 +19,6 @@ router.register('user_tag', UserTagMapViewSet, basename='user_tag')
 router.register('idea_tag', IdeaTagMapViewSet, basename='idea_tag')
 router.register('event_stock', EventStockViewSet, basename='event_stock')
 router.register('messages', MessageViewSet, basename='message')
+router.register('recruitments', RecruitmentViewSet, basename='recruitment')
 
 urlpatterns = router.urls
